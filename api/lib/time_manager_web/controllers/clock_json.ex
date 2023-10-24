@@ -15,7 +15,7 @@ defmodule TimeManagerWeb.ClockJSON do
     %{data: data(clock)}
   end
 
-  @spec data(%Clock{} | nil) :: any
+  @spec data(%Clock{} | nil) :: %Clock{} | nil
   defp data(optional_clock) do
     case optional_clock do
       nil -> nil
