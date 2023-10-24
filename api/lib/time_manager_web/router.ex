@@ -1,5 +1,12 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
+  use Plug.ErrorHandler
+  alias TimeManagerWeb.ErrorJSON, as: ErrorJSON
+
+  defp handle_errors(conn, params) do
+    conn |> json(ErrorJSON.handle_errors(params)) |> halt()
+  end
+
 
   pipeline :api do
     plug :accepts, ["json"]
