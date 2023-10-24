@@ -5,6 +5,7 @@ defmodule TimeManager.Clocks do
 
   import Ecto.Query, warn: false
   alias TimeManager.Repo
+  alias TimeManager.WorkingTimes
 
   alias TimeManager.Clocks.Clock
 
@@ -37,15 +38,19 @@ defmodule TimeManager.Clocks do
   def clock_user(userID) do
     now = DateTime.utc_now()
 
-    status = case last_user_clock(userID) do
-      nil -> true
-      %Clock{} = clock -> !clock.status
+    case last_user_clock(userID) do
+      nil -> create_clock(%{
+        user_id: userID,
+        status: true,
+        time: now
+      })
+      %Clock{} = clock -> case clock.status do
+        false -> update_clock(clock, %{status: !clock.status,time: now})
+        true -> with {:ok, %WorkingTimes.WorkingTime{} = _} <- WorkingTimes.create_working_time(%{user_id: userID, start: clock.time, end: now}) do
+          update_clock(clock, %{status: !clock.status, time: now})
+        end
+      end
     end
-    create_clock(%{
-      user_id: userID,
-      status: status,
-      time: now
-    })
   end
 
   @doc """
