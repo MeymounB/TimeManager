@@ -25,8 +25,12 @@ defmodule TimeManagerWeb.ErrorJSON do
     %{}
   end
 
+  def format_error(%{message: message} = error) do
+    Map.merge(%{_type: "#{error.__struct__}", message: message}, custom_error_format(error))
+  end
+
   def format_error(error) do
-    Map.merge(%{_type: "#{error.__struct__}", message: error.message}, custom_error_format(error))
+    Map.merge(%{_type: "#{error.__struct__}", message: "#{inspect(error)}"}, custom_error_format(error))
   end
 
   def handle_errors(%{kind: :error, reason: reason, stack: stack}) do

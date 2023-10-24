@@ -14,6 +14,7 @@ defmodule TimeManager.Users.User do
     user
     |> cast(attrs, [:username, :email])
     |> validate_required([:username, :email])
+    |> validate_format(:email, ~r/.+@.+\..+/, message: "must be in the format X@X.X")
     |> unique_constraint(:email)
   end
 end

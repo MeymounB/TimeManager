@@ -21,7 +21,7 @@ defmodule TimeManagerWeb.ClockJSON do
       nil -> nil
       %Clock{} = clock -> %{
         id: clock.id,
-        time: clock.time,
+        time: Calendar.strftime(clock.time, "%Y-%m-%d %H:%M:%S"),
         status: clock.status,
         user_id: clock.user_id
       }

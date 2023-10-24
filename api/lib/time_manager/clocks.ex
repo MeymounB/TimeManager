@@ -26,10 +26,7 @@ defmodule TimeManager.Clocks do
   Returns the last clock of a given user.
   """
   def last_user_clock(userID) do
-    Repo.one(from c in Clock,
-              where: c.user_id == ^userID,
-              order_by: [desc: c.time],
-              limit: 1)
+    Repo.one(from c in Clock, where: c.user_id == ^userID)
   end
 
   @doc """
@@ -39,11 +36,7 @@ defmodule TimeManager.Clocks do
     now = DateTime.utc_now()
 
     case last_user_clock(userID) do
-      nil -> create_clock(%{
-        user_id: userID,
-        status: true,
-        time: now
-      })
+      nil -> create_clock(%{user_id: userID, status: true, time: now})
       %Clock{} = clock -> case clock.status do
         false -> update_clock(clock, %{status: !clock.status,time: now})
         true -> with {:ok, %WorkingTimes.WorkingTime{} = _} <- WorkingTimes.create_working_time(%{user_id: userID, start: clock.time, end: now}) do
