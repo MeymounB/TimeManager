@@ -9,6 +9,11 @@ defmodule TimeManagerWeb.Router do
     pipe_through :api
 
     resources "/users", UserController, except: [:new, :edit]
+    scope "/clocks" do
+      resources "/", ClockController, only: [:index, :delete]
+      get "/:userID", ClockController, :get_last_user_clock
+      post "/:userID", ClockController, :clock_user
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
