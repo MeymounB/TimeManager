@@ -29,20 +29,25 @@ defineExpose({
 <template>
   <section class="working-times-container">
     <AppCard title="Working times">
-      <table class="working-times-table table-auto">
-        <thead>
+      <table class="min-w-full text-left text-sm font-light">
+        <thead class="border-b font-medium dark:border-neutral-500">
         <tr>
-          <th>Début</th>
-          <th>Fin</th>
-          <th>User ID</th>
+          <th scope="col" class="px-6 py-4">Début</th>
+          <th scope="col" class="px-6 py-4">Fin</th>
+          <th scope="col" class="px-6 py-4">User ID</th>
         </tr>
         </thead>
         <tbody>
         <template v-if="workingTimes.length > 0">
-          <tr v-for="workingTime in workingTimes" :key="workingTime.id">
-            <td>{{workingTime.start.toLocaleDateString}}</td>
-            <td>{{workingTime.end.toLocaleDateString}}</td>
-            <td>{{workingTime.user_id}}</td>
+          <tr v-for="workingTime in workingTimes" class="border-b transition duration-300 ease-in-out hover:bg-neutral-100">
+            <td class="whitespace-nowrap px-6 py-4">{{ workingTime.start.toLocaleDateString() }}</td>
+            <td class="whitespace-nowrap px-6 py-4">{{ workingTime.start.toLocaleDateString() }}</td>
+            <td class="whitespace-nowrap px-6 py-4">{{ workingTime.user_id }}</td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr>
+            <td colspan="99" class="text-center px-6 py-4">Aucune donnée</td>
           </tr>
         </template>
         </tbody>

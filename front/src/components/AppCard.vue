@@ -6,7 +6,7 @@ defineProps<{
 
 <template>
   <section class="app-card">
-    <div class="title">
+    <div class="title bg-gray-300">
       <h3 class="text-2xl h3">{{ title }}</h3>
     </div>
     <div class="content">
@@ -26,7 +26,7 @@ defineProps<{
 
   .title {
     padding: 16px 32px;
-    border-bottom: 1px solid lightgrey;
+    border-radius: 10px 10px 0 0;
   }
 
   .content {
