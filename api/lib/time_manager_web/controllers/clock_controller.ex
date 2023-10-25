@@ -6,8 +6,8 @@ defmodule TimeManagerWeb.ClockController do
 
   action_fallback TimeManagerWeb.FallbackController
 
-  def get_last_user_clock(conn, %{"userID" => userID}) do
-    clock = Clocks.last_user_clock(userID)
+  def get_user_clock(conn, %{"userID" => userID}) do
+    clock = Clocks.get_user_clock(userID)
     render(conn, :show, clock: clock)
   end
 

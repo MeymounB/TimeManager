@@ -26,7 +26,7 @@ defmodule TimeManagerWeb.Router do
 
     scope "/clocks" do
       resources "/", ClockController, only: [:index, :delete]
-      get "/:userID", ClockController, :get_last_user_clock
+      get "/:userID", ClockController, :get_user_clock
       post "/:userID", ClockController, :clock_user
     end
   end
