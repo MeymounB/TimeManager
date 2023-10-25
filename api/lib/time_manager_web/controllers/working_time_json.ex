@@ -15,12 +15,8 @@ defmodule TimeManagerWeb.WorkingTimeJSON do
     %{data: data(working_time)}
   end
 
-  defp data(%WorkingTime{} = working_time) do
-    %{
-      id: working_time.id,
-      start: Calendar.strftime(working_time.start, "%Y-%m-%d %H:%M:%S"),
-      end: Calendar.strftime(working_time.end, "%Y-%m-%d %H:%M:%S"),
-      user_id: working_time.user_id
-    }
+  @spec data(%WorkingTime{} | nil) :: %WorkingTime{} | nil
+  def data(optional_working_time) do
+    TimeManagerWeb.ModelJSON.data(optional_working_time)
   end
 end

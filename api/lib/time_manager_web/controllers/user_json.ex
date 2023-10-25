@@ -15,11 +15,8 @@ defmodule TimeManagerWeb.UserJSON do
     %{data: data(user)}
   end
 
+  @spec data(%User{} | nil) :: %User{} | nil
   defp data(%User{} = user) do
-    %{
-      id: user.id,
-      username: user.username,
-      email: user.email
-    }
+    TimeManagerWeb.ModelJSON.data(user)
   end
 end

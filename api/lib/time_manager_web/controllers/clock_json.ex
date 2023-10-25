@@ -17,14 +17,6 @@ defmodule TimeManagerWeb.ClockJSON do
 
   @spec data(%Clock{} | nil) :: %Clock{} | nil
   defp data(optional_clock) do
-    case optional_clock do
-      nil -> nil
-      %Clock{} = clock -> %{
-        id: clock.id,
-        time: Calendar.strftime(clock.time, "%Y-%m-%d %H:%M:%S"),
-        status: clock.status,
-        user_id: clock.user_id
-      }
-    end
+    TimeManagerWeb.ModelJSON.data(optional_clock)
   end
 end
