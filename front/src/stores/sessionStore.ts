@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { StorageSerializers, useLocalStorage } from '@vueuse/core';
-import type { IUser, IUserDTO } from '@/types/user';
-import { useFetch } from '@/composables/fetch';
+import type { IUser } from '@/types/user';
 import { useGetUser } from '@/composables/user';
 
 export const useSessionStore = defineStore('counter', () => {
@@ -10,11 +9,7 @@ export const useSessionStore = defineStore('counter', () => {
   })
 
   async function reloadUser() {
-    if (!user.value) {
-      return
-    }
-
-    const response = await useGetUser()(user.value.id)
+    const response = await useGetUser()(2)
 
     if (!response.ok) {
       return

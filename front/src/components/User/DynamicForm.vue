@@ -18,13 +18,13 @@ const onSubmit = () => {
 <template>
   <section class="user-form">
     <form @submit.prevent="">
-      <div>
+      <div class="input-section">
         <label>Email</label>
-        <input>
+        <input type="text" placeholder="email@box.com">
       </div>
-      <div>
+      <div class="input-section">
         <label>Username</label>
-        <input>
+        <input type="text" placeholder="fancy123">
       </div>
 
       <AppButton type="submit">
@@ -40,5 +40,14 @@ const onSubmit = () => {
 </template>
 
 <style scoped>
+.user-form {
+  .input-section {
+    display: flex;
+    flex-direction: column;
 
+    label {
+      margin-bottom: 10px;
+    }
+  }
+}
 </style>
