@@ -9,9 +9,9 @@ export function useGetAllWorkingTimes() {
 	}
 }
 
-export function useGetWorkingTime() {
-	return (wtId: number) => {
-		return useFetch<IWorkingTime>('GET', `${WT_ENDPOINT}/${wtId}`)
+export function useGetWorkingTimesForUser() {
+	return (userId: number) => {
+		return useFetch<IWorkingTime>('GET', `${WT_ENDPOINT}/${userId}`)
 	}
 }
 

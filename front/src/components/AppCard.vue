@@ -7,7 +7,7 @@ defineProps<{
 <template>
   <section class="app-card">
     <div class="title">
-      <h3>{{ title }}</h3>
+      <h3 class="h3">{{ title }}</h3>
     </div>
     <div class="content">
       <slot />

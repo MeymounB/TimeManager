@@ -13,7 +13,14 @@ export const useSessionStore = defineStore('counter', () => {
     if (!user.value) {
       return
     }
-    user.value = await useGetUser()(user.value.id)
+
+    const response = await useGetUser()(user.value.id)
+
+    if (!response.ok) {
+      return
+    }
+
+    user.value = response.data
   }
 
   setTimeout( () => {
