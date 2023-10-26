@@ -1,12 +1,12 @@
 <script setup lang="ts">
 defineProps<{
-  title: string
+  title?: string
 }>()
 </script>
 
 <template>
   <section class="app-card">
-    <div class="title bg-gray-300">
+    <div class="title bg-gray-300" v-if="title">
       <h3 class="text-2xl h3">{{ title }}</h3>
     </div>
     <div class="content">
@@ -31,6 +31,7 @@ defineProps<{
 
   .content {
     padding: 16px 32px;
+    min-height: fit-content;
   }
 }
 </style>
