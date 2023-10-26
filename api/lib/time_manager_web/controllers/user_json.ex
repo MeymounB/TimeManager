@@ -17,6 +17,6 @@ defmodule TimeManagerWeb.UserJSON do
 
   @spec data(%User{} | nil) :: %User{} | nil
   defp data(%User{} = user) do
-    TimeManagerWeb.ModelJSON.data(user)
+    TimeManagerWeb.ModelJSON.data(user, %{associations: true, global: %{excluded: [:user_id]}})
   end
 end
