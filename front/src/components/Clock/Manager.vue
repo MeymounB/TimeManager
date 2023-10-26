@@ -91,7 +91,7 @@ onMounted(async () => {
   <section class="manager">
     <AppCard title="Clocks" class="text-center">
       <div class="space-y-10">
-        <div class="clock-infos" v-if="clock">
+        <div class="clock-infos min-h-[24px]" v-if="clock">
           <span>Badgé à: {{ formatDate(clock.time).toLocaleString() }}</span>
         </div>
 

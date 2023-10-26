@@ -3,7 +3,7 @@ import AppButton from "@/components/AppButton.vue";
 import { storeToRefs } from "pinia";
 import { useSessionStore } from "@/stores/sessionStore.ts";
 import { IUserDTO } from "@/types/user.ts";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useCreateUser, useUpdateUser } from "@/composables/user.ts";
 
 const { user } = storeToRefs(useSessionStore());
@@ -11,6 +11,10 @@ const { user } = storeToRefs(useSessionStore());
 const formValue = ref<IUserDTO>({
   email: user.value?.email ?? '',
   username: user.value?.username  ?? '',
+})
+
+const isFormValueEmpty = computed(() => {
+  return formValue.value.email === '' || formValue.value.username === ''
 })
 
 watch(user, () => {
@@ -77,7 +81,7 @@ const onSubmit = async () => {
         </div>
       </div>
 
-      <AppButton type="submit" class="mt-5 w-full" button-style="primary">
+      <AppButton type="submit" class="mt-5 w-full" button-style="primary" :is-disabled="isFormValueEmpty">
         <template v-if="user">
           <span class="text-white">Éditer</span>
         </template>
