@@ -45,6 +45,7 @@ defmodule TimeManagerWeb.ModelJSON do
   def data(model, options \\ %{}) do
     case model do
       nil -> nil
+      [] -> []
       %{} = model -> Enum.into(Enum.map(get_model_fields(model, options), &model_field(model, &1, options)), %{})
       [_ | _] = models -> Enum.map(models, &data(&1, options))
     end
