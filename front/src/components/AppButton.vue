@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <button class="app-button" :type="type" role="button">
+  <button class="app-button hover:bg-gray-100" :type="type" role="button">
     <slot />
   </button>
 </template>

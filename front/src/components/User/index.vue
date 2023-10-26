@@ -11,8 +11,10 @@ const { user } = storeToRefs(useSessionStore())
 <template>
   <section class="user-container">
     <AppCard title="Utilisateurs">
-      <UserInfo :user="user" />
-      <UserForm :user="user" />
+      <div class="space-y-5">
+        <UserInfo :user="user" />
+        <UserForm :user="user" />
+      </div>
     </AppCard>
   </section>
 </template>

@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="user-info">
+  <div class="user-info" :class="{'text-center': !user}">
     <template v-if="user">
       <div>
         Email: {{ user.email }}
@@ -26,6 +26,5 @@ defineProps<{
 
 <style scoped>
 .user-info {
-  background: darkgray;
 }
 </style>

@@ -17,17 +17,19 @@ const onSubmit = () => {
 
 <template>
   <section class="user-form">
-    <form @submit.prevent="">
-      <div class="input-section">
-        <label>Email</label>
-        <input type="text" placeholder="email@box.com">
-      </div>
-      <div class="input-section">
-        <label>Username</label>
-        <input type="text" placeholder="fancy123">
+    <form @submit.prevent="" >
+      <div class="space-y-2">
+        <div class="input-section">
+          <label class="font-semibold">Email</label>
+          <input type="text" class="input-group py-2 px-3 text-black outline-0 border border-black rounded-lg" placeholder="email@box.com">
+        </div>
+        <div class="input-section">
+          <label class="font-semibold">Username</label>
+          <input type="text" class="input-group py-2 px-3 text-black outline-0 border border-black rounded-lg" placeholder="fancy123">
+        </div>
       </div>
 
-      <AppButton type="submit">
+      <AppButton type="submit" class="mt-5">
         <template v-if="user">
           <span>Éditer</span>
         </template>
@@ -44,10 +46,6 @@ const onSubmit = () => {
   .input-section {
     display: flex;
     flex-direction: column;
-
-    label {
-      margin-bottom: 10px;
-    }
   }
 }
 </style>
