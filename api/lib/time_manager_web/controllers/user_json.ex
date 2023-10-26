@@ -12,11 +12,11 @@ defmodule TimeManagerWeb.UserJSON do
   Renders a single user.
   """
   def show(%{user: user}) do
-    %{data: data(user)}
+    %{data: data(user, %{associations: true, global: %{excluded: [:user_id]}})}
   end
 
   @spec data(%User{} | nil) :: %User{} | nil
-  defp data(%User{} = user) do
-    TimeManagerWeb.ModelJSON.data(user, %{associations: true, global: %{excluded: [:user_id]}})
+  defp data(%User{} = user, options \\ %{}) do
+    TimeManagerWeb.ModelJSON.data(user, options)
   end
 end
