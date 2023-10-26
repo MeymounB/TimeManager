@@ -2,6 +2,8 @@
 import UserCard from '@/components/User/index.vue'
 import ClockCard from '@/components/Clock/Manager.vue'
 import WorkingTimesCard from '@/components/WorkingTimes.vue'
+import ChartManagerCard from '@/components/Chart/Manager.vue'
+
 import { ref } from "vue";
 import WorkingTime from "@/components/WorkingTime.vue";
 
@@ -21,6 +23,9 @@ const updateWorkingTimes = () => {
     <div class="section">
       <WorkingTimesCard class="w-2/3" ref="workingTimes" />
       <WorkingTime class="w-1/3"></WorkingTime>
+    </div>
+    <div class="section">
+      <ChartManagerCard class="w-full" />
     </div>
   </section>
 </template>

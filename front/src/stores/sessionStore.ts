@@ -9,12 +9,10 @@ export const useSessionStore = defineStore('counter', () => {
   })
 
   async function reloadUser() {
-    if (!user.value) {
-      return
-    }
-    const response = await useGetUser()(user.value.id)
+    const response = await useGetUser()(user.value?.id ?? 0)
 
     if (!response.ok) {
+      user.value = null
       return
     }
 
