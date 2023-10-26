@@ -44,7 +44,7 @@ watch(vModel, () => {
   }
 })
 
-const editWT = async () => {
+const updateWorkingTime = async () => {
   if (!vModel.value) {
     return
   }
@@ -60,7 +60,7 @@ const editWT = async () => {
 
   emit('updateAll')
 }
-const createWT = async () => {
+const createWorkingTime = async () => {
   if (vModel.value) {
     return
   }
@@ -77,8 +77,7 @@ const createWT = async () => {
 
   emit('updateAll')
 }
-
-const deleteWT = async () => {
+const deleteWorkingTime = async () => {
   if (!vModel.value) {
     return
   }
@@ -97,9 +96,9 @@ const onSubmit = () => {
   formValue.value.end = new Date(formValue.value.end).toISOString()
 
   if (vModel.value) {
-    return editWT()
+    return updateWorkingTime()
   } else
-    return createWT()
+    return createWorkingTime()
 };
 </script>
 
@@ -128,7 +127,7 @@ const onSubmit = () => {
           </div>
 
           <div class="delete-btn-container mt-3">
-            <AppButton button-style="danger" type="button" v-if="modelValue" class="w-full " @click="deleteWT">
+            <AppButton button-style="danger" type="button" v-if="modelValue" class="w-full " @click="deleteWorkingTime">
               <span class="text-white">Supprimer</span>
             </AppButton>
           </div>

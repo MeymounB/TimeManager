@@ -12,7 +12,7 @@ const formatDate = useFormatDate()
 const formatDateTimeLocal = useFormatDateTimeLocal()
 const selectedWT = ref<IWorkingTime | undefined>()
 
-const updateWorkingTimes = async () => {
+const getWorkingTimes = async () => {
   const response = await getWorkingTimesAPI()
 
   if (!response.ok) {
@@ -32,11 +32,11 @@ const onWTSelect = (workingTime: IWorkingTime) => {
 }
 
 onMounted(async () => {
-  await updateWorkingTimes()
+  await getWorkingTimes()
 })
 
 defineExpose({
-  updateWorkingTimes,
+  updateWorkingTimes: getWorkingTimes,
 })
 </script>
 
@@ -54,7 +54,7 @@ defineExpose({
           </thead>
           <tbody>
           <template v-if="workingTimes.length > 0">
-            <tr v-for="workingTime in workingTimes" @click="onWTSelect(workingTime)" class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 h-20" :class="{ 'bg-blue-300': selectedWT?.id === workingTime.id}">
+            <tr v-for="workingTime in workingTimes" @click="onWTSelect(workingTime)" class="border-b transition duration-300 ease-in-out cursor-pointer h-20" :class="{ 'bg-blue-300': selectedWT?.id === workingTime.id}">
               <td class="whitespace-nowrap px-6 py-4">{{ formatDateTimeLocal(formatDate(workingTime.start)).toString().replace('T', ' ') }}</td>
               <td class="whitespace-nowrap px-6 py-4">{{ formatDateTimeLocal(formatDate(workingTime.end)).toString().replace('T', ' ') }}</td>
               <td class="whitespace-nowrap px-6 py-4">{{ workingTime.user_id }}</td>
@@ -67,7 +67,7 @@ defineExpose({
           </template>
           </tbody>
         </table>
-        <WorkingTime v-model="selectedWT" @update-all="updateWorkingTimes" class="w-1/3 h-1/2" />
+        <WorkingTime v-model="selectedWT" @update-all="getWorkingTimes" class="w-1/3 h-1/2" />
       </div>
 
     </AppCard>

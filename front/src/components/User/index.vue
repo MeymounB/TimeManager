@@ -15,7 +15,7 @@ const logout = () => {
   sessionStore.localLogout()
 }
 
-const deleteAccount = async () => {
+const deleteUser = async () => {
   if (!user.value) {
     return
   }
@@ -38,7 +38,7 @@ const deleteAccount = async () => {
         <AppButton type="button" v-if="user" class="w-full" button-style="secondary" @click="logout">
           <span>Se déconnecter</span>
         </AppButton>
-        <AppButton type="button" v-if="user" class="w-full" button-style="danger" @click="deleteAccount">
+        <AppButton type="button" v-if="user" class="w-full" button-style="danger" @click="deleteUser">
             <span class="text-white">Supprimer mon compte</span>
         </AppButton>
       </div>

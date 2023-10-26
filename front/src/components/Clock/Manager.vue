@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import type { IClock } from "@/types/clock";
 import { computed, onMounted, ref } from "vue";
 import AppButton from "@/components/AppButton.vue";
-import { useFormatDate } from "@/composables/dateFormat.ts";
+import { useFormatDate, useFormatDateTimeLocal } from "@/composables/dateFormat.ts";
 
 const { user } = storeToRefs(useSessionStore());
 const getUserClockAPI = useGetClock();
@@ -17,6 +17,10 @@ const clock = ref<IClock | null>(null);
 const time = ref("00:00:00");
 const interval = ref()
 const formatDate = useFormatDate()
+const formatDateLocaleDateTime = useFormatDateTimeLocal()
+const startDateTime = computed(() => {
+  return (clock.value?.time && clock.value.status) ?? null
+})
 
 const calcTimer = () => {
   if (!clock.value) {
@@ -55,7 +59,6 @@ const clockUser = async () => {
   clock.value = response.data;
 
   if (clock.value.status && !interval.value) {
-    console.log("oui");
     calcTimer()
     interval.value = setInterval(calcTimer, 1000)
   } else if (interval.value){
@@ -69,7 +72,7 @@ const clockUser = async () => {
   }
 };
 
-const updateClock = async () => {
+const refresh = async () => {
   if (!user.value) {
     return;
   }
@@ -80,10 +83,15 @@ const updateClock = async () => {
   }
 
   clock.value = response.data;
+
+  if (clock.value?.status && !interval.value) {
+    calcTimer()
+    interval.value = setInterval(calcTimer, 1000)
+  }
 };
 
 onMounted(async () => {
-  await updateClock();
+  await refresh();
 });
 </script>
 
@@ -92,7 +100,15 @@ onMounted(async () => {
     <AppCard title="Clocks" class="text-center">
       <div class="space-y-10">
         <div class="clock-infos min-h-[24px]" v-if="clock">
-          <span>Badgé à: {{ formatDate(clock.time).toLocaleString() }}</span>
+          <span>
+            <span v-if="clockOut">
+              Badgé à:
+            </span>
+            <span v-else>
+              Parti à:
+            </span>
+            {{ formatDateLocaleDateTime(formatDate(clock.time)).toString().replace('T', ' ') }}
+          </span>
         </div>
 
         <div class="text-5xl font-bold">

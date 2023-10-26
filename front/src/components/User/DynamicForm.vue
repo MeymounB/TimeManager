@@ -26,7 +26,9 @@ watch(user, () => {
 const updateUserAPI = useUpdateUser()
 const createUserAPI = useCreateUser()
 
-const editUser = async () => {
+const getUser = () => ({ user })
+
+const updateUser = async () => {
   if (!user.value) {
     return
   }
@@ -52,7 +54,7 @@ const onSubmit = async () => {
   if (!user.value) {
     return createUser()
   } else {
-    return editUser()
+    return updateUser()
   }
 };
 </script>
