@@ -8,6 +8,6 @@ export async function useFetch<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE', url
 		return { ok: false, status: response.status }
 	}
 
-	const { data } = await response.json()
+	const { data } = method !== 'DELETE' ? await response.json() : { data: undefined }
 	return { ok: true, data }
 }

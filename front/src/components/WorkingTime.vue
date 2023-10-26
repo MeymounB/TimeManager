@@ -6,10 +6,12 @@ import { useSessionStore } from "@/stores/sessionStore.ts";
 import { storeToRefs } from "pinia";
 import AppCard from "@/components/AppCard.vue";
 import { useFormatDate, useFormatDateTimeLocal } from "@/composables/dateFormat.ts";
-import { useDeleteWorkingTime } from "@/composables/working-times.ts";
+import { useCreateWorkingTime, useDeleteWorkingTime, useUpdateWorkingTime } from "@/composables/working-times.ts";
 
 const formatDateTimeLocal = useFormatDateTimeLocal()
 const formatDateUTC = useFormatDate()
+const createWTAPI = useCreateWorkingTime()
+const editWTAPI = useUpdateWorkingTime()
 const deleteWTAPI = useDeleteWorkingTime()
 const props = defineProps<{
   modelValue?: IWorkingTime;
@@ -36,14 +38,46 @@ watch(vModel, () => {
   const endDate = vModel.value ? formatDateUTC(vModel.value.end) : new Date()
 
   formValue.value = {
-    start: formatDateTimeLocal(startDate),
-    end: formatDateTimeLocal(endDate),
+    start: formatDateTimeLocal(startDate).replace('Z', ''),
+    end: formatDateTimeLocal(endDate).replace('Z', ''),
     user_id: vModel.value?.user_id ?? user.value?.id ?? 0,
   }
 })
 
-const editWT = async () => {}
-const createWT = async () => {}
+const editWT = async () => {
+  if (!vModel.value) {
+    return
+  }
+
+  const response = await editWTAPI(vModel.value.id, {
+    start: new Date(formValue.value.start).toISOString(),
+    end: new Date(formValue.value.end).toISOString()
+  })
+
+  if (!response.ok) {
+    return alert('Une erreur est survenue')
+  }
+
+  emit('updateAll')
+}
+const createWT = async () => {
+  if (vModel.value) {
+    return
+  }
+
+  const response = await createWTAPI(formValue.value.user_id, {
+    start: new Date(formValue.value.start).toISOString(),
+    end: new Date(formValue.value.end).toISOString(),
+    user_id: formValue.value.user_id
+  })
+
+  if (!response.ok) {
+    return alert('Une erreur est survenue')
+  }
+
+  emit('updateAll')
+}
+
 const deleteWT = async () => {
   if (!vModel.value) {
     return
@@ -59,10 +93,13 @@ const deleteWT = async () => {
 }
 
 const onSubmit = () => {
+  formValue.value.start = new Date(formValue.value.start).toISOString()
+  formValue.value.end = new Date(formValue.value.end).toISOString()
+
   if (vModel.value) {
-    return createWT()
-  } else
     return editWT()
+  } else
+    return createWT()
 };
 </script>
 
@@ -90,6 +127,12 @@ const onSubmit = () => {
             </div>
           </div>
 
+          <div class="delete-btn-container mt-3">
+            <AppButton button-style="danger" type="button" v-if="modelValue" class="w-full " @click="deleteWT">
+              <span class="text-white">Supprimer</span>
+            </AppButton>
+          </div>
+
           <AppButton type="submit" class="mt-5 w-full" button-style="primary">
             <template v-if="modelValue">
               <span class="text-white">Éditer</span>
@@ -99,9 +142,7 @@ const onSubmit = () => {
             </template>
           </AppButton>
         </form>
-        <AppButton button-style="danger" type="button" v-if="modelValue" class="mt-5 w-full">
-          <span class="text-white">Supprimer</span>
-        </AppButton>
+
       </template>
       <template v-else>
         <div class="text-center">
@@ -112,4 +153,8 @@ const onSubmit = () => {
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+.delete-btn-container {
+  min-height: 40px;
+}
+</style>
