@@ -6,33 +6,48 @@ defmodule TimeManagerWeb.ModelJSON do
   end
 
   def custom_value(value), do: value
-  def custom_model_field(model, field, :association), do: data(Map.get(TimeManager.Repo.preload(model, field), field))
-  def custom_model_field(model, field, :field), do: custom_value(Map.get(model, field))
+  def custom_model_field(model, field, :associations, options) do
+    data(Map.get(TimeManager.Repo.preload(model, field), field), Map.merge(%{global: Map.get(options, :global, %{})}, Map.get(options, field, %{})))
+  end
+  def custom_model_field(model, field, :fields, _options), do: custom_value(Map.get(model, field))
 
-  ## User
-  def custom_show_field(%TimeManager.Users.User{}, _, :association), do: true
-  # Common
-  def custom_show_field(_, :inserted_at, _), do: false
-  def custom_show_field(_, :updated_at, _), do: false
-  def custom_show_field(_, _, :association), do: false
-  def custom_show_field(_, _, _), do: true
+  defp model_field(model, [field, type], options), do: {field, custom_model_field(model, field, type, options)}
 
-  defp model_field(model, [field, type]), do: {field, custom_model_field(model, field, type)}
+  def custom_show_field(_model, :inserted_at, _type, _options), do: false
+  def custom_show_field(_model, :updated_at, _type, _options), do: false
+  def custom_show_field(_model, _field, _type, _options), do: true
 
-  defp get_model_fields(model) do
-    fields = Enum.filter(model.__struct__.__schema__(:fields), &custom_show_field(model, &1, :field))
-    associations = Enum.filter(model.__struct__.__schema__(:associations), &custom_show_field(model, &1, :association))
+  defp is_field_not_excluded(field, options) do
+    case options do
+      nil -> true
+      options ->  field not in Map.get(options, :excluded, []) and is_field_not_excluded(field, Map.get(options, :global, nil))
+    end
 
-    fields
-    |> Enum.map(fn item -> [item, :field] end) # Add the :filter atom to each element
-    |> Enum.concat(Enum.map(associations, fn item -> [item, :association] end)) # Add the :association atom to each element
   end
 
-  def data(model) do
+  defp get_model_fields_types(model, type, options) do
+    model.__struct__.__schema__(type)
+    |> Enum.filter(&is_field_not_excluded(&1, options))
+    |> Enum.filter(&custom_show_field(model, &1, type, options))
+    |> Enum.map(fn item -> [item, type] end)
+  end
+
+  defp get_model_fields(model, options) do
+    associations = case Map.get(options, :associations, false) do
+      true -> get_model_fields_types(model, :associations, options)
+      false -> []
+    end
+
+    get_model_fields_types(model, :fields, options)
+    |> Enum.concat(associations)
+  end
+
+  def data(model, options \\ %{}) do
     case model do
       nil -> nil
-      %{} = model -> Enum.into(Enum.map(get_model_fields(model), &model_field(model, &1)), %{})
-      [_ | _] = models -> Enum.map(models, &data/1)
+      [] -> []
+      %{} = model -> Enum.into(Enum.map(get_model_fields(model, options), &model_field(model, &1, options)), %{})
+      [_ | _] = models -> Enum.map(models, &data(&1, options))
     end
   end
 end
