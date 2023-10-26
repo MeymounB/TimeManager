@@ -1,10 +1,15 @@
 # base image
 FROM node:14-alpine
 
-ADD . /app
+
 
 # set working directory
+ADD . /app
 WORKDIR /app
+
+RUN addgroup -S webgroup && adduser -S webuser -G webgroup
+RUN chown -R webuser:webgroup /app
+USER webuser
 
 RUN npm install
 
