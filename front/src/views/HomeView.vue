@@ -2,40 +2,37 @@
 import UserCard from '@/components/User/index.vue'
 import ClockCard from '@/components/Clock/Manager.vue'
 import WorkingTimesCard from '@/components/WorkingTimes.vue'
+import { ref } from "vue";
+import WorkingTime from "@/components/WorkingTime.vue";
+
+const workingTimes = ref<InstanceType<typeof WorkingTimesCard> | null>(null)
+
+const updateWorkingTimes = () => {
+  workingTimes.value?.updateWorkingTimes()
+}
 </script>
 
 <template>
   <section class="dashboard">
-    <div class="top-section">
-      <UserCard class="user-card" />
-      <ClockCard class="clock-card" />
+    <div class="section">
+      <UserCard class="w-full" />
+      <ClockCard @clock-out="updateWorkingTimes" class="w-full" />
     </div>
-    <div class="bottom-section">
-      <WorkingTimesCard />
+    <div class="section">
+      <WorkingTimesCard class="w-2/3" ref="workingTimes" />
+      <WorkingTime class="w-1/3"></WorkingTime>
     </div>
   </section>
 </template>
 <style scoped>
 .dashboard {
   padding: 32px;
-  .top-section {
+  .section {
     width: 100%;
-    height: 40%;
+    height: 50%;
     display: flex;
     margin-bottom: 10px;
     gap: 8px;
-  }
-  .user-card {
-    width: 100%;
-  }
-
-  .clock-card {
-    width: 100%;
-  }
-
-  .bottom-section {
-    width: 100%;
-    height: 60%;
   }
 }
 </style>

@@ -1,23 +1,14 @@
 <script setup lang="ts">
 defineProps<{
   type: 'submit' | 'button'
+  buttonStyle: 'primary' | 'secondary' | 'danger'
   isLoading?: boolean
   isDisabled?: boolean
 }>()
 </script>
 
 <template>
-  <button class="app-button hover:bg-gray-100" :type="type" role="button">
+  <button :class="`btn btn-${buttonStyle}`" :type="type" role="button">
     <slot />
   </button>
 </template>
-
-<style scoped>
-.app-button {
-  padding: 8px 16px;
-  border: 1px solid #181818;
-  border-radius: 8px;
-  min-width: 200px;
-  color: #181818;
-}
-</style>

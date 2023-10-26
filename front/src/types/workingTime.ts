@@ -4,3 +4,9 @@ export interface IWorkingTime {
 	end: Date,
 	user_id: number
 }
+
+export interface IWorkingTimeDTO {
+	start: Date
+	end: Date,
+	user_id: number
+}

@@ -3,9 +3,11 @@ import AppCard from '@/components/AppCard.vue';
 import { useGetAllWorkingTimes } from '@/composables/working-times';
 import { onMounted, ref } from 'vue';
 import type { IWorkingTime } from '@/types/workingTime';
+import { useFormatDate } from "@/composables/dateFormat.ts";
 
 const getWorkingTimesAPI = useGetAllWorkingTimes()
 const workingTimes = ref<IWorkingTime[]>([])
+const formatDate = useFormatDate()
 
 const updateWorkingTimes = async () => {
   const response = await getWorkingTimesAPI()
@@ -40,8 +42,8 @@ defineExpose({
         <tbody>
         <template v-if="workingTimes.length > 0">
           <tr v-for="workingTime in workingTimes" class="border-b transition duration-300 ease-in-out hover:bg-neutral-100">
-            <td class="whitespace-nowrap px-6 py-4">{{ workingTime.start.toLocaleDateString() }}</td>
-            <td class="whitespace-nowrap px-6 py-4">{{ workingTime.start.toLocaleDateString() }}</td>
+            <td class="whitespace-nowrap px-6 py-4">{{ formatDate(workingTime.start).toLocaleString() }}</td>
+            <td class="whitespace-nowrap px-6 py-4">{{ formatDate(workingTime.end).toLocaleString() }}</td>
             <td class="whitespace-nowrap px-6 py-4">{{ workingTime.user_id }}</td>
           </tr>
         </template>

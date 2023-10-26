@@ -9,7 +9,10 @@ export const useSessionStore = defineStore('counter', () => {
   })
 
   async function reloadUser() {
-    const response = await useGetUser()(2)
+    if (!user.value) {
+      return
+    }
+    const response = await useGetUser()(user.value.id)
 
     if (!response.ok) {
       return
@@ -18,9 +21,17 @@ export const useSessionStore = defineStore('counter', () => {
     user.value = response.data
   }
 
+  function localLogout() {
+    if (!user.value) {
+      return
+    }
+
+    user.value = null
+  }
+
   setTimeout( () => {
     reloadUser().catch(err => console.error(err))
   }, 0)
 
-  return { user }
+  return { user, localLogout }
 })

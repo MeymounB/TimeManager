@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import type { IUser } from '@/types/user';
+import { storeToRefs } from "pinia";
+import { useSessionStore } from "@/stores/sessionStore.ts";
 
-defineProps<{
-  user: IUser | null
-}>()
-
+const { user } = storeToRefs(useSessionStore())
 </script>
 
 <template>
-  <div class="user-info" :class="{'text-center': !user}">
+  <div class="user-info text-center">
     <template v-if="user">
-      <div>
-        Email: {{ user.email }}
+      <div class="text-3xl">
+        {{ user.username }}
       </div>
-      <div>
-        Username: {{ user.username }}
+      <div class="text-xs">
+        {{ user.email }}
       </div>
     </template>
     <template v-else>
@@ -23,8 +21,3 @@ defineProps<{
   </div>
 
 </template>
-
-<style scoped>
-.user-info {
-}
-</style>

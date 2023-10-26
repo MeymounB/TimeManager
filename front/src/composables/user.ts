@@ -17,7 +17,7 @@ export function useGetUser() {
 
 export function useCreateUser() {
 	return (newUser: IUserDTO) => {
-		return useFetch<IUser>('POST', USERS_ENDPOINT, { user: newUser})
+		return useFetch<IUser>('POST', USERS_ENDPOINT, { user: newUser })
 	}
 }
 
