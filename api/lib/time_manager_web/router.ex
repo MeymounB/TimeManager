@@ -42,7 +42,8 @@ defmodule TimeManagerWeb.Router do
       info: %{
         version: "1.0",
         title: "Time Manager API"
-      }
+      },
+      definitions: TimeManagerWeb.SwaggerDefinitions.global_definitions
     }
   end
 

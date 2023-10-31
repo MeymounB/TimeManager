@@ -1,6 +1,50 @@
 defmodule TimeManagerWeb.SwaggerDefinitions do
   use PhoenixSwagger
 
+  def global_definitions do
+    %{
+      ErrorReason: swagger_schema do
+        title("ErrorReason")
+        description("An error")
+
+        properties do
+          _type(:string, "Errror type", required: true)
+          message(:string, "Error message", required: true)
+          stack(Schema.array(:string), "Error stack trace. Only in debug mode")
+        end
+
+        example(%{
+          _type: "Elixir.Ecto.NoResultsError",
+          message: "expected at least one result but got none"
+        })
+      end,
+      NotFoundResponse: swagger_schema do
+        title("NotFoundResponse")
+        description("A resource was requested but the server was unavailable to find it")
+
+        properties do
+          reason(Schema.ref(:ErrorReason), "Error reason", required: true)
+        end
+      end,
+      UnprocessableEntityResponse: swagger_schema do
+        title("UnprocessableEntityResponse")
+        description("An action was requested to the server but the input was invalid")
+
+        properties do
+          errors(%Schema{type: :object}, "Error reasons. An entry for each invalid parameters with an array of reasons.", required: true)
+        end
+
+        example(%{
+          errors: %{
+            email: [
+              "has already been taken"
+            ]
+          }
+        })
+      end
+    }
+  end
+
   def user_definitions do
     %{
         User: swagger_schema do
@@ -9,13 +53,13 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
 
           properties do
             id(:integer, "User ID")
-            name(:string, "User name", required: true)
+            username(:string, "User name", required: true)
             email(:string, "Email address", format: :email, required: true)
           end
 
           example(%{
             id: 1,
-            name: "Joe",
+            username: "Joe",
             email: "joe@gmail.com"
           })
         end,
@@ -25,15 +69,15 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
 
           properties do
             id(:integer, "User ID")
-            name(:string, "User name", required: true)
+            username(:string, "User name", required: true)
             email(:string, "Email address", format: :email, required: true)
-            clock(Schema.ref(:Clock), "User clock")
+            clock(Schema.ref(:Clock), "User clock", "x-nullable": true)
             working_times(Schema.array(:Clock), "User working times")
           end
 
           example(%{
             id: 1,
-            name: "Joe",
+            username: "Joe",
             email: "joe@gmail.com",
             clock: %{
               id: 1,

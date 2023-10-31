@@ -15,22 +15,7 @@ defmodule TimeManagerWeb.UserController do
     summary("List Users")
     description("List all users in the database")
 
-    response(200, "OK", Schema.ref(:UsersResponse),
-      example: %{
-        data: [
-          %{
-            id: 1,
-            name: "Joe",
-            email: "Joe6@mail.com",
-          },
-          %{
-            id: 2,
-            name: "Jack",
-            email: "Jack7@mail.com",
-          }
-        ]
-      }
-    )
+    response(200, "OK", Schema.ref(:UsersResponse))
   end
   def index(conn, params) do
     users = Users.list_users(params)
@@ -40,22 +25,10 @@ defmodule TimeManagerWeb.UserController do
   swagger_path(:create) do
     summary("Create user")
     description("Creates a new user")
+    parameter(:user, :body, Schema.ref(:UserRequest), "The user details")
 
-    parameter(:user, :body, Schema.ref(:UserRequest), "The user details",
-      example: %{
-        user: %{name: "Joe", email: "Joe1@mail.com"}
-      }
-    )
-
-    response(201, "User created OK", Schema.ref(:UserResponse),
-      example: %{
-        data: %{
-          id: 1,
-          name: "Joe",
-          email: "Joe2@mail.com"
-        }
-      }
-    )
+    response(201, "User created OK", Schema.ref(:UserResponse))
+    response(422, "Unprocessable entity", Schema.ref(:UnprocessableEntityResponse))
   end
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Users.create_user(user_params) do
@@ -70,19 +43,11 @@ defmodule TimeManagerWeb.UserController do
     summary("Show User")
     description("Show a user by ID")
     produces("application/json")
+    consumes("application/json")
     parameter(:id, :path, :integer, "User ID", required: true, example: 123)
 
-    response(200, "OK", Schema.ref(:UserResponse),
-      example: %{
-        data: %{
-          id: 123,
-          name: "Joe",
-          email: "Joe3@mail.com",
-          clock: nil,
-          working_times: []
-        }
-      }
-    )
+    response(200, "OK", Schema.ref(:UserResponse))
+    response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
@@ -96,22 +61,12 @@ defmodule TimeManagerWeb.UserController do
     parameters do
       id(:path, :integer, "User ID", required: true, example: 3)
 
-      user(:body, Schema.ref(:UserRequest), "The user details",
-        example: %{
-          user: %{name: "Joe", email: "joe4@mail.com"}
-        }
-      )
+      user(:body, Schema.ref(:UserRequest), "The user details")
     end
 
-    response(200, "Updated Successfully", Schema.ref(:UserResponse),
-      example: %{
-        data: %{
-          id: 3,
-          name: "Joe",
-          email: "Joe5@mail.com"
-        }
-      }
-    )
+    response(200, "Updated Successfully", Schema.ref(:UserResponse))
+    response(404, "Not found", Schema.ref(:NotFoundResponse))
+    response(422, "Unprocessable entity", Schema.ref(:UnprocessableEntityResponse))
   end
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Users.get_user!(id)
@@ -126,7 +81,9 @@ defmodule TimeManagerWeb.UserController do
     summary("Delete User")
     description("Delete a user by ID")
     parameter(:id, :path, :integer, "User ID", required: true, example: 3)
+
     response(203, "No Content - Deleted Successfully")
+    response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def delete(conn, %{"id" => id}) do
     user = Users.get_user!(id)
