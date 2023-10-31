@@ -1,19 +1,13 @@
-# base image
-FROM node:14-alpine
+FROM oven/bun
+LABEL authors="jbrizard"
 
-
-
-# set working directory
-ADD . /app
 WORKDIR /app
 
-RUN addgroup -S webgroup && adduser -S webuser -G webgroup
-RUN chown -R webuser:webgroup /app
-USER webuser
+COPY ./bun.lockb .
+COPY ./package.json .
 
-RUN npm install
+RUN bun install
+COPY . .
+RUN bun run build
 
-EXPOSE 5173
-
-# start app
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "start"]
