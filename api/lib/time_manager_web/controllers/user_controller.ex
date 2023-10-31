@@ -77,7 +77,6 @@ defmodule TimeManagerWeb.UserController do
   end
 
   swagger_path(:delete) do
-    PhoenixSwagger.Path.delete("/api/users/{id}")
     summary("Delete User")
     description("Delete a user by ID")
     parameter(:id, :path, :integer, "User ID", required: true, example: 3)

@@ -127,6 +127,41 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
             time: "2017-02-04 11:24:45",
             status: false
           })
+        end,
+        ClockDetailed: swagger_schema do
+          title("ClockDetailed")
+          description("A user clock with its associations")
+
+          properties do
+            id(:integer, "Clock ID")
+            user_id(:integer, "Associated user ID")
+            time(:string, "Last clock time (utc)", format: :utc_datetime, required: true)
+            status(:boolean, "Clock status. Set to true when user clocks in and to false when he clocks out.", required: true)
+            user(Schema.ref(:User), "The clock user")
+          end
+
+          example(%{
+            id: 1,
+            user_id: 1,
+            time: "2017-02-04 11:24:45",
+            status: false,
+            user: %{
+              id: 1,
+              username: "Joe",
+              email: "joe@gmail.com"
+            }
+          })
+        end,
+        ClockResponse: swagger_schema do
+          title("ClockResponse")
+          description("Response schema for single clock")
+          property(:data, Schema.ref(:ClockDetailed), "The clock details")
+        end,
+        ClocksResponse:
+        swagger_schema do
+          title("ClocksReponse")
+          description("Response schema for multiple clocks")
+          property(:data, Schema.array(:Clock), "The clocks details")
         end
     }
   end
