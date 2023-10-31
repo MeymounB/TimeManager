@@ -1,13 +1,13 @@
-FROM oven/bun
+FROM node:18-alpine
 LABEL authors="jbrizard"
 
 WORKDIR /app
 
-COPY ./bun.lockb .
+COPY ./package-lock.json .
 COPY ./package.json .
 
-RUN bun install
+RUN npm install
 COPY . .
-RUN bun run build
+RUN npm run build
 
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "start"]
