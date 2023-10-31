@@ -11,6 +11,16 @@ config :time_manager,
   ecto_repos: [TimeManager.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :time_manager, :phoenix_swagger,
+swagger_files: %{
+  "priv/static/swagger.json" => [
+    router: TimeManagerWeb.Router,
+    endpoint: TimeManagerWeb.Endpoint
+  ]
+}
+config :phoenix_swagger, json_library: Jason
+
+
 # Configures the endpoint
 config :time_manager, TimeManagerWeb.Endpoint,
   url: [host: "localhost"],

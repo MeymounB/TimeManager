@@ -9,7 +9,8 @@ defmodule TimeManager.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      compilers: Mix.compilers ++ [:phoenix_swagger]
     ]
   end
 
@@ -47,7 +48,9 @@ defmodule TimeManager.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:cors_plug, "~> 2.0"},
       {:faker, "~> 0.17"},
-      {:faker_elixir_octopus, "~> 1.0.2"}
+      {:faker_elixir_octopus, "~> 1.0.2"},
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.7"}
     ]
   end
 

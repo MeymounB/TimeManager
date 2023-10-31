@@ -6,6 +6,10 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   action_fallback TimeManagerWeb.FallbackController
 
+  def swagger_definitions do
+    TimeManagerWeb.SwaggerDefinitions.working_times_definitions()
+  end
+
   def index(conn, _params) do
     working_times = WorkingTimes.list_working_times()
     render(conn, :index, working_times: working_times)

@@ -6,6 +6,10 @@ defmodule TimeManagerWeb.ClockController do
 
   action_fallback TimeManagerWeb.FallbackController
 
+  def swagger_definitions do
+    TimeManagerWeb.SwaggerDefinitions.clocks_definitions()
+  end
+
   def get_user_clock(conn, %{"userID" => userID}) do
     clock = Clocks.get_user_clock(userID)
     render(conn, :show, clock: clock)
