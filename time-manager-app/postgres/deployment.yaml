@@ -23,3 +23,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: db-secret-credentials
+          volumeMounts:
+            - mountPath: '/var/lib/postgresql'
+              name: time-manager-db1
+      volumes:
+        - name: time-manager-db1
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+
