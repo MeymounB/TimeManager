@@ -18,7 +18,7 @@ spec:
         app: time-manager-front1
     spec:
       containers:
-      - image: jbrizard/time-manager-front:latest
+      - image: jbrizard/time-manager-front:main
         imagePullPolicy: Always
         name: time-manager-front
         env:

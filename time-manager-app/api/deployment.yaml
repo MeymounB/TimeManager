@@ -18,7 +18,7 @@ spec:
         app: time-manager-api1
     spec:
       containers:
-      - image: jbrizard/time-manager-api:latest
+      - image: jbrizard/time-manager-api:main
         imagePullPolicy: Always
         name: time-manager-api
         envFrom:
