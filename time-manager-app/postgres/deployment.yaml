@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-manager-db1
+  labels:
+    app: time-manager-db1
+  namespace: time-manager-api1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: time-manager-db1
+  template:
+    metadata:
+      labels:
+        app: time-manager-db1
+    spec:
+      containers:
+        - name: time-manager-db1
+          image: postgres
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: db-secret-credentials

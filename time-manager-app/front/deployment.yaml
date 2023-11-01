@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: time-manager-front1
+  name: time-manager-front1
+  namespace: time-manager-front1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: time-manager-front1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: time-manager-front1
+    spec:
+      containers:
+      - image: jbrizard/time-manager-front:latest
+        imagePullPolicy: Always
+        name: time-manager-front
+        env:
+          - name: NUXT_PUBLIC_BACK_URL
+            value: 'http://35.234.114.1:4000/api'
