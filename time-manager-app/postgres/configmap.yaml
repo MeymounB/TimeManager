@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-secret-credentials
+  labels:
+    app: time-manager-db1
+data:
+  POSTGRES_DB: 'time-manager-prod'
+  POSTGRES_USER: 'time-manager-admin'
+  POSTGRES_PASSWORD: 'root'

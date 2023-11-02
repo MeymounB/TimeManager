@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: time-manager-db1
+  labels:
+    app: time-manager-db1
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    app: time-manager-db1

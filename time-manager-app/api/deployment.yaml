@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: time-manager-api1
+  name: time-manager-api1
+  namespace: time-manager-api1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: time-manager-api1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: time-manager-api1
+    spec:
+      containers:
+      - image: jbrizard/time-manager-api:main
+        imagePullPolicy: Always
+        name: time-manager-api
+        envFrom:
+          - configMapRef:
+              name: api-db-credentials

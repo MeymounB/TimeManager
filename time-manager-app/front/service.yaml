@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: time-manager-front1
+  name: time-manager-front1
+  labels:
+    app: time-manager-front1
+spec:
+  type: LoadBalancer
+  selector:
+    app: time-manager-front1
+  ports:
+    - name: front1-port
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
