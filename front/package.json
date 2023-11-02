@@ -28,6 +28,7 @@
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.5.0",
     "@vueuse/nuxt": "^10.5.0",
+    "@nuxtjs/svg-sprite": "^1.0.2",
     "prettier": "^3.0.3",
     "sass": "^1.69.5"
   }
