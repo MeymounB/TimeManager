@@ -3,9 +3,9 @@ name: Build
 # Actions are set on main because these workflows cannot run on epitech repository so we avoid running them for nothing
 on:
   push:
-    branches: [ main ]
+    branches: [ _main ]
   pull_request:
-    branches: [ main ]
+    branches: [ _main ]
 
 
 jobs:
