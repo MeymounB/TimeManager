@@ -1,5 +1,6 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
+  use Pow.Phoenix.Router
   use Plug.ErrorHandler
   alias TimeManagerWeb.ErrorJSON, as: ErrorJSON
 

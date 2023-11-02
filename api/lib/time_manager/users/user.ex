@@ -1,22 +1,15 @@
 defmodule TimeManager.Users.User do
   use Ecto.Schema
-  import Ecto.Changeset
+  use Pow.Ecto.Schema
+
 
   schema "users" do
-    field :email, :string
-    field :username, :string
+    pow_user_fields()
+    field :firstname, :string
+    field :lastname, :string
     has_one :clock, TimeManager.Clocks.Clock
     has_many :working_times, TimeManager.WorkingTimes.WorkingTime
 
     timestamps(type: :utc_datetime)
-  end
-
-  @doc false
-  def changeset(user, attrs) do
-    user
-    |> cast(attrs, [:username, :email])
-    |> validate_required([:username, :email])
-    |> validate_format(:email, ~r/.+@.+\..+/, message: "must be in the format X@X.X")
-    |> unique_constraint(:email)
   end
 end
