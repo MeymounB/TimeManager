@@ -23,13 +23,13 @@ defmodule TimeManager.Users do
     query = from u in User
     conditions = true
 
-    # Treat username optional parameter
+    # Treat firstname optional parameter
     conditions =
-      case Map.get(params, "username") do
-        # If no username is provided, don't filter the users on it
+      case Map.get(params, "firstname") do
+        # If no firstname is provided, don't filter the users on it
         nil -> conditions
-        # Otherwise keep only users whose usernames are similar to the queried username
-        username -> dynamic([u], ilike(u.username, ^username))
+        # Otherwise keep only users whose firstnames are similar to the queried firstname
+        firstname -> dynamic([u], ilike(u.firstname, ^firstname))
       end
 
     # Treat email optional parameter

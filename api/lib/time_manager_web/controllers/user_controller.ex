@@ -7,6 +7,7 @@ defmodule TimeManagerWeb.UserController do
   alias Ecto.Changeset
   alias Plug.Conn
   alias TimeManager.Auth.UserRegistration
+  alias Powjwt.Auth.UserPassLogin
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -115,5 +116,22 @@ defmodule TimeManagerWeb.UserController do
         |> put_status(500)
         |> json(%{error: %{status: 500, message: "Couldn't create user", errors: errors}})
     end
+  end
+
+  @spec login(Conn.t(), UserPassLogin.t()) :: Conn.t()
+  def login(conn, user_pass_login) do
+    with {:ok, conn} <- conn |> Pow.Plug.authenticate_user(user_pass_login) do
+      json(conn, %{token: conn.private[:api_access_token]})
+    else
+      {:error, conn} ->
+        conn
+        |> put_status(401)
+        |> json(%{error: %{status: 401, message: "Invalid email or password"}})
+    end
+  end
+
+  def user_informations(conn, _params) do
+    json(conn, %{jwt: conn.private[:api_access_token], user_id: conn.private[:user_id]})
+    conn
   end
 end

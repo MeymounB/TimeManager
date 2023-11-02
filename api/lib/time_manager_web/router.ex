@@ -16,18 +16,23 @@ defmodule TimeManagerWeb.Router do
 
   pipeline :api_protected do
     plug Pow.Plug.RequireAuthenticated,
-    error_handler: Pow.Phoenix.PlugErrorHandler
+    error_handler: TimeManagerWeb.AuthErrorHandler
   end
 
   scope "/api", TimeManagerWeb do
     pipe_through :api
 
     # Public
-    post "/users/register", UserController, :register
+    scope "/users" do
+      post "/register", UserController, :register
+      post "/login", UserController, :login
+    end
 
     # Protected
     scope "/" do
       pipe_through :api_protected
+
+      get "/me", UserController, :user_informations
 
       resources "/users", UserController, except: [:new, :edit]
 
