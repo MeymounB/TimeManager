@@ -4,7 +4,7 @@ import { useSessionStore } from "@/stores/sessionStore";
 
 const { user } = storeToRefs(useSessionStore());
 
-const formValue = ref<IUserDTO>({
+const formValue = ref<Partial<IUserDTO>>({
   email: user.value?.email ?? "",
   username: user.value?.username ?? "",
 });
@@ -36,22 +36,11 @@ const updateUser = async () => {
   user.value = response.data;
 };
 
-const createUser = async () => {
-  const response = await createUserAPI(formValue.value);
-
-  if (!response.ok) {
-    return alert("L'utilisateur n'a pu être créé");
-  }
-
-  user.value = response.data;
-};
-
 const onSubmit = () => {
   if (!user.value) {
-    return createUser();
-  } else {
-    return updateUser();
+    return;
   }
+  return updateUser();
 };
 </script>
 
@@ -85,12 +74,7 @@ const onSubmit = () => {
         button-style="primary"
         :is-disabled="isFormValueEmpty"
       >
-        <template v-if="user">
-          <span class="text-white">Éditer</span>
-        </template>
-        <template v-else>
-          <span class="text-white">Créer</span>
-        </template>
+        <span class="text-white">Editer</span>
       </AppButton>
     </form>
   </section>

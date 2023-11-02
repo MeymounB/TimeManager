@@ -13,6 +13,10 @@ export interface IUser extends IUserShort {
 }
 
 export interface IUserDTO {
+  firstname: string,
+  lastname: string,
+  password: string
+  role?: string
   email: string;
-  username: string;
+  username?: string;
 }
