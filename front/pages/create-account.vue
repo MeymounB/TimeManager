@@ -14,14 +14,14 @@ definePageMeta({
         <div class="w-full">
           <label for="firstname" class="block text-sm font-medium leading-6">Prénom</label>
           <div>
-            <input id="firstname" name="firstname" type="text" capitalize="true" autocomplete="firstname" required class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6">
+            <input id="firstname" name="firstname" type="text" autocomplete="firstname" required class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6">
           </div>
         </div>
 
         <div class="w-full">
           <label for="lastname" class="block text-sm font-medium leading-6">Nom</label>
           <div>
-            <input id="lastname" name="lastname" type="text" capitalize="true" autocomplete="lastname" required class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6">
+            <input id="lastname" name="lastname" type="text" autocomplete="lastname" required class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6">
           </div>
         </div>
       </div>
