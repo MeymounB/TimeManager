@@ -5,12 +5,12 @@ definePageMeta({
 </script>
 
 <template>
-<section class="w-full h-full">
-  <div class="w-full text-center mt-5">
+<section class="w-full">
+  <div class="text-center mt-5">
     <h2 class="text-4xl h1 font-bold italic">TimeManager</h2>
-    <span class="text-sm italic">Connectez-vous à votre espace</span>
+    <span class="text-sm italic">Connectez vous à votre espace</span>
   </div>
-  <form class="mt-16 space-y-6 space p-5">
+  <form class="mt-15 space-y-6 space p-5">
     <div>
       <label for="email" class="block text-sm font-medium leading-6">Email</label>
       <div class="mt-2">
