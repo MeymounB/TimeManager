@@ -11,24 +11,38 @@ defmodule TimeManagerWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug TimeManager.Auth.AuthFlow, otp_app: :time_manager
+  end
+
+  pipeline :api_protected do
+    plug Pow.Plug.RequireAuthenticated,
+    error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
   scope "/api", TimeManagerWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit]
+    # Public
+    post "/users/register", UserController, :register
 
-    scope "/workingtimes" do
-      resources "/", WorkingTimeController, except: [:new, :show, :create, :edit]
-      get "/:userID", WorkingTimeController, :show_user_times
-      get "/:userID/:id", WorkingTimeController, :show_user_time
-      post "/:userID", WorkingTimeController, :create_user_time
-    end
+    # Protected
+    scope "/" do
+      pipe_through :api_protected
 
-    scope "/clocks" do
-      resources "/", ClockController, only: [:index, :delete]
-      get "/:userID", ClockController, :get_user_clock
-      post "/:userID", ClockController, :clock_user
+      resources "/users", UserController, except: [:new, :edit]
+
+      scope "/workingtimes" do
+        resources "/", WorkingTimeController, except: [:new, :show, :create, :edit]
+        get "/:userID", WorkingTimeController, :show_user_times
+        get "/:userID/:id", WorkingTimeController, :show_user_time
+        post "/:userID", WorkingTimeController, :create_user_time
+      end
+
+      scope "/clocks" do
+        resources "/", ClockController, only: [:index, :delete]
+        get "/:userID", ClockController, :get_user_clock
+        post "/:userID", ClockController, :clock_user
+      end
     end
   end
 

@@ -12,4 +12,11 @@ defmodule TimeManager.Users.User do
 
     timestamps(type: :utc_datetime)
   end
+
+  def changeset(user_or_changeset, attrs) do
+    user_or_changeset
+    |> pow_changeset(attrs)
+    |> Ecto.Changeset.cast(attrs, [:firstname, :lastname])
+    |> Ecto.Changeset.validate_required([:firstname, :lastname])
+  end
 end

@@ -4,6 +4,9 @@ defmodule TimeManagerWeb.UserController do
 
   alias TimeManager.Users
   alias TimeManager.Users.User
+  alias Ecto.Changeset
+  alias Plug.Conn
+  alias TimeManager.Auth.UserRegistration
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -89,6 +92,28 @@ defmodule TimeManagerWeb.UserController do
 
     with {:ok, %User{}} <- Users.delete_user(user) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def translate_error({msg, opts}) do
+    if count = opts[:count] do
+      Gettext.dngettext(TimeManagerWeb.Gettext, "errors", msg, msg, count, opts)
+    else
+      Gettext.dgettext(TimeManagerWeb.Gettext, "errors", msg, opts)
+    end
+  end
+
+
+  @spec register(Conn.t(), UserRegistration.t()) :: Conn.t()
+  def register(conn, user_registration_command) do
+    with {:ok, _user, conn} <- conn |> Pow.Plug.create_user(user_registration_command) do
+      json(conn, %{token: conn.private[:api_access_token]})
+    else
+      {:error, changeset, conn} ->
+        errors = Changeset.traverse_errors(changeset, &translate_error/1)
+        conn
+        |> put_status(500)
+        |> json(%{error: %{status: 500, message: "Couldn't create user", errors: errors}})
     end
   end
 end
