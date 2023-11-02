@@ -11,18 +11,18 @@ const { user } = storeToRefs(sessionStore);
     <div class="max-w-[90rem] mx-auto">
       <div class="w-100 py-3 px-8 flex items-center">
         <div>
-          <span class="font-bold text-xl">Time Manager PAR-5</span>
+          <NuxtLink to="/" class="font-bold text-xl">Time Manager PAR-5</NuxtLink>
         </div>
         <div class="ml-auto flex space-x-5 items-center">
           <nav class="text-md font-semibold">
             <ul class="flex decoration-0 space-x-8">
-              <li>
+              <li class="hover:underline">
                 <NuxtLink to="/">Home</NuxtLink>
               </li>
-              <li>
+              <li class="hover:underline">
                 <NuxtLink to="/">About</NuxtLink>
               </li>
-              <li>
+              <li class="hover:underline">
                 <NuxtLink to="/">Contact</NuxtLink>
               </li>
             </ul>
@@ -30,9 +30,16 @@ const { user } = storeToRefs(sessionStore);
           <div class="border-l border-gray-400 pr-5">
             <div class="ml-5">
               <template v-if="user">
-                <span>
-                  {{ user.email }}
-                </span>
+                <button type="button" class="min-h-fit">
+                  <span class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center inline mr-3 font-semibold">
+                    {{ user.username[0].toUpperCase() + user.username[1].toUpperCase()}}
+                  </span>
+                  <span class="">
+                    {{ user.email }}
+                  </span>
+                </button>
+<!--                todo: faire le dropdown -->
+
               </template>
               <template v-else>
                 <div class="space-x-3">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   type: 'submit' | 'button'
-  buttonStyle: 'primary' | 'secondary' | 'danger'
+  buttonStyle: 'primary' | 'secondary' | 'danger | none'
   isLoading?: boolean
   isDisabled?: boolean
 }>()
