@@ -38,7 +38,7 @@ jobs:
         with:
           images: ${{ matrix.image }}
           tags: |
-            type=schedule,pattern=latest
+            type=raw,value=latest
 
       - name: Build and push Docker Image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
