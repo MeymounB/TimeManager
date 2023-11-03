@@ -98,24 +98,78 @@ defmodule TimeManager.Seeds do
     user
   end
 
-  defp create_random_user do
-    name = Faker.Person.name()
+  defp create_user(attrs) do
     with {:ok, %User{} = user} <-
       %User{}
-      |> User.changeset(%{
-        email: FakerElixir.Internet.email(name),
-        firstname: FakerElixir.Internet.user_name(name),
-        lastname: name,
-        password: "123456789"
-      })
+      |> User.changeset(attrs)
       |> Repo.insert()
     do
       user
       |> create_user_working_times()
+    else
+      _err ->
+        IO.puts("Error #{inspect(_err)}\n")
+    end
+  end
+
+  defp create_random_user do
+    firstname = FakerElixir.Name.first_name()
+    lastname = FakerElixir.Name.last_name()
+    name = firstname <> " " <> lastname
+    create_user(%{
+      firstname: firstname,
+      lastname: lastname,
+      email: FakerElixir.Internet.email(name),
+      password: "123456789",
+      password_confirmation: "123456789",
+      role_id: 4
+    })
+  end
+
+  defp seed_roled_users do
+    # Admin -> Must document it and ask user to update the password
+    create_user(%{
+      firstname: "admin",
+      lastname: "admin",
+      email: "admin@timemanager.fr",
+      password: "password",
+      password_confirmation: "password",
+      role_id: TimeManager.Roles.get_role_by_name("Admin").id
+    })
+
+    if Mix.env() == :dev do
+      # General Manager
+      create_user(%{
+        firstname: "gmanager",
+        lastname: "gmanager",
+        email: "gmanager@timemanager.fr",
+        password: "password",
+        password_confirmation: "password",
+        role_id: TimeManager.Roles.get_role_by_name("General Manager").id
+      })
+      # Manager
+      create_user(%{
+        firstname: "manager",
+        lastname: "manager",
+        email: "manager@timemanager.fr",
+        password: "password",
+        password_confirmation: "password",
+        role_id: TimeManager.Roles.get_role_by_name("Manager").id
+      })
+      # Employee
+      create_user(%{
+        firstname: "employee",
+        lastname: "employee",
+        email: "employee@timemanager.fr",
+        password: "password",
+        password_confirmation: "password",
+        role_id: TimeManager.Roles.get_role_by_name("Employee").id
+      })
     end
   end
 
   defp seed_users do
+    seed_roled_users()
     Enum.map(1..20, fn _ -> create_random_user() end)
   end
 end

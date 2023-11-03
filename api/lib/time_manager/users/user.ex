@@ -20,7 +20,7 @@ defmodule TimeManager.Users.User do
   def changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> pow_changeset(attrs)
-    |> Ecto.Changeset.cast(attrs, [:firstname, :lastname, :role_id])
+    |> Ecto.Changeset.cast(attrs, [:firstname, :lastname, :role_id, :custom_permissions])
     |> default_role()
     |> Ecto.Changeset.validate_required([:firstname, :lastname, :role_id])
     |> TimeManager.Roles.Permissions.validate_permissions(:custom_permissions)
