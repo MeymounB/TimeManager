@@ -125,4 +125,15 @@ defmodule TimeManager.Users do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  def add_role_to_user(user, role_name) do
+    with {:ok, role} <- TimeManager.Roles.get_role_by_name(role_name) do
+      update_user(user, %{role_id: role.id})
+    end
+  end
+
+  def add_custom_permission_to_user(user, name, actions) do
+    custom_permissions = Map.put(user.custom_permissions, name, actions)
+    update_user(user, %{custom_permissions: custom_permissions})
+  end
 end

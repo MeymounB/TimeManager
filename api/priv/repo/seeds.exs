@@ -17,7 +17,16 @@ defmodule TimeManager.Seeds do
   alias TimeManager.Repo
 
   def seed_data do
+    seed_roles()
     seed_users()
+  end
+
+  defp seed_roles() do
+    for role <- TimeManager.Roles.DefaultRoles.all() do
+      unless TimeManager.Roles.get_role_by_name(role.name) do
+        {:ok, _role} = TimeManager.Roles.create_role(role)
+      end
+    end
   end
 
   defp random_bool() do
@@ -93,7 +102,12 @@ defmodule TimeManager.Seeds do
     name = Faker.Person.name()
     with {:ok, %User{} = user} <-
       %User{}
-      |> User.changeset(%{email: FakerElixir.Internet.email(name), username: FakerElixir.Internet.user_name(name)})
+      |> User.changeset(%{
+        email: FakerElixir.Internet.email(name),
+        firstname: FakerElixir.Internet.user_name(name),
+        lastname: name,
+        password: "123456789"
+      })
       |> Repo.insert()
     do
       user

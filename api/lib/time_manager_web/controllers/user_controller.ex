@@ -11,6 +11,15 @@ defmodule TimeManagerWeb.UserController do
 
   action_fallback TimeManagerWeb.FallbackController
 
+  plug(TimeManagerWeb.Plugs.CheckPermissions,
+    actions: [
+      user_informations: {"account", "read"},
+      index: {"users", "read"},
+      show: {"users", "read"},
+      delete: {"users", "delete"}
+    ]
+  )
+
   def swagger_definitions do
     TimeManagerWeb.SwaggerDefinitions.user_definitions()
   end
@@ -131,7 +140,10 @@ defmodule TimeManagerWeb.UserController do
   end
 
   def user_informations(conn, _params) do
-    json(conn, %{jwt: conn.private[:api_access_token], user_id: conn.private[:user_id]})
+    json(conn, %{
+      user_id: conn.private[:user_id],
+      role: TimeManagerWeb.Plugs.CheckPermissions.get_user(conn).role.name
+      })
     conn
   end
 end
