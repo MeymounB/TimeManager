@@ -56,14 +56,14 @@ defmodule TimeManagerWeb.AccountController do
 
   def show(conn, _params) do
     user = CheckPermissions.get_user!(conn)
-    render(conn, :show, user: user)
+    json(conn, TimeManagerWeb.UserJSON.show(%{user: user}))
   end
 
   def clock(conn, _params) do
     with {:ok, %TimeManager.Clocks.Clock{} = clock} <- TimeManager.Clocks.clock_user(CheckPermissions.get_user_id(conn)) do
       conn
       |> put_status(:created)
-      |> render(:show, clock: clock)
+      |> json(TimeManagerWeb.ClockJSON.show(%{clock: clock}))
     end
   end
 
@@ -71,7 +71,7 @@ defmodule TimeManagerWeb.AccountController do
     user = CheckPermissions.get_user!(conn)
 
     with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-      render(conn, :show, user: user)
+      json(conn, TimeManagerWeb.UserJSON.show(%{user: user}))
     end
   end
 
