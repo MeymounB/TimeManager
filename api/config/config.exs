@@ -24,7 +24,7 @@ config :phoenix_swagger, json_library: Jason
 # Configures the endpoint
 config :time_manager, TimeManagerWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "8ZxsxXy6roDD8KWSgF1J+WbwKDKx4WMgWHcxp2u7bvsOGTOsPqnHEVCxddEcuO6v",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
     formats: [json: TimeManagerWeb.ErrorJSON],
