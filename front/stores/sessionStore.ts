@@ -7,16 +7,17 @@ export const useSessionStore = defineStore("counter", () => {
     serializer: StorageSerializers.object,
   });
 
-  const accessToken = ref<null | string>(null);
+  const accessToken = useLocalStorage<null | string>("accessToken", null, {
+    serializer: StorageSerializers.string,
+  });
 
   async function reloadUser() {
     const response = await useGetMe()();
 
     if (!response.ok) {
-      user.value = null;
+      localLogout();
       return;
     }
-
     user.value = response.data;
   }
 
