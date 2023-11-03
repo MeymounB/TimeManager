@@ -8,19 +8,20 @@ import {
 } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import type { IUserDTO } from "~/utils/user";
+import { useSessionStore } from "~/stores/sessionStore";
 
 definePageMeta({
   layout: "auth",
 });
 
-const createUserAPI = useCreateUser();
+const sessionStore = useSessionStore();
 
-const formValue = reactive<IUserDTO & { confirmPassword: string }>({
+const formValue = reactive<IUserDTO>({
   firstname: "",
   lastname: "",
   email: "",
   password: "",
-  confirmPassword: "",
+  password_confirmation: "",
 });
 
 const rules = computed(() => {
@@ -45,7 +46,7 @@ const rules = computed(() => {
         minLength(6),
       ),
     },
-    confirmPassword: {
+    password_confirmation: {
       required: helpers.withMessage(
         "Vous devez confirmer votre mot de passe",
         required,
@@ -60,8 +61,7 @@ const rules = computed(() => {
 
 const vuelidate = useVuelidate(rules, formValue);
 
-const passwordConfirmation = ref("");
-const formErrors = ref([]);
+const formErrors = ref<{ message: string }[]>([]);
 const formErrorsExist = computed(() => {
   return formErrors.value.length > 0;
 });
@@ -85,7 +85,16 @@ const preventSubmit = computed(() => {
   }
 });
 
-const onSubmit = async () => {};
+const onSubmit = async () => {
+  formErrors.value.length = 0;
+  try {
+    await sessionStore.register(formValue);
+  } catch (err) {
+    formErrors.value.push({
+      message: "La creation de l'utilisateur est impossible",
+    });
+  }
+};
 </script>
 
 <template>
@@ -93,7 +102,7 @@ const onSubmit = async () => {};
     <div class="text-center">
       <h2 class="text-4xl h1 font-bold italic">Créer un compte</h2>
     </div>
-    <form class="mt-15 space-y-3 p-5">
+    <form class="mt-15 space-y-3 p-5" @submit.prevent="onSubmit">
       <div class="flex gap-5 flex-col md:flex-row">
         <div class="w-full">
           <label for="firstname" class="block text-sm font-medium leading-6">
@@ -191,29 +200,29 @@ const onSubmit = async () => {};
 
       <div>
         <label
-          for="confirmPassword"
+          for="password_confirmation"
           class="block text-sm font-medium leading-6"
         >
           Répétez le mot de passe
         </label>
         <div>
           <input
-            id="confirmPassword"
-            v-model="formValue.confirmPassword"
-            name="confirmPassword"
+            id="password_confirmation"
+            v-model="formValue.password_confirmation"
+            name="password_confirmation"
             type="password"
             required
-            :class="{ 'ring-red-500': isFieldError('confirmPassword') }"
+            :class="{ 'ring-red-500': isFieldError('password_confirmation') }"
             class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-            @change="vuelidate.confirmPassword.$touch"
+            @change="vuelidate.password_confirmation.$touch"
           />
         </div>
         <div class="min-h-[25px]">
           <span
-            v-if="isFieldError('confirmPassword')"
+            v-if="isFieldError('password_confirmation')"
             class="text-sm text-red-500"
           >
-            {{ fieldErrorMessage("confirmPassword").value }}
+            {{ fieldErrorMessage("password_confirmation").value }}
           </span>
         </div>
       </div>

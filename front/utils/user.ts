@@ -13,10 +13,14 @@ export interface IUser extends IUserShort {
 }
 
 export interface IUserDTO {
-  firstname: string,
-  lastname: string,
-  password: string
-  role?: string
+  firstname: string;
+  lastname: string;
+  password: string;
+  password_confirmation: string;
   email: string;
-  username?: string;
+}
+
+export interface IUserCredentialsDTO {
+  email: string;
+  password: string;
 }

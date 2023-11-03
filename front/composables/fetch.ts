@@ -5,9 +5,13 @@ export async function useFetchAPI<T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
   body?: any,
+  accessToken?: string | null,
 ): Promise<Ok<T> | Err> {
   const response = await fetch(url, {
-    headers: { "Content-type": "application/json" },
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
     method,
     body: JSON.stringify(body),
   });
