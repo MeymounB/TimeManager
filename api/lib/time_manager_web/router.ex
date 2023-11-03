@@ -23,18 +23,24 @@ defmodule TimeManagerWeb.Router do
     pipe_through :api
 
     # Public
-    scope "/users" do
-      post "/register", UserController, :register
-      post "/login", UserController, :login
+    scope "/account" do
+      post "/register", AccountController, :register
+      post "/login", AccountController, :login
     end
 
     # Protected
     scope "/" do
       pipe_through :api_protected
 
-      get "/me", UserController, :user_informations
+      scope "/account" do
+        get "/", AccountController, :show
+        post "/clock", AccountController, :clock
+        put "/", AccountController, :update
+        patch "/", AccountController, :update
+        delete "/", AccountController, :delete
+      end
 
-      resources "/users", UserController, except: [:new, :edit]
+      resources "/users", UserController, except: [:new, :edit, :create]
 
       scope "/workingtimes" do
         resources "/", WorkingTimeController, except: [:new, :show, :create, :edit]

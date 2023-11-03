@@ -43,7 +43,13 @@ defmodule TimeManager.Auth.AuthFlow do
   end
 
   @spec validate_token(binary()) :: {atom(), any()}
-  defp validate_token(jwt_token),
-    do: Token.verify_and_validate(jwt_token)
+  defp validate_token(jwt_token) do
+    with {:ok, claims} = validate_res <- Token.verify_and_validate(jwt_token) do
+      case TimeManager.Users.is_user_id_valid(claims["user_id"]) do
+        true -> validate_res
+        false -> nil
+      end
+    end
+  end
 
 end

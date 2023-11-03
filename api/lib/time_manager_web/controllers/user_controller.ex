@@ -4,19 +4,15 @@ defmodule TimeManagerWeb.UserController do
 
   alias TimeManager.Users
   alias TimeManager.Users.User
-  alias Ecto.Changeset
-  alias Plug.Conn
-  alias TimeManager.Auth.UserRegistration
-  alias Powjwt.Auth.UserPassLogin
 
   action_fallback TimeManagerWeb.FallbackController
 
   plug(TimeManagerWeb.Plugs.CheckPermissions,
     actions: [
-      user_informations: {"account", "read"},
-      index: {"users", "read"},
-      show: {"users", "read"},
-      delete: {"users", "delete"}
+      index: %{"user" => ["read"]},
+      show: %{"user" => ["read"]},
+      update: %{"user" => ["update"]},
+      delete: %{"user" => ["delete"]}
     ]
   )
 
@@ -33,23 +29,6 @@ defmodule TimeManagerWeb.UserController do
   def index(conn, params) do
     users = Users.list_users(params)
     render(conn, :index, users: users)
-  end
-
-  swagger_path(:create) do
-    summary("Create user")
-    description("Creates a new user")
-    parameter(:user, :body, Schema.ref(:UserRequest), "The user details")
-
-    response(201, "User created OK", Schema.ref(:UserResponse))
-    response(422, "Unprocessable entity", Schema.ref(:UnprocessableEntityResponse))
-  end
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Users.create_user(user_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/users/#{user}")
-      |> render(:show, user: user)
-    end
   end
 
   swagger_path(:show) do
@@ -105,45 +84,4 @@ defmodule TimeManagerWeb.UserController do
     end
   end
 
-  def translate_error({msg, opts}) do
-    if count = opts[:count] do
-      Gettext.dngettext(TimeManagerWeb.Gettext, "errors", msg, msg, count, opts)
-    else
-      Gettext.dgettext(TimeManagerWeb.Gettext, "errors", msg, opts)
-    end
-  end
-
-
-  @spec register(Conn.t(), UserRegistration.t()) :: Conn.t()
-  def register(conn, user_registration_command) do
-    with {:ok, _user, conn} <- conn |> Pow.Plug.create_user(user_registration_command) do
-      json(conn, %{token: conn.private[:api_access_token]})
-    else
-      {:error, changeset, conn} ->
-        errors = Changeset.traverse_errors(changeset, &translate_error/1)
-        conn
-        |> put_status(500)
-        |> json(%{error: %{status: 500, message: "Couldn't create user", errors: errors}})
-    end
-  end
-
-  @spec login(Conn.t(), UserPassLogin.t()) :: Conn.t()
-  def login(conn, user_pass_login) do
-    with {:ok, conn} <- conn |> Pow.Plug.authenticate_user(user_pass_login) do
-      json(conn, %{token: conn.private[:api_access_token]})
-    else
-      {:error, conn} ->
-        conn
-        |> put_status(401)
-        |> json(%{error: %{status: 401, message: "Invalid email or password"}})
-    end
-  end
-
-  def user_informations(conn, _params) do
-    json(conn, %{
-      user_id: conn.private[:user_id],
-      role: TimeManagerWeb.Plugs.CheckPermissions.get_user(conn).role.name
-      })
-    conn
-  end
 end

@@ -20,19 +20,6 @@ defmodule TimeManagerWeb.Plugs.CheckPermissions do
     end
   end
 
-  def get_user(conn) do
-    case conn.private[:user_id] do
-      nil -> nil
-      user_id -> TimeManager.Users.get_user!(user_id)
-                |> Repo.preload(:role)
-    end
-  end
-
-  def get_user!(conn) do
-    TimeManager.Users.get_user!(conn.private[:user_id])
-    |> Repo.preload(:role)
-  end
-
   defp get_required_permission(conn, opts) do
     action = action_name(conn)
 
@@ -43,4 +30,19 @@ defmodule TimeManagerWeb.Plugs.CheckPermissions do
       {:ok, acts} -> acts
     end
   end
+
+  def get_user(conn) do
+    case get_user_id(conn) do
+      nil -> nil
+      user_id -> TimeManager.Users.get_user!(user_id)
+                |> Repo.preload(:role)
+    end
+  end
+
+  def get_user!(conn) do
+    TimeManager.Users.get_user!(get_user_id(conn))
+    |> Repo.preload(:role)
+  end
+
+  def get_user_id(conn), do: conn.private[:user_id]
 end

@@ -136,4 +136,6 @@ defmodule TimeManager.Users do
     custom_permissions = Map.put(user.custom_permissions, name, actions)
     update_user(user, %{custom_permissions: custom_permissions})
   end
+
+  def is_user_id_valid(user_id), do: Repo.get(User, user_id) != nil
 end

@@ -6,7 +6,9 @@ defmodule TimeManager.Roles.Permissions do
       # Account mean connected user account
       "account" => ["read", "update", "delete", "clock"],
       "user" => ["create", "read", "update", "delete", "clock", "role"],
-      "team" => ["create", "read", "update", "delete", "clock"]
+      "team" => ["create", "read", "update", "delete", "clock"],
+      "clock" => ["read", "delete"],
+      "working_time" => ["create", "read", "update", "delete"],
     }
   end
 
@@ -21,19 +23,11 @@ defmodule TimeManager.Roles.Permissions do
     end)
   end
 
-  def has_permission?(permissions, {name, actions}) do
-    exists?(name, permissions) && actions_valid?(name, actions, permissions)
-  end
-
-  defp exists?(name, permissions), do: Map.has_key?(permissions, name)
-
-  defp actions_valid?(permission_name, given_action, permissions) when is_binary(given_action) do
-    actions_valid?(permission_name, [given_action], permissions)
-  end
-
-  defp actions_valid?(permission_name, given_actions, permissions) when is_list(given_actions) do
-    defined_actions = Map.get(permissions, permission_name)
-    Enum.all?(given_actions, &(&1 in defined_actions))
+  def has_permission?(permissions, required_perms) do
+    Map.merge(permissions, required_perms, fn(_key, perms1, perms2) ->
+      Enum.uniq(perms1 ++ perms2)
+    end)
+    |> Map.equal?(permissions)
   end
 
   def user_has_permission?(user, permission) do
