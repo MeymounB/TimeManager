@@ -14,22 +14,18 @@ export function useRegisterAccount() {
     return useFetchAPI<ITokens>(
       "POST",
       `${ACCOUNT_ENDPOINT}/register`,
-      {
-        newUser,
-      },
+      newUser,
       true,
     );
   };
 }
 
 export function useLoginAccount() {
-  return (newUser: IUserCredentialsDTO) => {
-    return useFetchAPI<ITokens>(
+  return async (creds: IUserCredentialsDTO) => {
+    return await useFetchAPI<ITokens>(
       "POST",
       `${ACCOUNT_ENDPOINT}/login`,
-      {
-        newUser,
-      },
+      creds,
       true,
     );
   };

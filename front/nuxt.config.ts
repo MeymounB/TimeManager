@@ -6,7 +6,12 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/devtools", "@vueuse/nuxt", "@pinia/nuxt", '@nuxtjs/svg-sprite'],
+  modules: [
+    "@nuxt/devtools",
+    "@vueuse/nuxt",
+    "@pinia/nuxt",
+    "@nuxtjs/svg-sprite",
+  ],
 
   devtools: { enabled: true },
   ssr: false,
