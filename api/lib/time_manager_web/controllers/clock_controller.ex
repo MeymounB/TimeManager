@@ -7,6 +7,15 @@ defmodule TimeManagerWeb.ClockController do
 
   action_fallback TimeManagerWeb.FallbackController
 
+  plug(TimeManagerWeb.Plugs.CheckPermissions,
+    actions: [
+      get_user_clock: %{"user" => ["read"]},
+      clock_user: %{"user" => ["clock"]},
+      index: %{"clock" => ["read"]},
+      delete: %{"clock" => ["delete"]}
+    ]
+  )
+
   def swagger_definitions do
     TimeManagerWeb.SwaggerDefinitions.clocks_definitions()
   end

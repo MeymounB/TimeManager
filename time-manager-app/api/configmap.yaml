@@ -11,4 +11,4 @@ data:
   POSTGRES_HOST: 'time-manager-db1.time-manager-api1.svc.cluster.local'
   POSTGRES_PORT: '5432'
   DATABASE_URL: 'postgresql://time-manager-admin:root@time-manager-db1.time-manager-api1.svc.cluster.local:5432/time-manager-prod'
-  SECRET_KEY_BASE: ''
+  SECRET_KEY_BASE: "8ZxsxXy6roDD8KWSgF1J+WbwKDKx4WMgWHcxp2u7bvsOGTOsPqnHEVCxddEcuO6v"

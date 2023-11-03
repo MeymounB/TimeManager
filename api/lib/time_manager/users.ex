@@ -23,13 +23,13 @@ defmodule TimeManager.Users do
     query = from u in User
     conditions = true
 
-    # Treat username optional parameter
+    # Treat firstname optional parameter
     conditions =
-      case Map.get(params, "username") do
-        # If no username is provided, don't filter the users on it
+      case Map.get(params, "firstname") do
+        # If no firstname is provided, don't filter the users on it
         nil -> conditions
-        # Otherwise keep only users whose usernames are similar to the queried username
-        username -> dynamic([u], ilike(u.username, ^username))
+        # Otherwise keep only users whose firstnames are similar to the queried firstname
+        firstname -> dynamic([u], ilike(u.firstname, ^firstname))
       end
 
     # Treat email optional parameter
@@ -125,4 +125,17 @@ defmodule TimeManager.Users do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  def add_role_to_user(user, role_name) do
+    with {:ok, role} <- TimeManager.Roles.get_role_by_name(role_name) do
+      update_user(user, %{role_id: role.id})
+    end
+  end
+
+  def add_custom_permission_to_user(user, name, actions) do
+    custom_permissions = Map.put(user.custom_permissions, name, actions)
+    update_user(user, %{custom_permissions: custom_permissions})
+  end
+
+  def is_user_id_valid(user_id), do: Repo.get(User, user_id) != nil
 end

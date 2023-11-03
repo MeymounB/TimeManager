@@ -24,6 +24,7 @@ config :phoenix_swagger, json_library: Jason
 # Configures the endpoint
 config :time_manager, TimeManagerWeb.Endpoint,
   url: [host: "localhost"],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
     formats: [json: TimeManagerWeb.ErrorJSON],
@@ -48,6 +49,10 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :time_manager, :pow,
+  user: TimeManager.Users.User,
+  repo: TimeManager.Repo
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

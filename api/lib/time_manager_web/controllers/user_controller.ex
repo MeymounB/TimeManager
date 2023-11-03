@@ -7,6 +7,16 @@ defmodule TimeManagerWeb.UserController do
 
   action_fallback TimeManagerWeb.FallbackController
 
+  plug(TimeManagerWeb.Plugs.CheckPermissions,
+    actions: [
+      index: %{"user" => ["read"]},
+      show: %{"user" => ["read"]},
+      update: %{"user" => ["update"]},
+      set_role: %{"user" => ["role"]},
+      delete: %{"user" => ["delete"]}
+    ]
+  )
+
   def swagger_definitions do
     TimeManagerWeb.SwaggerDefinitions.user_definitions()
   end
@@ -20,23 +30,6 @@ defmodule TimeManagerWeb.UserController do
   def index(conn, params) do
     users = Users.list_users(params)
     render(conn, :index, users: users)
-  end
-
-  swagger_path(:create) do
-    summary("Create user")
-    description("Creates a new user")
-    parameter(:user, :body, Schema.ref(:UserRequest), "The user details")
-
-    response(201, "User created OK", Schema.ref(:UserResponse))
-    response(422, "Unprocessable entity", Schema.ref(:UnprocessableEntityResponse))
-  end
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Users.create_user(user_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/users/#{user}")
-      |> render(:show, user: user)
-    end
   end
 
   swagger_path(:show) do
@@ -91,4 +84,13 @@ defmodule TimeManagerWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def set_role(conn, %{"userID" => user_id, "roleID" => role_id}) do
+    user = Users.get_user!(user_id)
+
+    with {:ok, %User{} = user} <- Users.update_user(user, %{"user" => %{"role_id" => role_id}}) do
+      render(conn, :show, user: user)
+    end
+  end
+
 end

@@ -6,6 +6,18 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   action_fallback TimeManagerWeb.FallbackController
 
+  plug(TimeManagerWeb.Plugs.CheckPermissions,
+    actions: [
+      show_user_time: %{"user" => ["read"]},
+      show_user_times: %{"user" => ["read"]},
+
+      create_user_time: %{"working_time" => ["create"]},
+      index: %{"working_time" => ["read"]},
+      update: %{"working_time" => ["update"]},
+      delete: %{"working_time" => ["delete"]}
+    ]
+  )
+
   def swagger_definitions do
     TimeManagerWeb.SwaggerDefinitions.working_times_definitions()
   end
@@ -31,11 +43,6 @@ defmodule TimeManagerWeb.WorkingTimeController do
       |> put_status(:created)
       |> render(:show, working_time: working_time)
     end
-  end
-
-  def show(conn, %{"id" => id}) do
-    working_time = WorkingTimes.get_working_time!(id)
-    render(conn, :show, working_time: working_time)
   end
 
   def update(conn, %{"id" => id, "working_time" => working_time_params}) do

@@ -50,7 +50,9 @@ defmodule TimeManager.MixProject do
       {:faker, "~> 0.17"},
       {:faker_elixir_octopus, "~> 1.0.2"},
       {:phoenix_swagger, "~> 0.8"},
-      {:ex_json_schema, "~> 0.7"}
+      {:ex_json_schema, "~> 0.7"},
+      {:joken, "~> 2.6"},
+      {:pow, "~> 1.0"}
     ]
   end
 
