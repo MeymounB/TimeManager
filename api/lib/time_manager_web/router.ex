@@ -40,7 +40,12 @@ defmodule TimeManagerWeb.Router do
         delete "/", AccountController, :delete
       end
 
-      resources "/users", UserController, except: [:new, :edit, :create]
+      resources "/roles", RoleController, only: [:index, :show]
+
+      scope "/users" do
+        resources "/", UserController, except: [:new, :edit, :create]
+        post "/:userID/role/:roleID", UserController, :set_role
+      end
 
       scope "/workingtimes" do
         resources "/", WorkingTimeController, except: [:new, :show, :create, :edit]

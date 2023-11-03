@@ -12,6 +12,7 @@ defmodule TimeManagerWeb.UserController do
       index: %{"user" => ["read"]},
       show: %{"user" => ["read"]},
       update: %{"user" => ["update"]},
+      set_role: %{"user" => ["role"]},
       delete: %{"user" => ["delete"]}
     ]
   )
@@ -81,6 +82,14 @@ defmodule TimeManagerWeb.UserController do
 
     with {:ok, %User{}} <- Users.delete_user(user) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def set_role(conn, %{"userID" => user_id, "roleID" => role_id}) do
+    user = Users.get_user!(user_id)
+
+    with {:ok, %User{} = user} <- Users.update_user(user, %{"user" => %{"role_id" => role_id}}) do
+      render(conn, :show, user: user)
     end
   end
 

@@ -11,6 +11,7 @@ defmodule TimeManager.Roles.DefaultRoles do
           "account" => ["read", "update", "delete", "clock"],
           "user" => ["read", "delete", "clock", "role"],
           "team" => ["create", "read", "update", "delete", "clock"],
+          "role" => ["read"]
         }
       },
       %{
@@ -19,12 +20,14 @@ defmodule TimeManager.Roles.DefaultRoles do
           "account" => ["read", "update", "delete", "clock"],
           "user" => ["read", "clock"],
           "team" => ["create", "read", "update", "delete", "clock"],
+          "role" => ["read"]
         }
       },
       %{
         name: "Employee",
         permissions: %{
           "account" => ["read", "update", "delete", "clock"],
+          "role" => ["read"]
         }
       }
     ]
