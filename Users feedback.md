@@ -1,3 +1,5 @@
+# Users feedback
+
 ## Rejected
 
 - Need to handle constraints schedules and display associated employees/managers/Accounting -> This means linking absolutely all data which may cause a security issue.
@@ -8,7 +10,7 @@
 - Sometimes employee don't have enough work to do to ensure they make 100% of their working times. We can't add work if there is none.
 - Overtime are not always paid or not equally between night/week-ends.
 - Schedules are planned too late and not always follows business needs.
-- Impression of hostile and incompetent management. 
+- Impression of hostile and incompetent management.
 - The company must define its own clock policy (when to clock in/out).
 - Unpaid working times may not be recorded/visible because these hours should be payed -> We are not doing this because it is illegal
 - Every employee must have an access to a computer/mobile phone to clock in/out
