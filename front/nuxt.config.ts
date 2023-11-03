@@ -34,7 +34,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      BACK_URL: "",
+      BACK_URL: "NUXT_PUBLIC_BACK_URL",
     },
   },
 });
