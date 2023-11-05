@@ -35,9 +35,12 @@ const { user } = storeToRefs(sessionStore);
                 </span>
               </template>
               <template v-else>
-                <AppButton button-style="primary" type="button">
-                  Se connecter
-                </AppButton>
+                <div class="space-x-3">
+                  <AppButton button-style="primary" type="button" @click="navigateTo('/login')">
+                    Se connecter
+                  </AppButton>
+                  <NuxtLink to="/create-account" class="text-sm underline">Créer un compte</NuxtLink>
+                </div>
               </template>
             </div>
           </div>

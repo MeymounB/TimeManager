@@ -11,7 +11,8 @@ import AppHeader from "~/components/AppHeader.vue";
   </section>
 </template>
 
-<style scoped lang="scss">
-.default-layout {
+<style lang="scss">
+html {
+  background: white;
 }
 </style>
