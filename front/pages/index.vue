@@ -41,6 +41,9 @@
         lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies
         lacus lorem varius purus. Curabitur eu amet.
       </p>
+      <ChartCustomStackedBarChart />
+      <ChartCustomMultiAxisLineChart />
+      <ChartCustomPieChart />
     </HomeWritableContent>
   </section>
 </template>
