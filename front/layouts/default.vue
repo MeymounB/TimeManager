@@ -1,11 +1,9 @@
-<script setup lang="ts">
-import AppHeader from "~/components/AppHeader.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <section class="default-layout">
+  <section class="default-layout w-full">
     <AppHeader />
-    <main class="w-100 h-100">
+    <main class="w-100 h-100 p-[32px]">
       <slot />
     </main>
   </section>

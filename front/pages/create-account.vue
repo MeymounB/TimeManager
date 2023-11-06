@@ -151,7 +151,6 @@ const onSubmit = async () => {
           </div>
         </div>
       </div>
-      <div></div>
       <div>
         <label for="email" class="block text-sm font-medium leading-6">
           Email

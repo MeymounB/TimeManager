@@ -115,7 +115,7 @@ const onSubmit = async () => {
       <AppButton
         type="submit"
         :button-style="'primary'"
-        class="flex items-center justify-center w-1/3 ml-auto"
+        class="flex items-center justify-center w-full md:w-1/3 ml-auto"
         :is-disabled="preventSubmit"
       >
         <svg-icon name="login" class="w-4 h-4 mr-3" /> Connexion
