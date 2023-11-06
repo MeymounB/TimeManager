@@ -56,71 +56,59 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <section class="w-full">
-    <div class="text-center">
-      <h2 class="text-4xl h1 font-bold italic">TimeManager</h2>
-      <span class="text-sm italic">Connectez vous à votre espace</span>
+  <section class="w-full h-full flex flex-col justify-center items-center p-4">
+    <div class="w-full max-w-md mx-auto text-center">
+      <h2 class="text-2xl md:text-4xl font-bold italic">TimeManager</h2>
+      <span class="text-xs md:text-sm italic">Connectez-vous à votre espace</span>
     </div>
-    <form class="mt-15 p-5" @submit.prevent="onSubmit">
+    <form class="w-full max-w-md mx-auto mt-4" @submit.prevent="onSubmit">
       <div>
-        <label for="email" class="block text-sm font-medium leading-6">
+        <label for="email" class="block text-sm font-medium">
           Email
         </label>
-        <div>
-          <input
-            id="email"
-            v-model="formValue.email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-            :class="{ 'ring-red-500': isFieldError('email') }"
-            class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-            @change="vuelidate.email.$touch"
-          />
-        </div>
-        <div class="min-h-[25px]">
-          <span v-if="isFieldError('email')" class="text-sm text-red-500">
-            {{ fieldErrorMessage("email").value }}
-          </span>
-        </div>
+        <input
+          id="email"
+          v-model="formValue.email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          :class="{ 'ring-red-500': isFieldError('email') }"
+          class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+          @change="vuelidate.email.$touch"
+        />
+        <span v-if="isFieldError('email')" class="text-xs text-red-500">
+          {{ fieldErrorMessage("email").value }}
+        </span>
       </div>
-
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm font-medium leading-6">
-            Mot de passe
-          </label>
-        </div>
-        <div>
-          <input
-            id="password"
-            v-model="formValue.password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-          />
-        </div>
+      <div class="mt-4">
+        <label for="password" class="block text-sm font-medium">
+          Mot de passe
+        </label>
+        <input
+          id="password"
+          v-model="formValue.password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+        />
       </div>
-
-      <div class="errors min-h-[32px] mt-10 text-red-500">
-        <template v-if="formError">
-          <span class="text-red-500">{{ formError }}</span>
-        </template>
-      </div>
-
+      <template v-if="formError" class="errors mt-4 text-xs text-red-500">
+        {{ formError }}
+      </template>
       <AppButton
         type="submit"
-        :button-style="'primary'"
-        class="flex items-center justify-center w-1/3 ml-auto"
+        button-style="primary"
+        class="mt-6 w-full flex items-center justify-center"
         :is-disabled="preventSubmit"
       >
-        <svg-icon name="login" class="w-4 h-4 mr-3" /> Connexion
+        <svg-icon name="login" class="w-4 h-4 mr-2" /> Connexion
       </AppButton>
     </form>
   </section>
 </template>
+
 
 <style scoped></style>
