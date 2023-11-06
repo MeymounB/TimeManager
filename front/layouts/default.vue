@@ -3,7 +3,7 @@
 <template>
   <section class="default-layout w-full">
     <AppHeader />
-    <main class="w-100 h-100 p-[32px]">
+    <main class="w-100 h-100">
       <slot />
     </main>
   </section>
