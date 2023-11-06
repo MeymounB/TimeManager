@@ -50,16 +50,22 @@ const firstnameEdit = ref(false);
 
 const toggleEmailEdit = () => {
   emailEdit.value = !emailEdit.value;
+  firstnameEdit.value = false;
+  lastnameEdit.value = false;
   formValue.email = user.value?.email;
 };
 
 const toggleLastnameEdit = () => {
   lastnameEdit.value = !lastnameEdit.value;
+  firstnameEdit.value = false;
+  emailEdit.value = false;
   formValue.lastname = user.value?.lastname;
 };
 
 const toggleFirstnameEdit = () => {
   firstnameEdit.value = !firstnameEdit.value;
+  emailEdit.value = false;
+  lastnameEdit.value = false;
   formValue.firstname = user.value?.firstname;
 };
 
