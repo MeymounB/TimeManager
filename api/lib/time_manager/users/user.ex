@@ -14,6 +14,15 @@ defmodule TimeManager.Users.User do
     has_one :clock, TimeManager.Clocks.Clock
     has_many :working_times, TimeManager.WorkingTimes.WorkingTime
 
+    many_to_many :teams,
+      TimeManager.Teams.Team,
+      join_through: TimeManager.Teams.TeamEmployees,
+      join_keys: [employee_id: :id, team_id: :id]
+    many_to_many :managed_teams,
+      TimeManager.Teams.Team,
+      join_through: TimeManager.Teams.TeamManagers,
+      join_keys: [manager_id: :id, team_id: :id]
+
     timestamps(type: :utc_datetime)
   end
 

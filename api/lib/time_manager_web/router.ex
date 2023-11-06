@@ -47,6 +47,10 @@ defmodule TimeManagerWeb.Router do
         post "/:userID/role/:roleID", UserController, :set_role
       end
 
+      scope "/teams" do
+        resources "/", TeamController, except: [:new, :edit]
+      end
+
       scope "/workingtimes" do
         resources "/", WorkingTimeController, except: [:new, :show, :create, :edit]
         get "/:userID", WorkingTimeController, :show_user_times
