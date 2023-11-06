@@ -3,6 +3,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   alias TimeManager.WorkingTimes
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManagerWeb.Plugs.CheckPermissions
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -29,11 +30,15 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   def show_user_times(conn, params) do
     working_times = WorkingTimes.get_user_working_times!(params)
+    CheckPermissions.assert_user_permissions(conn, Map.get(params, "userID"))
+
     render(conn, :index, working_times: working_times)
   end
 
   def show_user_time(conn, %{"userID" => userID, "id" => id}) do
     working_time = WorkingTimes.get_user_working_time!(userID, id)
+    CheckPermissions.assert_user_permissions(conn, userID)
+
     render(conn, :show, working_time: working_time)
   end
 

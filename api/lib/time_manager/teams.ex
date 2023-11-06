@@ -7,6 +7,8 @@ defmodule TimeManager.Teams do
   alias TimeManager.Repo
 
   alias TimeManager.Teams.Team
+  alias TimeManager.Teams.TeamEmployees
+  alias TimeManager.Teams.TeamManagers
 
   @doc """
   Returns the list of teams.
@@ -100,5 +102,41 @@ defmodule TimeManager.Teams do
   """
   def change_team(%Team{} = team, attrs \\ %{}) do
     Team.changeset(team, attrs)
+  end
+
+  def get_employee_relation(team_id, employee_id) do
+    Repo.one(from te in TeamEmployees, where: te.team_id == ^team_id and te.employee_id == ^employee_id)
+  end
+
+  def has_employee(team_id, employee_id), do: get_employee_relation(team_id, employee_id) != nil
+
+  def get_manager_relation(team_id, manager_id) do
+    Repo.one(from te in TeamManagers, where: te.team_id == ^team_id and te.manager_id == ^manager_id)
+  end
+
+  def has_manager(team_id, manager_id), do: get_manager_relation(team_id, manager_id) != nil
+
+  def add_employee(team_id, employee_id) do
+    %TeamEmployees{}
+    |> TeamEmployees.changeset(%{team_id: team_id, employee_id: employee_id})
+    |> Repo.insert()
+  end
+
+  def add_manager(team_id, manager_id) do
+    %TeamManagers{}
+    |> TeamManagers.changeset(%{team_id: team_id, manager_id: manager_id})
+    |> Repo.insert()
+  end
+
+  def remove_employee(team_id, employee_id) do
+    with %TeamEmployees{} = relation <- get_employee_relation(team_id, employee_id) do
+      Repo.delete(relation)
+    end
+  end
+
+  def remove_manager(team_id, manager_id) do
+    with %TeamManagers{} = relation <- get_manager_relation(team_id, manager_id) do
+      Repo.delete(relation)
+    end
   end
 end

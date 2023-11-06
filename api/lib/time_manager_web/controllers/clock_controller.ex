@@ -4,10 +4,11 @@ defmodule TimeManagerWeb.ClockController do
 
   alias TimeManager.Clocks
   alias TimeManager.Clocks.Clock
+  alias TimeManagerWeb.Plugs.CheckPermissions
 
   action_fallback TimeManagerWeb.FallbackController
 
-  plug(TimeManagerWeb.Plugs.CheckPermissions,
+  plug(CheckPermissions,
     actions: [
       get_user_clock: %{"user" => ["read"]},
       clock_user: %{"user" => ["clock"]},
@@ -32,6 +33,8 @@ defmodule TimeManagerWeb.ClockController do
   end
   def get_user_clock(conn, %{"userID" => userID}) do
     clock = Clocks.get_user_clock(userID)
+    CheckPermissions.assert_user_permissions(conn, userID)
+
     render(conn, :show, clock: clock)
   end
 
@@ -48,6 +51,8 @@ defmodule TimeManagerWeb.ClockController do
     response(422, "Unprocessable entity", Schema.ref(:UnprocessableEntityResponse))
   end
   def clock_user(conn, %{"userID" => userID}) do
+    CheckPermissions.assert_user_permissions(conn, userID)
+
     with {:ok, %Clock{} = clock} <- Clocks.clock_user(userID) do
       conn
       |> put_status(:created)
