@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { WorkingTimes } from "#components";
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const workingTimes = ref<InstanceType<typeof WorkingTimes> | null>(null);
 const updateWorkingTimes = () => {
   workingTimes.value?.updateWorkingTimes();

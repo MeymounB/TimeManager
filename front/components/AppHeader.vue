@@ -25,20 +25,53 @@ const { user } = storeToRefs(sessionStore);
           <div class="border-l border-gray-400 pr-5">
             <div class="ml-5">
               <template v-if="user">
-                <button type="button" class="min-h-fit">
-                  <span
-                    class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center inline mr-3 font-semibold"
-                  >
-                    {{
-                      user.firstname[0].toUpperCase() +
-                      user.lastname[0].toUpperCase()
-                    }}
-                  </span>
-                  <span class="">
-                    {{ user.email }}
-                  </span>
-                </button>
-                <!--                todo: faire le dropdown -->
+                <div class="relative">
+                  <AppDropdown button-style="tertiary">
+                    <template #dropdown-toggle>
+                      <span
+                        class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center flex font-semibold"
+                      >
+                        {{
+                          user.firstname[0].toUpperCase() +
+                          user.lastname[0].toUpperCase()
+                        }}
+                      </span>
+                      <span>
+                        {{ user.email }}
+                      </span>
+                    </template>
+                    <template #dropdown-content>
+                      <nav>
+                        <ul class="space-y-2">
+                          <li>
+                            <NuxtLink
+                              to="/session/profile"
+                              class="w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
+                            >
+                              <svg-icon
+                                name="profile"
+                                class="w-5 h-5 inline mr-2"
+                              />
+                              Profil
+                            </NuxtLink>
+                          </li>
+                          <AppButton
+                            button-style="danger"
+                            class="w-full flex items-center justify-center"
+                            type="button"
+                            @click="sessionStore.localLogout()"
+                          >
+                            <svg-icon
+                              name="disconnect"
+                              class="w-4 h-4 mr-2 inline"
+                            ></svg-icon>
+                            Déconnexion
+                          </AppButton>
+                        </ul>
+                      </nav>
+                    </template>
+                  </AppDropdown>
+                </div>
               </template>
               <template v-else>
                 <div class="space-x-3">

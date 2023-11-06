@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+  middleware: ["guest"],
+});
+</script>
 
 <template>
   <section class="w-100">

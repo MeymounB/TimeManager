@@ -7,6 +7,7 @@ const sessionStore = useSessionStore();
 
 definePageMeta({
   layout: "auth",
+  middleware: ["guest"],
 });
 
 const formValue = reactive<IUserCredentialsDTO>({

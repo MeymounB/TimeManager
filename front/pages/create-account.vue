@@ -12,6 +12,7 @@ import { useSessionStore } from "~/stores/sessionStore";
 
 definePageMeta({
   layout: "auth",
+  middleware: ["guest"],
 });
 
 const sessionStore = useSessionStore();
