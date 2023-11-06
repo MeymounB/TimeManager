@@ -8,7 +8,7 @@ data:
   POSTGRES_DB: 'time-manager-prod'
   POSTGRES_USER: 'time-manager-admin'
   POSTGRES_PASSWORD: 'root'
-  POSTGRES_HOST: 'time-manager-db1.time-manager-api1.svc.cluster.local'
+  POSTGRES_HOST: 'postgres.time-manager-api1.svc.cluster.local'
   POSTGRES_PORT: '5432'
-  DATABASE_URL: 'postgresql://time-manager-admin:root@time-manager-db1.time-manager-api1.svc.cluster.local:5432/time-manager-prod'
+  DATABASE_URL: 'postgresql://time-manager-admin:root@postgres.time-manager-api1.svc.cluster.local:5432/time-manager-prod'
   SECRET_KEY_BASE: "8ZxsxXy6roDD8KWSgF1J+WbwKDKx4WMgWHcxp2u7bvsOGTOsPqnHEVCxddEcuO6v"
