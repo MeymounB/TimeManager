@@ -11,6 +11,8 @@ export const useSessionStore = defineStore("counter", () => {
     serializer: StorageSerializers.string,
   });
 
+  const isLoggedIn = computed(() => user.value != null);
+
   async function reloadUser() {
     const response = await useGetMe()();
 
@@ -29,7 +31,8 @@ export const useSessionStore = defineStore("counter", () => {
     }
 
     accessToken.value = response.data.access_token;
-    return await reloadUser();
+    await reloadUser();
+    navigateTo("/session/dashboard");
   }
 
   async function register(newMe: IUserDTO) {
@@ -44,7 +47,8 @@ export const useSessionStore = defineStore("counter", () => {
     }
 
     accessToken.value = response.data.access_token;
-    return await reloadUser();
+    await reloadUser();
+    navigateTo("/session/dashboard");
   }
 
   function localLogout() {
@@ -61,5 +65,5 @@ export const useSessionStore = defineStore("counter", () => {
     reloadUser().catch((err) => console.error(err));
   }, 0);
 
-  return { user, accessToken, localLogout, login, register };
+  return { user, accessToken, localLogout, login, register, isLoggedIn };
 });
