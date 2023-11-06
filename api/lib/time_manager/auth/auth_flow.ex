@@ -4,18 +4,19 @@ defmodule TimeManager.Auth.AuthFlow do
   require Logger
 
   alias Plug.Conn
-  alias TimeManager.Auth.Token
+  alias TimeManager.Auth.AccessToken
+  alias TimeManager.Auth.RefreshToken
 
   @impl true
   def fetch(conn, _config) do
-    with {:ok, jwt_token} <- read_token(conn),
-         {:ok, claims} <- validate_token(jwt_token) do
+    with {:ok, access_token} <- read_token(conn),
+         {:ok, claims} <- validate_access_token(access_token) do
       conn =
         conn
-        |> Conn.put_private(:api_access_token, jwt_token)
+        |> Conn.put_private(:api_access_token, access_token)
         |> Conn.put_private(:user_id, claims["user_id"])
 
-      {conn, %{"token" => jwt_token}}
+      {conn, %{"token" => access_token}}
     else
       _any -> {conn, nil}
     end
@@ -23,15 +24,41 @@ defmodule TimeManager.Auth.AuthFlow do
 
   @impl true
   def create(conn, user, _config) do
-    claims = %{"user_id" => user.id}
-    generated_token = Token.generate_and_sign!(claims)
-    conn = conn |> Conn.put_private(:api_access_token, generated_token)
+    refresh_token = generate_refresh_token(user)
+    access_token = generate_access_token(user.id)
+    conn = conn
+    |> Conn.put_private(:api_access_token, access_token)
+    |> Conn.put_private(:api_refresh_token, refresh_token)
     {conn, user}
   end
 
   @impl true
   def delete(conn, _config) do
     conn
+  end
+
+  def refresh(conn, refresh_token) do
+    with {:ok, claims} <- validate_refresh_token(refresh_token) do
+      access_token = generate_access_token(claims["user_id"])
+      conn =
+        conn
+        |> Conn.put_private(:api_access_token, access_token)
+        |> Conn.put_private(:user_id, claims["user_id"])
+
+      {:ok, conn, %{"access_token" => access_token}}
+    else
+      _any -> {:error, conn}
+    end
+  end
+
+  defp generate_access_token(user_id) do
+    AccessToken.generate_and_sign!(%{"user_id" => user_id})
+  end
+
+  def generate_refresh_token(user) do
+    refresh_token = RefreshToken.generate_and_sign!(%{"user_id" => user.id})
+    TimeManager.Users.set_refresh_token(user, refresh_token)
+    refresh_token
   end
 
   @spec read_token(Conn.t()) :: {atom(), any()}
@@ -42,12 +69,27 @@ defmodule TimeManager.Auth.AuthFlow do
     end
   end
 
-  @spec validate_token(binary()) :: {atom(), any()}
-  defp validate_token(jwt_token) do
-    with {:ok, claims} = validate_res <- Token.verify_and_validate(jwt_token) do
+  @spec validate_access_token(binary()) :: {atom(), any()}
+  defp validate_access_token(access_token) do
+    with {:ok, claims} = validate_res <- AccessToken.verify_and_validate(access_token) do
       case TimeManager.Users.is_user_id_valid(claims["user_id"]) do
         true -> validate_res
         false -> nil
+      end
+    end
+  end
+
+  @spec validate_refresh_token(binary()) :: {atom(), any()}
+  defp validate_refresh_token(refresh_token) do
+    with {:ok, claims} = validate_res <- RefreshToken.verify_and_validate(refresh_token) do
+      case TimeManager.Users.get_user(claims["user_id"]) do
+        %TimeManager.Users.User{} = user ->
+          if user.refresh_token == refresh_token do
+            validate_res
+          else
+            nil
+          end
+        nil -> nil
       end
     end
   end

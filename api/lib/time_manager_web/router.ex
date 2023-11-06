@@ -26,6 +26,7 @@ defmodule TimeManagerWeb.Router do
     scope "/account" do
       post "/register", AccountController, :register
       post "/login", AccountController, :login
+      post "/refresh", AccountController, :refresh
     end
 
     # Protected
@@ -38,6 +39,7 @@ defmodule TimeManagerWeb.Router do
         put "/", AccountController, :update
         patch "/", AccountController, :update
         delete "/", AccountController, :delete
+        post "/logout", AccountController, :logout
       end
 
       resources "/roles", RoleController, only: [:index, :show]

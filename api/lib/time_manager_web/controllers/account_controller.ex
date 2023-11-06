@@ -32,7 +32,10 @@ defmodule TimeManagerWeb.AccountController do
   @spec register(Conn.t(), UserRegistration.t()) :: Conn.t()
   def register(conn, user_registration_command) do
     with {:ok, _user, conn} <- conn |> Pow.Plug.create_user(user_registration_command) do
-      json(conn, %{access_token: conn.private[:api_access_token]})
+      json(conn, %{
+        access_token: conn.private[:api_access_token],
+        refresh_token: conn.private[:api_refresh_token]
+      })
     else
       {:error, changeset, conn} ->
         errors = Changeset.traverse_errors(changeset, &translate_error/1)
@@ -45,13 +48,34 @@ defmodule TimeManagerWeb.AccountController do
   @spec login(Conn.t(), UserPassLogin.t()) :: Conn.t()
   def login(conn, user_pass_login) do
     with {:ok, conn} <- conn |> Pow.Plug.authenticate_user(user_pass_login) do
-      json(conn, %{access_token: conn.private[:api_access_token]})
+      json(conn, %{
+        access_token: conn.private[:api_access_token],
+        refresh_token: conn.private[:api_refresh_token]
+      })
     else
       {:error, conn} ->
         conn
         |> put_status(401)
         |> json(%{error: %{status: 401, message: "Invalid email or password"}})
     end
+  end
+
+  def refresh(conn, %{"refresh_token" => refresh_token}) do
+    with {:ok, conn, response} <- TimeManager.Auth.AuthFlow.refresh(conn, refresh_token) do
+      json(conn, response)
+    else
+      {:error, conn} ->
+        conn
+        |> put_status(401)
+        |> json(%{error: "Invalid refresh token"})
+    end
+  end
+
+  def logout(conn, _params) do
+    user = CheckPermissions.get_user!(conn)
+    Users.invalidate_user_refresh_token(user)
+
+    send_resp(conn, :no_content, "")
   end
 
   def show(conn, _params) do
