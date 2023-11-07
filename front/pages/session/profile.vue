@@ -227,7 +227,40 @@ const onSubmit = async () => {};
             </span>
           </div>
         </div>
-      </form>
+      <div class="grid grid-cols-2 divide-x gap-5">
+        <div class="p-3">
+          <span class="block font-medium">Mes équipes</span>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-5"
+          >
+            <div
+              v-for="team in user.teams"
+              :key="team.id"
+              class="flex items-center gap-3 border border-gray-700 rounded max-w-[200px] px-4 py-2"
+            >
+              <svg-icon name="chevron-down" class="w-4 h-4" />
+              <span class="font-medium text-center">{{ team.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3">
+          <span class="block font-medium">Équipes gérées</span>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-5"
+          >
+            <div
+              v-for="team in user.managed_teams"
+              :key="team.id"
+              class="flex items-center gap-3 border border-gray-700 rounded max-w-[150px] px-4 py-2"
+            >
+              <svg-icon name="chevron-down" class="w-4 h-4" />
+              <span class="font-medium text-center">{{ team.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   </section>
 </template>
 
