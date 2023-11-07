@@ -233,11 +233,50 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
             end: "2023-02-04 16:28:42",
           })
         end,
+        UserWorkingTimeRequest: swagger_schema do
+          title("UserWorkingTimeRequest")
+          description("Request body when creating a user working time")
+
+          properties do
+            start(:string, "Working time start time", format: :utc_datetime)
+            end_(:string, "Workinng time end time", format: :utc_datetime)
+          end
+
+          example(%{
+            working_time: %{
+              start: "2023-02-04 11:24:45",
+              end: "2023-02-04 16:28:42",
+            }
+          })
+        end,
+        WorkingTimeRequest: swagger_schema do
+          title("WorkingTimeRequest")
+          description("Request body when creating a user working time")
+
+          properties do
+            user_id(:integer, "Associated user id")
+            start(:string, "Working time start time", format: :utc_datetime)
+            end_(:string, "Workinng time end time", format: :utc_datetime)
+          end
+
+          example(%{
+            working_time: %{
+              user_id: 1,
+              start: "2023-02-04 11:24:45",
+              end: "2023-02-04 16:28:42",
+            }
+          })
+        end,
+        WorkingTimeResponse: swagger_schema do
+          title("WorkingTimeResponse")
+          description("Response schema for single working time")
+          property(:data, Schema.ref(:WorkingTime), "The working time details")
+        end,
         WorkingTimesResponse:
         swagger_schema do
           title("WorkingTimesResponse")
           description("Response schema for multiple working times")
-          property(:data, Schema.array(:Clock), "The working times list")
+          property(:data, Schema.array(:WorkingTime), "The working times list")
         end
     }
   end
@@ -326,6 +365,17 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
           name: "Employee",
           users: []
         })
+      end,
+      RoleResponse: swagger_schema do
+        title("RoleResponse")
+        description("Response schema for single role")
+        property(:data, Schema.ref(:Role), "The role details")
+      end,
+      RolesResponse:
+      swagger_schema do
+        title("RolesResponse")
+        description("Response schema for multiple roles")
+        property(:data, Schema.array(:Role), "The roles list")
       end
   }
   end
