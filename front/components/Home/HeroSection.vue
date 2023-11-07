@@ -23,13 +23,13 @@ function navigateToLogin() {
       </p>
       <div class="mt-6 flex flex-col sm:flex-row justify-center items-center">
         <button
-          class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 mb-2 sm:mb-0 sm:mr-2"
+          class="text-white font-bold py-2 px-4 rounded transition duration-300 mb-2 sm:mb-0 sm:mr-2 btn-primary"
           @click="navigateToSignup()"
         >
           Inscrivez-vous maintenant
         </button>
         <button
-          class="bg-transparent text-blue-600 font-semibold py-2 px-4 border border-blue-600 rounded hover:border-blue-800 transition duration-300 mt-2 sm:mt-0"
+          class="bg-transparent font-semibold py-2 px-4 border rounded transition duration-300 mt-2 sm:mt-0 btn-secondary"
           @click="navigateToLogin()"
         >
           Connectez-vous
