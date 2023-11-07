@@ -84,9 +84,11 @@ defmodule TimeManagerWeb.AccountController do
   end
 
   def clock(conn, _params) do
-    with {:ok, %TimeManager.Clocks.Clock{} = clock} <- TimeManager.Clocks.clock_user(CheckPermissions.get_user_id(conn)) do
-      conn
-      |> put_status(:created)
+    with {status, {:ok, %TimeManager.Clocks.Clock{} = clock}} <- TimeManager.Clocks.clock_user(CheckPermissions.get_user_id(conn)) do
+      case status do
+        :created -> put_status(conn, :created)
+        _ -> put_status(conn, 200)
+      end
       |> json(TimeManagerWeb.ClockJSON.show(%{clock: clock}))
     end
   end

@@ -53,9 +53,11 @@ defmodule TimeManagerWeb.ClockController do
   def clock_user(conn, %{"userID" => userID}) do
     CheckPermissions.assert_user_permissions(conn, userID)
 
-    with {:ok, %Clock{} = clock} <- Clocks.clock_user(userID) do
-      conn
-      |> put_status(:created)
+    with {status, {:ok, %Clock{} = clock}} <- Clocks.clock_user(userID) do
+      case status do
+        :created -> put_status(conn, :created)
+        _ -> put_status(conn, 200)
+      end
       |> render(:show, clock: clock)
     end
   end

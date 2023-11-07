@@ -29,9 +29,7 @@ defmodule TimeManagerWeb.TeamController do
     conn
     |> json(Enum.map(team.employees, fn employee ->
       with {:ok, %TimeManager.Clocks.Clock{} = clock} <- TimeManager.Clocks.clock_user(employee) do
-        conn
-        |> put_status(:created)
-        |> json(TimeManagerWeb.ClockJSON.show(%{clock: clock}))
+        TimeManagerWeb.ClockJSON.show(%{clock: clock})
       end
     end))
   end
