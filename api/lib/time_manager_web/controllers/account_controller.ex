@@ -40,8 +40,8 @@ defmodule TimeManagerWeb.AccountController do
       {:error, changeset, conn} ->
         errors = Changeset.traverse_errors(changeset, &translate_error/1)
         conn
-        |> put_status(500)
-        |> json(%{error: %{status: 500, message: "Couldn't create user", errors: errors}})
+        |> put_status(422)
+        |> json(%{error: %{message: "Couldn't create user", errors: errors}})
     end
   end
 
