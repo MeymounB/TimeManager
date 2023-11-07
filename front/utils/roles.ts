@@ -13,10 +13,16 @@ export enum Rights {
   CLOCK = "clock",
 }
 
-export type Roles = {
-  role: Rights[];
-  team: Rights[];
-  account: Rights[];
-  user: Rights[];
-  clock: Rights[];
-};
+export interface IPermission {
+  role?: Rights[];
+  team?: Rights[];
+  account?: Rights[];
+  user?: Rights[];
+  clock?: Rights[];
+}
+
+export interface Role {
+  id: number;
+  name: string;
+  permissions: Permissions;
+}
