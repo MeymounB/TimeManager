@@ -1,9 +1,19 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useSessionStore } from "~/stores/sessionStore";
+import { isUserAdmin, isUserManager } from "~/composables/user";
+import type { IUser } from "~/utils/user";
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
+
+const userAdmin = computed(() => {
+  return isUserAdmin(user.value as IUser);
+});
+
+const userManager = computed(() => {
+  return isUserManager(user.value as IUser);
+});
 </script>
 
 <template>
@@ -12,46 +22,58 @@ const { user } = storeToRefs(session);
       class="flex flex-col items-center lg:flex-row decoration-0 lg:space-x-8 space-y-10 lg:space-y-0"
     >
       <li class="text-2xl lg:text-base">
-        <NuxtLink to="/session/dashboard" class="link p-2">Dashboard</NuxtLink>
+        <NuxtLink to="/session/dashboard" class="link p-2"
+          >Tableau de bord</NuxtLink
+        >
       </li>
-      <li class="text-2xl lg:text-base">
+      <li v-if="userAdmin" class="text-2xl lg:text-base">
+        <NuxtLink to="/session/teams" class="link p-2">Équipes</NuxtLink>
+      </li>
+      <li v-if="userAdmin" class="text-2xl lg:text-base">
         <NuxtLink to="/session/users" class="link p-2">Utilisateurs</NuxtLink>
       </li>
       <li class="text-2xl lg:text-base">
-        <AppDropdown>
-          <template #dropdown-toggle>
-            <span>Temps de travail</span>
-          </template>
-          <template #dropdown-content>
-            <nav class="w-52">
-              <ul class="space-y-2 w-full">
-                <li>
-                  <NuxtLink
-                    class="link w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
-                    to="/session/workingtimes/me"
-                  >
-                    Mes sessions
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink
-                    class="link w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
-                    to="/session/workingtimes/teams"
-                    >Sessions par équipes
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink
-                    class="link w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
-                    to="/session/workingtimes"
-                  >
-                    Toutes les sessions
-                  </NuxtLink>
-                </li>
-              </ul>
-            </nav>
-          </template>
-        </AppDropdown>
+        <template v-if="!userManager">
+          <NuxtLink class="link p-2" to="/session/workingtimes/me">
+            Temps de travail
+          </NuxtLink>
+        </template>
+        <template v-else>
+          <AppDropdown>
+            <template #dropdown-toggle>
+              <span>Temps de travail</span>
+            </template>
+            <template #dropdown-content>
+              <nav class="w-52">
+                <ul class="space-y-2 w-full">
+                  <li>
+                    <NuxtLink
+                      class="link w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
+                      to="/session/workingtimes/me"
+                    >
+                      Mes sessions
+                    </NuxtLink>
+                  </li>
+                  <li v-if="userManager">
+                    <NuxtLink
+                      class="link w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
+                      to="/session/workingtimes/teams"
+                      >Sessions par équipes
+                    </NuxtLink>
+                  </li>
+                  <li v-if="userAdmin">
+                    <NuxtLink
+                      class="link w-full flex items-center px-4 py-2 rounded hover:bg-gray-200"
+                      to="/session/workingtimes"
+                    >
+                      Toutes les sessions
+                    </NuxtLink>
+                  </li>
+                </ul>
+              </nav>
+            </template>
+          </AppDropdown>
+        </template>
       </li>
     </ul>
   </nav>
