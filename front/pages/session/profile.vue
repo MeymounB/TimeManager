@@ -4,6 +4,10 @@ import { email, helpers, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { useSessionStore } from "~/stores/sessionStore";
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const session = useSessionStore();
 const { user } = storeToRefs(session);
 
