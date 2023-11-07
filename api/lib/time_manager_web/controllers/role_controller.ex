@@ -1,5 +1,6 @@
 defmodule TimeManagerWeb.RoleController do
   use TimeManagerWeb, :controller
+  use PhoenixSwagger
 
   alias TimeManager.Roles
 
@@ -11,6 +12,11 @@ defmodule TimeManagerWeb.RoleController do
       show: %{"role" => ["read"]}
     ]
   )
+
+  def swagger_definitions do
+    TimeManagerWeb.SwaggerDefinitions.role_definitions()
+  end
+
   def index(conn, _params) do
     roles = Roles.list_roles
     render(conn, :index, roles: roles)

@@ -1,5 +1,6 @@
 defmodule TimeManagerWeb.TeamController do
   use TimeManagerWeb, :controller
+  use PhoenixSwagger
 
   alias TimeManager.Teams
   alias TimeManager.Teams.Team
@@ -22,6 +23,10 @@ defmodule TimeManagerWeb.TeamController do
     delete: %{"team" => ["delete"]}
   ]
 )
+
+  def swagger_definitions do
+    TimeManagerWeb.SwaggerDefinitions.team_definitions()
+  end
 
   def clock(conn, %{"teamID" => id}) do
     team = TimeManager.Repo.preload(Teams.get_team!(id), :employees)
