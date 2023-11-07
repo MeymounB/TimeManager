@@ -10,6 +10,7 @@ defmodule TimeManagerWeb.TeamController do
   plug(CheckPermissions,
   actions: [
     clock: %{"team" => ["clock"]},
+    working_times: %{"team" => ["read"]},
     add_employee: %{"team" => ["update"]},
     remove_employee: %{"team" => ["update"]},
     add_manager: %{"team" => ["update"]},
@@ -32,6 +33,24 @@ defmodule TimeManagerWeb.TeamController do
         TimeManagerWeb.ClockJSON.show(%{clock: clock})
       end
     end))
+  end
+
+  def working_times(conn, params) do
+    id = Map.get(params, "teamID")
+    team = TimeManager.Repo.preload(Teams.get_team!(id), :employees)
+    CheckPermissions.assert_team_permissions(conn, id)
+
+    conn
+    |> json(%{data:
+      team.employees
+      |> Enum.map(fn employee ->
+          params
+          |> Map.put("userID", "#{employee.id}")
+          |> TimeManager.WorkingTimes.get_user_working_times!()
+          |> TimeManagerWeb.ModelJSON.data()
+        end)
+      |> List.flatten()
+    })
   end
 
   def add_employee(conn, %{"teamID" => team_id, "employee_id" => employee_id}) do

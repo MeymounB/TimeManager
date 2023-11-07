@@ -14,7 +14,9 @@ defmodule TimeManagerWeb.UserController do
       show: %{"user" => ["read"]},
       update: %{"user" => ["update"]},
       set_role: %{"user" => ["role"]},
-      delete: %{"user" => ["delete"]}
+      delete: %{"user" => ["delete"]},
+      clock: %{"user" => ["clock"]},
+      working_times: %{"user" => ["clock"]}
     ]
   )
 
@@ -103,6 +105,28 @@ defmodule TimeManagerWeb.UserController do
     with {:ok, %User{} = user} <- Users.update_user(user, %{"user" => %{"role_id" => role.id}}) do
       render(conn, :show, user: user)
     end
+  end
+
+  def clock(conn, %{"userID" => userID}) do
+    CheckPermissions.assert_user_permissions(conn, userID)
+
+    with {status, {:ok, %TimeManager.Clocks.Clock{} = clock}} <- TimeManager.Clocks.clock_user(userID) do
+      case status do
+        :created -> put_status(conn, :created)
+        _ -> put_status(conn, 200)
+      end
+      |> put_view(json: TimeManagerWeb.ClockJSON)
+      |> render(:show, clock: clock)
+    end
+  end
+
+  def working_times(conn, params) do
+    working_times = TimeManager.WorkingTimes.get_user_working_times!(params)
+    CheckPermissions.assert_user_permissions(conn, Map.get(params, "userID"))
+
+    conn
+    |> put_view(json: TimeManagerWeb.WorkingTimeJSON)
+    |> render(:index, working_times: working_times)
   end
 
 end

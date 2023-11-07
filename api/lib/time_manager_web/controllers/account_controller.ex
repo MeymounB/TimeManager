@@ -15,6 +15,7 @@ defmodule TimeManagerWeb.AccountController do
   plug(CheckPermissions,
     actions: [
       clock: %{"account" =>  ["clock"]},
+      working_times: %{"account" => ["read"]},
       show: %{"account" =>  ["read"]},
       update: %{"account" =>  ["update"]},
       delete: %{"account" =>  ["delete"]},
@@ -80,7 +81,10 @@ defmodule TimeManagerWeb.AccountController do
 
   def show(conn, _params) do
     user = CheckPermissions.get_user!(conn)
-    json(conn, TimeManagerWeb.UserJSON.show(%{user: user}))
+
+    conn
+    |> put_view(json: TimeManagerWeb.UserJSON)
+    |> render(:show, user: user)
   end
 
   def clock(conn, _params) do
@@ -89,15 +93,28 @@ defmodule TimeManagerWeb.AccountController do
         :created -> put_status(conn, :created)
         _ -> put_status(conn, 200)
       end
-      |> json(TimeManagerWeb.ClockJSON.show(%{clock: clock}))
+      |> put_view(json: TimeManagerWeb.ClockJSON)
+      |> render(:show, clock: clock)
     end
+  end
+
+  def working_times(conn, params) do
+    working_times = params
+      |> Map.put("userID", CheckPermissions.get_user_id(conn))
+      |> TimeManager.WorkingTimes.get_user_working_times!
+
+    conn
+    |> put_view(json: TimeManagerWeb.WorkingTimeJSON)
+    |> render(:index, working_times: working_times)
   end
 
   def update(conn, %{"user" => user_params}) do
     user = CheckPermissions.get_user!(conn)
 
     with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-      json(conn, TimeManagerWeb.UserJSON.show(%{user: user}))
+      conn
+      |> put_view(json: TimeManagerWeb.UserJSON)
+      |> render(:show, user: user)
     end
   end
 
