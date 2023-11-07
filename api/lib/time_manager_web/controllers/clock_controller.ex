@@ -5,6 +5,7 @@ defmodule TimeManagerWeb.ClockController do
   alias TimeManager.Clocks
   alias TimeManager.Clocks.Clock
   alias TimeManagerWeb.Plugs.CheckPermissions
+  alias TimeManagerWeb.SwaggerDefinitions
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -18,15 +19,16 @@ defmodule TimeManagerWeb.ClockController do
   )
 
   def swagger_definitions do
-    TimeManagerWeb.SwaggerDefinitions.clocks_definitions()
+    SwaggerDefinitions.clocks_definitions()
   end
 
   swagger_path(:get_user_clock) do
     summary("Get user clock")
-    description("Show a clock by its user ID")
-    produces("application/json")
-    consumes("application/json")
+    description("Show a clock by its user ID.\nScopes: user.read")
     parameter(:userID, :path, :integer, "User ID", required: true, example: 123)
+
+    SwaggerDefinitions.protected_path
+    SwaggerDefinitions.json_path
 
     response(200, "OK", Schema.ref(:ClockResponse))
     response(404, "Not found", Schema.ref(:NotFoundResponse))
@@ -39,15 +41,21 @@ defmodule TimeManagerWeb.ClockController do
   end
 
   swagger_path(:clock_user) do
-    summary("Clock a user")
+    summary("Clock user")
     description("Clock in/out a user.
 
     If there is no clock for the given user, a new entry is created in the database with its status true.
     If already existing, the status is inverted.
-    When a clock status pass from true to false, it creates a new working time entry.")
-    parameter(:user, :body, Schema.ref(:UserRequest), "The user details")
+    When a clock status pass from true to false, it creates a new working time entry.
 
-    response(201, "User created OK", Schema.ref(:UserResponse))
+    Scopes: user.clock")
+    parameter(:userID, :path, :integer, "User ID", required: true, example: 3)
+
+    SwaggerDefinitions.protected_path
+    SwaggerDefinitions.json_path
+
+    response(200, "OK", Schema.ref(:ClockResponse))
+    response(201, "Clock created", Schema.ref(:ClockResponse))
     response(422, "Unprocessable entity", Schema.ref(:UnprocessableEntityResponse))
   end
   def clock_user(conn, %{"userID" => userID}) do
@@ -64,22 +72,27 @@ defmodule TimeManagerWeb.ClockController do
 
   swagger_path(:index) do
     summary("List Clocks")
-    description("List all clocks in the database")
+    description("List all clocks in the database.\nScopes: clock.read")
+
+    SwaggerDefinitions.protected_path
+    SwaggerDefinitions.json_path
 
     response(200, "OK", Schema.ref(:ClocksResponse))
   end
   def index(conn, _params) do
     clocks = Clocks.list_clocks()
     render(conn, :index, clocks: clocks)
-
   end
 
   swagger_path(:delete) do
     summary("Delete clock")
-    description("Delete a clock by ID")
+    description("Delete a clock by ID.\nScopes: clock.delete")
     parameter(:id, :path, :integer, "Clock ID", required: true, example: 3)
 
-    response(203, "No Content - Deleted Successfully")
+    SwaggerDefinitions.protected_path
+    SwaggerDefinitions.json_path
+
+    response(204, "No Content - Deleted Successfully")
     response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def delete(conn, %{"id" => id}) do

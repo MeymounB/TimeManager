@@ -144,30 +144,31 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
             clock: %{
               id: 1,
               user_id: 1,
-              time: "2017-02-04 11:24:45",
+              time: "2023-02-04 11:24:45",
               status: false
             },
             working_times: []
           })
         end,
-        UserRequest:
-        swagger_schema do
+        UserRequest: swagger_schema do
           title("UserRequest")
           description("PUT/PATCH body for updating a user (can be partial)")
-          property(:user, :User, "The user details")
+          property(:user, Schema.ref(:User), "The user details")
 
           example(%{
-            firstname: "Joe",
-            lastname: "Doe",
-            email: "joe@gmail.com",
-            role_id: 1,
-            custom_permissions: %{},
+            user: %{
+              firstname: "Joe",
+              lastname: "Doe",
+              email: "joe@gmail.com",
+              role_id: 1,
+              custom_permissions: %{}
+            }
           })
         end,
         UserResponse: swagger_schema do
           title("UserResponse")
           description("Response schema for single user")
-          property(:data, :UserDetailed, "The user details")
+          property(:data, Schema.ref(:UserDetailed), "The user details")
         end,
         UsersResponse:
         swagger_schema do
@@ -194,7 +195,7 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
           example(%{
             id: 1,
             user_id: 1,
-            time: "2017-02-04 11:24:45",
+            time: "2023-02-04 11:24:45",
             status: false
           })
         end,
@@ -228,8 +229,8 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
           example(%{
             id: 1,
             user_id: 2,
-            start: "2017-02-04 11:24:45",
-            end: "2017-02-04 16:28:42",
+            start: "2023-02-04 11:24:45",
+            end: "2023-02-04 16:28:42",
           })
         end,
         WorkingTimesResponse:
@@ -327,6 +328,95 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
         })
       end
   }
+  end
+
+  def account_definitions do
+    %{
+      RegisterRequest: swagger_schema do
+        title("RegisterRequest")
+        description("Account registration request")
+
+        properties do
+          firstname(:string, "User first name", required: true)
+          lastname(:string, "User last name", required: true)
+          email(:string, "User email", required: true)
+          password(:string, "User password. You should consider sending a hashed password to avoid man in the middle issues.", required: true)
+          password_confirmation(:string, "User password confirmation (must equal password property)", required: true)
+        end
+
+        example(%{
+          firstname: "toto",
+          lastname: "tata",
+          email: "toto2@epitech.eu",
+          password: "12345678",
+          password_confirmation: "12345678"
+        })
+      end,
+      AuthSuccessResponse: swagger_schema do
+        title("AuthSuccessResponse")
+        description("Authentification success response")
+
+        properties do
+          access_token(:string, "User access token. Must be send in the Authorization header as a bearer token.")
+          refresh_token(:string, "User refresh token. Use it on /api/account/refresh to renew the access token when it expires.")
+        end
+
+        example(%{
+          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJKb2tlbiIsImV4cCI6NjAwMDE2OTkzOTAxMzAsImlhdCI6MTY5OTM5MDczMCwiaXNzIjoiSm9rZW4iLCJqdGkiOiIydWFuNW5jOGVxcWhnMWZ0NGMwMDAxbzEiLCJuYmYiOjE2OTkzOTA3MzAsInVzZXJfaWQiOjR9.w0PMJ--hYo81YrgiQ8n2rJk5maAEfiF3lxGo8ddCnp0",
+          refresh_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJKb2tlbiIsImV4cCI6MTcwMjA2OTEzMCwiaWF0IjoxNjk5MzkwNzMwLCJpc3MiOiJKb2tlbiIsImp0aSI6IjJ1YW41bmM2ZzZvbmsxZnQ0YzAwMDFuMSIsIm5iZiI6MTY5OTM5MDczMCwidXNlcl9pZCI6NH0.ZQwBjo02loJkND_GbbR-slmh0V1ufkU1zoDB36A5frA",
+        })
+      end,
+      RefreshSuccessResponse: swagger_schema do
+        title("RefreshSuccessResponse")
+        description("Access token refresh response")
+
+        properties do
+          access_token(:string, "User access token. Must be send in the Authorization header as a bearer token.")
+        end
+
+        example(%{
+          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJKb2tlbiIsImV4cCI6NjAwMDE2OTkzOTAxMzAsImlhdCI6MTY5OTM5MDczMCwiaXNzIjoiSm9rZW4iLCJqdGkiOiIydWFuNW5jOGVxcWhnMWZ0NGMwMDAxbzEiLCJuYmYiOjE2OTkzOTA3MzAsInVzZXJfaWQiOjR9.w0PMJ--hYo81YrgiQ8n2rJk5maAEfiF3lxGo8ddCnp0",
+        })
+      end,
+      RegisterError: swagger_schema do
+        title("RegisterError")
+        description("Register error content")
+
+        properties do
+          errors(%Schema{type: :object}, "Error reasons. An entry for each invalid parameters with an array of reasons.")
+          message(:string, "General error message")
+        end
+
+        example(%{
+          errors: %{
+            email: ["has alrady been taken"]
+          },
+          message: "Couldn't create user"
+        })
+      end,
+      RegisterFailureResponse: swagger_schema do
+        title("RegisterFailureResponse")
+        description("Register failure response")
+
+        properties do
+          error(Schema.ref(:RegisterError), "Registration error details")
+        end
+      end,
+      LoginRequest: swagger_schema do
+        title("LoginRequest")
+        description("Account login request")
+
+        properties do
+          email(:string, "User email", required: true)
+          password(:string, "User password. You should consider sending a hashed password to avoid man in the middle issues.", required: true)
+        end
+
+        example(%{
+          email: "toto2@epitech.eu",
+          password: "12345678",
+        })
+      end
+    }
   end
 
 end

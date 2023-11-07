@@ -90,7 +90,7 @@ defmodule TimeManagerWeb.UserController do
     SwaggerDefinitions.protected_path
     SwaggerDefinitions.json_path
 
-    response(203, "No Content - Deleted Successfully")
+    response(204, "No Content - Deleted Successfully")
     response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def delete(conn, %{"id" => id}) do
@@ -111,7 +111,7 @@ defmodule TimeManagerWeb.UserController do
     SwaggerDefinitions.protected_path
     SwaggerDefinitions.json_path
 
-    response(203, "No Content - Deleted Successfully")
+    response(204, "No Content - Deleted Successfully")
     response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def set_role(conn, %{"userID" => user_id, "roleID" => role_id}) do
@@ -139,7 +139,7 @@ defmodule TimeManagerWeb.UserController do
     SwaggerDefinitions.protected_path
     SwaggerDefinitions.json_path
 
-    response(200, "Successfull", Schema.ref(:ClockResponse))
+    response(200, "OK", Schema.ref(:ClockResponse))
     response(201, "Clock created", Schema.ref(:ClockResponse))
     response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
@@ -160,13 +160,13 @@ defmodule TimeManagerWeb.UserController do
     summary("User working times")
     description("Fetch a user working times over a given period.\nScopes: user.read")
     parameter(:userID, :path, :integer, "User ID", required: true, example: 3)
-    parameter(:start, :path, :string, "Period start (default to no limit)", required: false, example: "2017-02-04 11:24:45", format: :utc_datetime)
-    parameter(:end, :path, :string, "Period end (default to no limit)", required: false, example: "2017-02-14 16:28:42", format: :utc_datetime)
+    parameter(:start, :query, :string, "Period start (default to no limit)", required: false, example: "2023-02-04 11:24:45", format: :utc_datetime)
+    parameter(:end, :query, :string, "Period end (default to no limit)", required: false, example: "2023-02-14 16:28:42", format: :utc_datetime)
 
     SwaggerDefinitions.protected_path
     SwaggerDefinitions.json_path
 
-    response(200, "Successfull", Schema.ref(:WorkingTimesResponse))
+    response(200, "OK", Schema.ref(:WorkingTimesResponse))
     response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def working_times(conn, params) do
