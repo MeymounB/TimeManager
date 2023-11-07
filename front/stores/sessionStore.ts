@@ -95,7 +95,7 @@ export const useSessionStore = defineStore("counter", () => {
     user.value = null;
     accessToken.value = null;
     refreshToken.value = null;
-    navigateTo("/");
+    navigateTo("/login");
   }
 
   setTimeout(() => {
