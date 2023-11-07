@@ -36,7 +36,9 @@ export async function useFetchAPI<T>(
   }
 
   const json =
-    method !== "DELETE" ? await response.json() : { data: undefined };
+    method !== "DELETE" && response.status !== 204
+      ? await response.json()
+      : { data: undefined };
 
   const data = json?.data ?? { ...json };
   return { ok: true, data };

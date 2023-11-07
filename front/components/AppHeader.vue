@@ -3,6 +3,17 @@ const sessionStore = useSessionStore();
 
 const { user } = storeToRefs(sessionStore);
 const open = ref(false);
+
+const logout = async () => {
+  if (!user.value) {
+    return;
+  }
+  try {
+    await sessionStore.logout();
+  } catch (err) {
+    return alert(err);
+  }
+};
 </script>
 
 <template>
@@ -78,7 +89,7 @@ const open = ref(false);
                             button-style="danger"
                             class="w-full flex items-center justify-center"
                             type="button"
-                            @click="sessionStore.localLogout()"
+                            @click="logout"
                           >
                             <svg-icon
                               name="disconnect"
@@ -114,7 +125,7 @@ const open = ref(false);
                     button-style="danger"
                     class="flex items-center justify-center mt-3 w-full"
                     type="button"
-                    @click="sessionStore.localLogout()"
+                    @click="logout"
                   >
                     <svg-icon
                       name="disconnect"
