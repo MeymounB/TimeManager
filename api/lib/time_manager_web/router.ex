@@ -89,6 +89,17 @@ defmodule TimeManagerWeb.Router do
         version: "1.0",
         title: "Time Manager API"
       },
+      securityDefinitions: %{
+        bearerToken: %{
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
+          description: "Access Token Authentication"
+        }
+      },
+      security: %{
+        bearerToken: []
+      },
       definitions: TimeManagerWeb.SwaggerDefinitions.global_definitions
     }
   end

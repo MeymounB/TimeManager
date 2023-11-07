@@ -1,5 +1,19 @@
 defmodule TimeManagerWeb.SwaggerDefinitions do
   use PhoenixSwagger
+  alias PhoenixSwagger.Path
+
+  def json_path(%Path.PathObject{} = path) do
+    path
+    |> Path.produces("application/json")
+    |> Path.consumes("application/json")
+  end
+
+  def protected_path(%Path.PathObject{} = path) do
+    path
+    |> Path.security([%{"bearerToken" => []}])
+    |> Path.response(401, "Unauthorized", Schema.ref(:UnauthorizedResponse))
+    |> Path.response(403, "Forbidden", Schema.ref(:ForbiddenResponse))
+  end
 
   def global_definitions do
     %{
@@ -18,7 +32,35 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
           message: "expected at least one result but got none"
         })
       end,
-      NotFoundResponse: swagger_schema do
+      UnauthorizedResponse: swagger_schema do # 401
+        title("UnauthorizedResponse")
+        description("An action was requested to the server but the user is not authenticated")
+
+        properties do
+          errors(%Schema{type: :object}, "Errors object containing error message.")
+        end
+
+        example(%{
+          errors: %{
+            message: "The user is not authenticated"
+          }
+        })
+      end,
+      ForbiddenResponse: swagger_schema do # 403
+        title("ForbiddenResponse")
+        description("An action was requested to the server with an authentified user but the user doesn't have enough permissions")
+
+        properties do
+          errors(%Schema{type: :object}, "Errors object containing error message.")
+        end
+
+        example(%{
+          errors: %{
+            message: "The user has insufficient permissions"
+          }
+        })
+      end,
+      NotFoundResponse: swagger_schema do # 404
         title("NotFoundResponse")
         description("A resource was requested but the server was unavailable to find it")
 
@@ -26,16 +68,16 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
           reason(:ErrorReason, "Error reason")
         end
       end,
-      UnprocessableEntityResponse: swagger_schema do
+      UnprocessableEntityResponse: swagger_schema do # 422
         title("UnprocessableEntityResponse")
         description("An action was requested to the server but the input was invalid")
 
         properties do
-          errors(%Schema{type: :object}, "Error reasons. An entry for each invalid parameters with an array of reasons.")
+          error(%Schema{type: :object}, "Error reasons. An entry for each invalid parameters with an array of reasons.")
         end
 
         example(%{
-          errors: %{
+          error: %{
             email: [
               "has already been taken"
             ]
@@ -111,8 +153,16 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
         UserRequest:
         swagger_schema do
           title("UserRequest")
-          description("POST body for creating a user")
+          description("PUT/PATCH body for updating a user (can be partial)")
           property(:user, :User, "The user details")
+
+          example(%{
+            firstname: "Joe",
+            lastname: "Doe",
+            email: "joe@gmail.com",
+            role_id: 1,
+            custom_permissions: %{},
+          })
         end,
         UserResponse: swagger_schema do
           title("UserResponse")
@@ -123,7 +173,7 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
         swagger_schema do
           title("UsersReponse")
           description("Response schema for multiple users")
-          property(:data, Schema.array(:User), "The users details")
+          property(:data, Schema.array(:User), "The users list")
         end
     }
   end
@@ -151,7 +201,7 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
         ClockResponse: swagger_schema do
           title("ClockResponse")
           description("Response schema for single clock")
-          property(:data, :Clock, "The clock details")
+          property(:data, Schema.ref(:Clock), "The clock details")
         end,
         ClocksResponse:
         swagger_schema do
@@ -171,8 +221,8 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
           properties do
             id(:integer, "Working Time ID")
             user_id(:integer, "Associated user ID")
-            start(:string, "Working time start time")
-            end_(:string, "Workinng time end time", format: :email)
+            start(:string, "Working time start time", format: :utc_datetime)
+            end_(:string, "Workinng time end time", format: :utc_datetime)
           end
 
           example(%{
@@ -181,6 +231,12 @@ defmodule TimeManagerWeb.SwaggerDefinitions do
             start: "2017-02-04 11:24:45",
             end: "2017-02-04 16:28:42",
           })
+        end,
+        WorkingTimesResponse:
+        swagger_schema do
+          title("WorkingTimesResponse")
+          description("Response schema for multiple working times")
+          property(:data, Schema.array(:Clock), "The working times list")
         end
     }
   end
