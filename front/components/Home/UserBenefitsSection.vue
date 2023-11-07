@@ -7,7 +7,7 @@
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="benefit-card bg-white p-4 sm:p-6 shadow rounded-lg flex flex-col items-center text-center">
         <!-- Image -->
-          <img class="h-12 w-12 sm:h-16 sm:w-16 mb-3" src="/" alt="Avantages pour les employés">
+          <svg-icon class="h-12 w-12 sm:h-16 sm:w-16 mb-3" name="cross" alt="Avantages pour les employés" />
           <h3 class="mb-2 font-semibold text-gray-900 text-lg">Employés</h3>
           <p class="text-sm text-gray-600">
             Gérez votre temps avec précision et obtenez des jours de repos bien mérités en toute simplicité.
@@ -16,7 +16,7 @@
 
         <div class="benefit-card bg-white p-4 sm:p-6 shadow rounded-lg flex flex-col items-center text-center">
         <!-- Image -->
-          <img class="h-12 w-12 sm:h-16 sm:w-16 mb-3" src="/" alt="Avantages pour les employés">
+          <svg-icon class="h-12 w-12 sm:h-16 sm:w-16 mb-3" name="cross" alt="Avantages pour les employés" />
           <h3 class="mb-2 font-semibold text-gray-900 text-lg">Gestionnaires</h3>
           <p class="text-sm text-gray-600">
             Organisez les équipes, suivez les performances et assurez-vous que tout le monde est sur la bonne voie.
@@ -25,7 +25,7 @@
 
         <div class="benefit-card bg-white p-4 sm:p-6 shadow rounded-lg flex flex-col items-center text-center">
         <!-- Image -->
-          <img class="h-12 w-12 sm:h-16 sm:w-16 mb-3" src="/" alt="Avantages pour les employés">
+          <svg-icon class="h-12 w-12 sm:h-16 sm:w-16 mb-3" name="cross" alt="Avantages pour les employés" />
           <h3 class="mb-2 font-semibold text-gray-900 text-lg">Directeur Général</h3>
           <p class="text-sm text-gray-600">
             Ayez une vue d'ensemble des opérations, prenez des décisions éclairées et pilotez la stratégie globale.

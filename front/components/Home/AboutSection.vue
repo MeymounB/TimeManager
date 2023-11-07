@@ -12,7 +12,7 @@
     <div class="features-list grid grid-cols-1 gap-6 md:grid-cols-3">
       <div class="feature-item bg-white p-6 shadow-sm rounded-lg flex flex-col items-center text-center">
       <!-- Image -->
-        <img class="h-12 w-12 mb-3" src="/" alt="Gestion du Temps">
+        <svg-icon class="h-12 w-12 mb-3" src="/" alt="Gestion du Temps" name="cross" />
         <h3 class="mb-2 font-semibold text-gray-900">Gestion du Temps</h3>
         <p class="text-sm text-gray-600">
           Suivi précis des heures de travail pour optimiser la productivité.
@@ -21,7 +21,7 @@
 
       <div class="feature-item bg-white p-6 shadow-sm rounded-lg flex flex-col items-center text-center">
       <!-- Image -->
-        <img class="h-12 w-12 mb-3" src="" alt="Gestion d'Équipe">
+        <svg-icon class="h-12 w-12 mb-3"  alt="Gestion d'Équipe" name="cross" />
         <h3 class="mb-2 font-semibold text-gray-900">Gestion d'Équipe</h3>
         <p class="text-sm text-gray-600">
           Organisation des équipes avec des outils de communication intégrés.
@@ -30,7 +30,7 @@
 
       <div class="feature-item bg-white p-6 shadow-sm rounded-lg flex flex-col items-center text-center">
       <!-- Image -->
-        <img class="h-12 w-12 mb-3" src="" alt="Rapports Détaillés">
+        <svg-icon class="h-12 w-12 mb-3" alt="Rapports Détaillés" name="cross" />
         <h3 class="mb-2 font-semibold text-gray-900">Rapports Détaillés</h3>
         <p class="text-sm text-gray-600">
           Des rapports d'activités complets pour un suivi en temps réel.
