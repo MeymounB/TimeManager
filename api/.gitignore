@@ -27,3 +27,5 @@ time_manager-*.tar
 
 # Ignore swagger json file
 /priv/static/swagger.json
+
+.env

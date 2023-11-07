@@ -60,6 +60,7 @@ defmodule TimeManager.Users do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+  def get_user(id), do: Repo.get(User, id)
 
   @doc """
   Creates a user.
@@ -138,4 +139,12 @@ defmodule TimeManager.Users do
   end
 
   def is_user_id_valid(user_id), do: Repo.get(User, user_id) != nil
+
+  def set_refresh_token(%User{} = user, token) do
+    update_user(user, %{refresh_token: token})
+  end
+
+  def invalidate_user_refresh_token(%User{} = user) do
+    set_refresh_token(user, nil)
+  end
 end

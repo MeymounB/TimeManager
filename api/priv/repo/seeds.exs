@@ -107,8 +107,7 @@ defmodule TimeManager.Seeds do
       user
       |> create_user_working_times()
     else
-      _err ->
-        IO.puts("Error #{inspect(_err)}\n")
+      err -> IO.puts("Error #{inspect(err)}\n")
     end
   end
 

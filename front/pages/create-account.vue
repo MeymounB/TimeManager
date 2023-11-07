@@ -12,6 +12,7 @@ import { useSessionStore } from "~/stores/sessionStore";
 
 definePageMeta({
   layout: "auth",
+  middleware: ["guest"],
 });
 
 const sessionStore = useSessionStore();
@@ -142,7 +143,6 @@ const onSubmit = async () => {
           </span>
         </div>
       </div>
-
       <div>
         <label for="email" class="block text-sm font-medium">
           Email

@@ -4,7 +4,8 @@ import type { IClock } from "~/utils/clock";
 export interface IUserShort {
   id: number;
   email: string;
-  username: string;
+  firstname: string;
+  lastname: string;
 }
 
 export interface IUser extends IUserShort {

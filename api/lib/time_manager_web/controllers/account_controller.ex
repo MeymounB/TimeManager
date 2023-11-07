@@ -32,20 +32,26 @@ defmodule TimeManagerWeb.AccountController do
   @spec register(Conn.t(), UserRegistration.t()) :: Conn.t()
   def register(conn, user_registration_command) do
     with {:ok, _user, conn} <- conn |> Pow.Plug.create_user(user_registration_command) do
-      json(conn, %{access_token: conn.private[:api_access_token]})
+      json(conn, %{
+        access_token: conn.private[:api_access_token],
+        refresh_token: conn.private[:api_refresh_token]
+      })
     else
       {:error, changeset, conn} ->
         errors = Changeset.traverse_errors(changeset, &translate_error/1)
         conn
-        |> put_status(500)
-        |> json(%{error: %{status: 500, message: "Couldn't create user", errors: errors}})
+        |> put_status(422)
+        |> json(%{error: %{message: "Couldn't create user", errors: errors}})
     end
   end
 
   @spec login(Conn.t(), UserPassLogin.t()) :: Conn.t()
   def login(conn, user_pass_login) do
     with {:ok, conn} <- conn |> Pow.Plug.authenticate_user(user_pass_login) do
-      json(conn, %{access_token: conn.private[:api_access_token]})
+      json(conn, %{
+        access_token: conn.private[:api_access_token],
+        refresh_token: conn.private[:api_refresh_token]
+      })
     else
       {:error, conn} ->
         conn
@@ -54,15 +60,35 @@ defmodule TimeManagerWeb.AccountController do
     end
   end
 
+  def refresh(conn, %{"refresh_token" => refresh_token}) do
+    with {:ok, conn, response} <- TimeManager.Auth.AuthFlow.refresh(conn, refresh_token) do
+      json(conn, response)
+    else
+      {:error, conn} ->
+        conn
+        |> put_status(401)
+        |> json(%{error: "Invalid refresh token"})
+    end
+  end
+
+  def logout(conn, _params) do
+    user = CheckPermissions.get_user!(conn)
+    Users.invalidate_user_refresh_token(user)
+
+    send_resp(conn, :no_content, "")
+  end
+
   def show(conn, _params) do
     user = CheckPermissions.get_user!(conn)
     json(conn, TimeManagerWeb.UserJSON.show(%{user: user}))
   end
 
   def clock(conn, _params) do
-    with {:ok, %TimeManager.Clocks.Clock{} = clock} <- TimeManager.Clocks.clock_user(CheckPermissions.get_user_id(conn)) do
-      conn
-      |> put_status(:created)
+    with {status, {:ok, %TimeManager.Clocks.Clock{} = clock}} <- TimeManager.Clocks.clock_user(CheckPermissions.get_user_id(conn)) do
+      case status do
+        :created -> put_status(conn, :created)
+        _ -> put_status(conn, 200)
+      end
       |> json(TimeManagerWeb.ClockJSON.show(%{clock: clock}))
     end
   end

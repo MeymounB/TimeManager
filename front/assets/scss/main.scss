@@ -3,21 +3,40 @@
 @tailwind utilities;
 
 .btn {
-  @apply rounded-lg px-5 py-2;
+  @apply rounded-lg p-2;
 }
 .btn-primary {
-  @apply bg-gray-700 text-white hover:bg-gray-800 active:bg-gray-900;
+  @apply bg-gray-700 text-white hover:bg-gray-800 active:bg-gray-900 px-5;
 }
 
 .btn-secondary {
-  @apply bg-white text-black border border-black;
+  @apply bg-white border border-gray-700 px-5;
+}
+
+.btn-tertiary {
+  @apply bg-transparent hover:bg-gray-200 hover:border-gray-300;
+}
+
+.btn-icon {
+  @apply p-3
 }
 
 .btn-danger {
-  @apply bg-red-500 text-white;
+  @apply bg-red-500 text-white hover:bg-red-600;
 }
 
 .input-section {
   display: flex;
   flex-direction: column;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+#__nuxt {
+  width: 100%;
+  height: 100%;
+  @apply text-gray-700;
 }

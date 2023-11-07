@@ -4,6 +4,7 @@ defmodule TimeManagerWeb.UserController do
 
   alias TimeManager.Users
   alias TimeManager.Users.User
+  alias TimeManagerWeb.Plugs.CheckPermissions
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -63,6 +64,7 @@ defmodule TimeManagerWeb.UserController do
   end
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Users.get_user!(id)
+    CheckPermissions.assert_user_permissions(conn, id)
 
     with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
       render(conn, :show, user: user)
@@ -79,6 +81,7 @@ defmodule TimeManagerWeb.UserController do
   end
   def delete(conn, %{"id" => id}) do
     user = Users.get_user!(id)
+    CheckPermissions.assert_user_permissions(conn, id)
 
     with {:ok, %User{}} <- Users.delete_user(user) do
       send_resp(conn, :no_content, "")
@@ -86,9 +89,18 @@ defmodule TimeManagerWeb.UserController do
   end
 
   def set_role(conn, %{"userID" => user_id, "roleID" => role_id}) do
-    user = Users.get_user!(user_id)
+    self = CheckPermissions.get_user(conn)
+    user = TimeManager.Repo.preload(Users.get_user!(user_id), :role)
+    role = TimeManager.Roles.get_role!(role_id)
+    # If we are not admin (and might have forbidden actions)
+    if self.role.name != "Admin" do
+      # We cannot give the admin role or modify an admin user role
+      if role.name == "Admin" or user.role.name == "Admin" do
+        CheckPermissions.forbidden(conn)
+      end
+    end
 
-    with {:ok, %User{} = user} <- Users.update_user(user, %{"user" => %{"role_id" => role_id}}) do
+    with {:ok, %User{} = user} <- Users.update_user(user, %{"user" => %{"role_id" => role.id}}) do
       render(conn, :show, user: user)
     end
   end

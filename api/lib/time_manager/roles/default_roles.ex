@@ -27,7 +27,9 @@ defmodule TimeManager.Roles.DefaultRoles do
         name: "Employee",
         permissions: %{
           "account" => ["read", "update", "delete", "clock"],
-          "role" => ["read"]
+          "user" => ["read"],
+          "role" => ["read"],
+          "team" => ["read"]
         }
       }
     ]

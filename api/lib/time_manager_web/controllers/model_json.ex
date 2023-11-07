@@ -13,6 +13,8 @@ defmodule TimeManagerWeb.ModelJSON do
 
   defp model_field(model, [field, type], options), do: {field, custom_model_field(model, field, type, options)}
 
+  def custom_show_field(_model, :password, _type, _options), do: false
+  def custom_show_field(_model, :password_hash, _type, _options), do: false
   def custom_show_field(_model, :inserted_at, _type, _options), do: false
   def custom_show_field(_model, :updated_at, _type, _options), do: false
   def custom_show_field(_model, _field, _type, _options), do: true

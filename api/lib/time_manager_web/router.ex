@@ -26,6 +26,7 @@ defmodule TimeManagerWeb.Router do
     scope "/account" do
       post "/register", AccountController, :register
       post "/login", AccountController, :login
+      post "/refresh", AccountController, :refresh
     end
 
     # Protected
@@ -38,6 +39,7 @@ defmodule TimeManagerWeb.Router do
         put "/", AccountController, :update
         patch "/", AccountController, :update
         delete "/", AccountController, :delete
+        post "/logout", AccountController, :logout
       end
 
       resources "/roles", RoleController, only: [:index, :show]
@@ -45,6 +47,15 @@ defmodule TimeManagerWeb.Router do
       scope "/users" do
         resources "/", UserController, except: [:new, :edit, :create]
         post "/:userID/role/:roleID", UserController, :set_role
+      end
+
+      scope "/teams" do
+        resources "/", TeamController, except: [:new, :edit]
+        post "/:teamID/clock", TeamController, :clock
+        put "/:teamID/add_employee/:employee_id", TeamController, :add_employee
+        put "/:teamID/remove_employee/:employee_id", TeamController, :add_employee
+        put "/:teamID/add_manager/:manager_id", TeamController, :add_manager
+        put "/:teamID/remove_manager/:manager_id", TeamController, :add_manager
       end
 
       scope "/workingtimes" do
