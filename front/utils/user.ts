@@ -25,3 +25,9 @@ export interface IUserCredentialsDTO {
   email: string;
   password: string;
 }
+
+export interface IUserEditDTO {
+  lastname?: string;
+  firstname?: string;
+  email?: string;
+}

@@ -99,9 +99,11 @@ const onSubmit = async () => {
           class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
         />
       </div>
-      <template v-if="formError" class="errors mt-4 text-xs text-red-500">
-        {{ formError }}
-      </template>
+      <div class="errors min-h-[32px] mt-10 text-red-500">
+        <template v-if="formError">
+          <span class="text-red-500">{{ formError }}</span>
+        </template>
+      </div>
       <AppButton
         type="submit"
         button-style="primary"

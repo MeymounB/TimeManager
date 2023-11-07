@@ -56,7 +56,7 @@ const logout = async () => {
             <div class="lg:ml-5">
               <template v-if="user">
                 <div class="hidden lg:block">
-                  <AppDropdown button-style="tertiary" class="">
+                  <AppDropdown button-style="tertiary">
                     <template #dropdown-toggle>
                       <span
                         class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center flex font-semibold"
@@ -72,7 +72,7 @@ const logout = async () => {
                     </template>
                     <template #dropdown-content>
                       <nav>
-                        <ul class="space-y-2">
+                        <ul class="space-y-2 w-full">
                           <li>
                             <NuxtLink
                               to="/session/profile"

@@ -40,7 +40,7 @@ export function useDeleteAccount() {
 
 export function useUpdateAccount() {
   return (newData: Partial<IUserDTO>) => {
-    return useFetchAPI<IUser>("PUT", ACCOUNT_ENDPOINT, newData);
+    return useFetchAPI<IUser>("PUT", ACCOUNT_ENDPOINT, { user: newData });
   };
 }
 

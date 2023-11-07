@@ -21,7 +21,7 @@ const toggleDropdown = () => {
       <svg-icon class="w-5 h-5" name="dropdown-toggle" />
     </AppButton>
     <div
-      class="absolute mt-2 rounded-lg bg-white border border-gray-400 p-3 w-full z-10"
+      class="absolute mt-2 rounded-lg bg-white border border-gray-400 min-w-full p-3 z-10"
       :class="{ hidden: !toggled }"
     >
       <slot name="dropdown-content" />
