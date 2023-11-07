@@ -32,11 +32,39 @@
 }
 
 body {
-  height: 100vh;
+  height: 100%;
+
+  @media print {
+    background-color: white;
+  }
 }
 
 #__nuxt {
   width: 100%;
   height: 100%;
   @apply text-gray-700;
+}
+
+.profile {
+  @media (min-width: 640px) {
+    max-width: 768px;
+  }
+
+  h1,
+  p {
+    transition: color 0.3s ease-in-out;
+  }
+
+  input[type="text"],
+  input[type="email"] {
+    @apply w-full h-12 px-4 py-2 border rounded-md shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500;
+
+    &:focus {
+      @apply ring-2 ring-blue-400;
+    }
+  }
+
+  .error-message {
+    @apply text-red-500 text-sm mt-2;
+  }
 }
