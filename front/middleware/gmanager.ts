@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 import { useSessionStore } from "~/stores/sessionStore";
-import { isUserGeneralManager, isUserManager } from "~/composables/user";
+import { isUserGeneralManager } from "~/composables/user";
 
 export default defineNuxtRouteMiddleware(() => {
   const session = useSessionStore();

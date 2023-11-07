@@ -1,5 +1,6 @@
 import { useFetchAPI } from "~/composables/fetch";
 import type { ITokens } from "~/utils/tokens";
+import type { IWorkingTime } from "~/utils/workingTime";
 
 const runtimeConfig = useRuntimeConfig();
 const ACCOUNT_ENDPOINT = `${runtimeConfig.public.BACK_URL}/account`;
@@ -57,5 +58,14 @@ export function useRefreshAccount() {
       // eslint-disable-next-line camelcase
       refresh_token,
     });
+  };
+}
+
+export function useAccountWorkingTimes() {
+  return () => {
+    return useFetchAPI<IWorkingTime[]>(
+      "GET",
+      `${ACCOUNT_ENDPOINT}/working_times`,
+    );
   };
 }
