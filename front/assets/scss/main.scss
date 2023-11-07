@@ -5,6 +5,7 @@
 .btn {
   @apply rounded-lg p-2;
 }
+
 .btn-primary {
   @apply bg-gray-700 text-white hover:bg-gray-800 active:bg-gray-900 px-5;
 }
@@ -31,7 +32,6 @@
 }
 
 body {
-  width: 100vw;
   height: 100vh;
 }
 
