@@ -238,7 +238,7 @@ const onSubmit = async () => {};
               :key="team.id"
               class="flex items-center gap-3 border border-gray-700 rounded max-w-[200px] px-4 py-2"
             >
-              <svg-icon name="chevron-down" class="w-4 h-4" />
+              <svg-icon name="team" class="w-4 h-4" />
               <span class="font-medium text-center">{{ team.name }}</span>
             </div>
           </div>
@@ -254,7 +254,7 @@ const onSubmit = async () => {};
               :key="team.id"
               class="flex items-center gap-3 border border-gray-700 rounded max-w-[150px] px-4 py-2"
             >
-              <svg-icon name="chevron-down" class="w-4 h-4" />
+              <svg-icon name="team" class="w-4 h-4" />
               <span class="font-medium text-center">{{ team.name }}</span>
             </div>
           </div>
