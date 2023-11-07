@@ -10,7 +10,8 @@ export async function useFetchAPI<T>(
   body?: any,
   publicRoute: boolean = false,
 ): Promise<Ok<T> | Err> {
-  const { accessToken } = storeToRefs(useSessionStore());
+  const session = useSessionStore();
+  const { accessToken } = storeToRefs(session);
 
   const response = await fetch(url, {
     headers: {
@@ -22,6 +23,15 @@ export async function useFetchAPI<T>(
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      const success = await session.refreshSession();
+
+      if (!success) {
+        return { ok: false, status: response.status };
+      }
+
+      return useFetchAPI(method, url, body, publicRoute);
+    }
     return { ok: false, status: response.status };
   }
 
