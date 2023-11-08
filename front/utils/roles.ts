@@ -21,7 +21,7 @@ export interface IPermission {
   clock?: Rights[];
 }
 
-export interface Role {
+export interface IRole {
   id: number;
   name: string;
   permissions: Permissions;

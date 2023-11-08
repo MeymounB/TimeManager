@@ -1,6 +1,6 @@
 import type { IWorkingTime } from "~/utils/workingTime";
 import type { IClock } from "~/utils/clock";
-import type { Role } from "~/utils/roles";
+import type { IRole } from "~/utils/roles";
 import type { IShortTeam } from "~/utils/teams";
 
 export interface IUserShort {
@@ -13,7 +13,7 @@ export interface IUserShort {
 }
 
 export interface IUser extends IUserShort {
-  role: Role;
+  role: IRole;
   clock: IClock;
   working_times: IWorkingTime[];
   teams: IShortTeam[];
