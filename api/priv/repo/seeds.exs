@@ -14,6 +14,8 @@ defmodule TimeManager.Seeds do
   alias TimeManager.Users.User
   alias TimeManager.Clocks.Clock
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManager.Teams.Team
+  alias TimeManager.Teams
   alias TimeManager.Repo
 
   def seed_data do
@@ -115,7 +117,7 @@ defmodule TimeManager.Seeds do
     firstname = FakerElixir.Name.first_name()
     lastname = FakerElixir.Name.last_name()
     name = firstname <> " " <> lastname
-    create_user(%{
+    user = create_user(%{
       firstname: firstname,
       lastname: lastname,
       email: FakerElixir.Internet.email(name),
@@ -123,6 +125,10 @@ defmodule TimeManager.Seeds do
       password_confirmation: "123456789",
       role_id: 4
     })
+    team_id = random_int(1, 4)
+    if team_id != 4 do
+      Teams.add_employee(team_id, user.id)
+    end
   end
 
   defp seed_roled_users do
@@ -169,6 +175,19 @@ defmodule TimeManager.Seeds do
 
   defp seed_users do
     seed_roled_users()
+
+    # Generate 3 teams
+    Enum.map(1..3, fn _ ->
+      %Team{}
+      |> Team.changeset(%{name: Faker.Commerce.department()})
+      |> Repo.insert()
+    end)
+    # Add the manager to 2/3 teams, the gmanager to 1/3 and the employee to the first one
+    Teams.add_manager(1, 3)
+    Teams.add_manager(2, 3)
+    Teams.add_manager(1, 2)
+    Teams.add_employee(1, 4)
+
     Enum.map(1..20, fn _ -> create_random_user() end)
   end
 end
