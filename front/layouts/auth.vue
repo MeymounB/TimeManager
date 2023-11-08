@@ -14,7 +14,7 @@
         >
           <svg-icon name="back-arrow" class="w-3 h-3 mr-2" /> Retour
         </AppButton>
-        <div class="flex-grow flex flex-col justify-center items-center px-4">
+        <div class="flex-grow flex flex-col justify-center items-center">
           <slot />
         </div>
       </div>
