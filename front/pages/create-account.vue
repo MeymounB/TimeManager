@@ -99,8 +99,8 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <section class="flex flex-col items-center justify-center h-full p-4">
-    <div class="w-full max-w-md text-center">
+  <section class="flex flex-col items-center w-full h-full p-4">
+    <div class="max-w-md text-center">
       <h2 class="text-2xl md:text-4xl font-bold italic">Créer un compte</h2>
     </div>
     <form class="w-full max-w-md mt-4 space-y-4" @submit.prevent="onSubmit">
