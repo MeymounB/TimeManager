@@ -6,7 +6,6 @@
       </h2>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="benefit-card bg-white p-4 sm:p-6 shadow rounded-lg flex flex-col items-center text-center">
-        <!-- Image -->
           <svg-icon class="h-12 w-12 sm:h-16 sm:w-16 mb-3" name="user" />
           <h3 class="mb-2 font-semibold text-gray-900 text-lg">Employés</h3>
           <p class="text-sm text-gray-600">
@@ -15,7 +14,6 @@
         </div>
 
         <div class="benefit-card bg-white p-4 sm:p-6 shadow rounded-lg flex flex-col items-center text-center">
-        <!-- Image -->
           <svg-icon class="h-12 w-12 sm:h-16 sm:w-16 mb-3" name="square-chart" />
           <h3 class="mb-2 font-semibold text-gray-900 text-lg">Gestionnaires</h3>
           <p class="text-sm text-gray-600">
@@ -24,7 +22,6 @@
         </div>
 
         <div class="benefit-card bg-white p-4 sm:p-6 shadow rounded-lg flex flex-col items-center text-center">
-        <!-- Image -->
           <svg-icon class="h-12 w-12 sm:h-16 sm:w-16 mb-3" name="building" />
           <h3 class="mb-2 font-semibold text-gray-900 text-lg">Directeur Général</h3>
           <p class="text-sm text-gray-600">

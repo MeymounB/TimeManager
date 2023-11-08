@@ -11,7 +11,6 @@
 
     <div class="features-list grid grid-cols-1 gap-6 md:grid-cols-3">
       <div class="feature-item bg-white p-6 shadow-sm rounded-lg flex flex-col items-center text-center">
-      <!-- Image -->
         <svg-icon class="h-12 w-12 mb-3" src="/" name="clock" />
         <h3 class="mb-2 font-semibold text-gray-900">Gestion du Temps</h3>
         <p class="text-sm text-gray-600">
@@ -20,7 +19,6 @@
       </div>
 
       <div class="feature-item bg-white p-6 shadow-sm rounded-lg flex flex-col items-center text-center">
-      <!-- Image -->
         <svg-icon class="h-12 w-12 mb-3"  alt="Gestion d'Équipe" name="team" />
         <h3 class="mb-2 font-semibold text-gray-900">Gestion d'Équipe</h3>
         <p class="text-sm text-gray-600">
@@ -29,7 +27,6 @@
       </div>
 
       <div class="feature-item bg-white p-6 shadow-sm rounded-lg flex flex-col items-center text-center">
-      <!-- Image -->
         <svg-icon class="h-12 w-12 mb-3" alt="Rapports Détaillés" name="clipboard" />
         <h3 class="mb-2 font-semibold text-gray-900">Rapports Détaillés</h3>
         <p class="text-sm text-gray-600">
