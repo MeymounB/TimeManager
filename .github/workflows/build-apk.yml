@@ -1,0 +1,50 @@
+name: Build APK
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install npm dependencies
+        working-directory: ./front
+        run: npm install
+
+      - name: Install npm dependencies
+        working-directory: ./front
+        run: |
+          npm run build
+          npm run generate
+
+      - name: Update android folder
+        working-directory: ./front
+        run: |
+          npx cap copy
+          npx cap sync
+
+      - name: set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: "17"
+          distribution: "adopt"
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        working-directory: ./front/android
+        run: chmod +x gradlew
+
+      - name: Build
+        working-directory: ./front/android
+        run: bash ./gradlew assemble
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app
+          path: ./front/android/app/build/outputs/apk/debug/app-debug.apk
