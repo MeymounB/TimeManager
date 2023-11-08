@@ -109,6 +109,7 @@ export const useSessionStore = defineStore("counter", () => {
     login,
     register,
     refreshSession,
+    reloadUser,
     logout,
     isLoggedIn,
   };

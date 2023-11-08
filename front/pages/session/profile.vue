@@ -10,6 +10,7 @@ definePageMeta({
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
+const updateAccountAPI = useUpdateAccount();
 
 const formValue = reactive({
   firstname: user.value?.firstname,
@@ -73,7 +74,34 @@ const toggleFirstnameEdit = () => {
   formValue.firstname = user.value?.firstname;
 };
 
-const onSubmit = async () => {};
+const onSubmit = async () => {
+  if (!user.value) {
+    return;
+  }
+  const toSubmit = {
+    ...(formValue.email !== user.value.email ? { email: formValue.email } : {}),
+    ...(formValue.firstname !== user.value.firstname
+      ? { firstname: formValue.firstname }
+      : {}),
+    ...(formValue.lastname !== user.value.lastname
+      ? { lastname: formValue.lastname }
+      : {}),
+  };
+
+  const response = await updateAccountAPI(toSubmit);
+
+  if (!response.ok) {
+    return alert("Error happened while updating profile");
+  }
+
+  await session.reloadUser();
+  formValue.email = user.value?.email;
+  formValue.firstname = user.value?.firstname;
+  formValue.lastname = user.value?.lastname;
+  emailEdit.value = false;
+  firstnameEdit.value = false;
+  lastnameEdit.value = false;
+};
 </script>
 
 <template>
