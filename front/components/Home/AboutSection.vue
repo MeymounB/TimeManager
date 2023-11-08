@@ -1,7 +1,7 @@
 <template>
   <div class="about-section my-12 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="mb-10">
-      <h2 class="text-center text-3xl font-extrabold text-gray-900">
+      <h2 class="text-center text-2xl md:text-3xl font-extrabold text-gray-900">
         À propos de Time Manager
       </h2>
       <p class="mt-4 text-center text-lg text-gray-600">
