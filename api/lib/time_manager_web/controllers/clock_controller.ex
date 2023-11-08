@@ -35,7 +35,6 @@ defmodule TimeManagerWeb.ClockController do
   end
   def get_user_clock(conn, %{"userID" => userID}) do
     clock = Clocks.get_user_clock(userID)
-    CheckPermissions.assert_user_permissions(conn, userID)
 
     render(conn, :show, clock: clock)
   end

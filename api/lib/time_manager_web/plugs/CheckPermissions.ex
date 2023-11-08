@@ -63,7 +63,7 @@ defmodule TimeManagerWeb.Plugs.CheckPermissions do
     has_team_permissions(user, team_id) or TimeManager.Teams.has_employee(team_id, user.id)
   end
   def has_user_permissions(user, user_id) do
-    user.id == user_id or
+    (user.id == user_id or
     is_general_manager(user) or
     TimeManager.Repo.one(from t in TimeManager.Teams.Team,
         join: tm in TimeManager.Teams.TeamManagers,
@@ -71,7 +71,10 @@ defmodule TimeManagerWeb.Plugs.CheckPermissions do
         join: te in TimeManager.Teams.TeamEmployees,
         on: t.id == te.team_id,
         where: tm.manager_id == ^user.id and te.employee_id == ^user_id,
-        distinct: t) != nil
+        distinct: t) != nil)
+    and
+    # Cannot operate on admin user if we are not admin
+    not (!is_admin(user) and is_admin(TimeManager.Repo.preload(TimeManager.Users.get(user_id), :role)))
   end
 
   def assert_permission(conn, has_perm) do

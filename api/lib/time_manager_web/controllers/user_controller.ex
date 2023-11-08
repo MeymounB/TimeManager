@@ -118,12 +118,11 @@ defmodule TimeManagerWeb.UserController do
     self = CheckPermissions.get_user(conn)
     user = TimeManager.Repo.preload(Users.get_user!(user_id), :role)
     role = TimeManager.Roles.get_role!(role_id)
+    CheckPermissions.assert_user_permissions(conn, user_id)
+
     # If we are not admin (and might have forbidden actions)
-    if self.role.name != "Admin" do
-      # We cannot give the admin role or modify an admin user role
-      if role.name == "Admin" or user.role.name == "Admin" do
-        CheckPermissions.forbidden(conn)
-      end
+    if self.role.name != "Admin" and role.name == "Admin" do
+      CheckPermissions.forbidden(conn)
     end
 
     with {:ok, %User{} = user} <- Users.update_user(user, %{"user" => %{"role_id" => role.id}}) do
