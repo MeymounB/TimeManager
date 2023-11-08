@@ -104,7 +104,9 @@ const onSubmit = async () => {
       <h2 class="text-2xl md:text-4xl font-bold italic">Créer un compte</h2>
     </div>
     <form class="w-full max-w-md mt-4 space-y-4" @submit.prevent="onSubmit">
-      <div class="flex flex-col space-y-4 md:space-y-0 md:space-x-4 md:flex-row">
+      <div
+        class="flex flex-col space-y-4 md:space-y-0 md:space-x-4 md:flex-row"
+      >
         <div class="w-full">
           <label for="firstname" class="block text-sm font-medium">
             Prénom
@@ -119,15 +121,15 @@ const onSubmit = async () => {
             class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
             @change="vuelidate.firstname.$touch"
           />
-          <span v-if="isFieldError('firstname')" class="text-xs text-red-500">
-            {{ fieldErrorMessage("firstname").value }}
-          </span>
+          <div class="min-h-[25px]">
+            <span v-if="isFieldError('firstname')" class="text-xs text-red-500">
+              {{ fieldErrorMessage("firstname").value }}
+            </span>
+          </div>
         </div>
 
         <div class="w-full">
-          <label for="lastname" class="block text-sm font-medium">
-            Nom
-          </label>
+          <label for="lastname" class="block text-sm font-medium"> Nom </label>
           <input
             id="lastname"
             v-model="formValue.lastname"
@@ -138,15 +140,15 @@ const onSubmit = async () => {
             class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
             @change="vuelidate.lastname.$touch"
           />
-          <span v-if="isFieldError('lastname')" class="text-xs text-red-500">
-            {{ fieldErrorMessage("lastname").value }}
-          </span>
+          <div class="min-h-[25px]">
+            <span v-if="isFieldError('lastname')" class="text-xs text-red-500">
+              {{ fieldErrorMessage("lastname").value }}
+            </span>
+          </div>
         </div>
       </div>
       <div>
-        <label for="email" class="block text-sm font-medium">
-          Email
-        </label>
+        <label for="email" class="block text-sm font-medium"> Email </label>
         <input
           id="email"
           v-model="formValue.email"
@@ -157,9 +159,11 @@ const onSubmit = async () => {
           class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
           @change="vuelidate.email.$touch"
         />
-        <span v-if="isFieldError('email')" class="text-xs text-red-500">
-          {{ fieldErrorMessage("email").value }}
-        </span>
+        <div class="min-h-[25px]">
+          <span v-if="isFieldError('email')" class="text-xs text-red-500">
+            {{ fieldErrorMessage("email").value }}
+          </span>
+        </div>
       </div>
 
       <div>
@@ -177,9 +181,11 @@ const onSubmit = async () => {
           class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
           @change="vuelidate.password.$touch"
         />
-        <span v-if="isFieldError('password')" class="text-xs text-red-500">
-          {{ fieldErrorMessage("password").value }}
-        </span>
+        <div class="min-h-[25px]">
+          <span v-if="isFieldError('password')" class="text-xs text-red-500">
+            {{ fieldErrorMessage("password").value }}
+          </span>
+        </div>
       </div>
 
       <div>
@@ -196,14 +202,21 @@ const onSubmit = async () => {
           class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
           @change="vuelidate.password_confirmation.$touch"
         />
-        <span v-if="isFieldError('password_confirmation')" class="text-xs text-red-500">
-          {{ fieldErrorMessage("password_confirmation").value }}
-        </span>
+        <div class="min-h-[25px]">
+          <span
+            v-if="isFieldError('password_confirmation')"
+            class="text-xs text-red-500"
+          >
+            {{ fieldErrorMessage("password_confirmation").value }}
+          </span>
+        </div>
       </div>
 
-      <template v-if="formErrorsExist" class="mt-4 text-xs text-red-500">
-       API errors here
-      </template>
+      <div class="errors min-h-[32px] mt-10 text-red-500">
+        <template v-if="formErrorsExist">
+          <span class="text-red-500"> API errors here </span>
+        </template>
+      </div>
 
       <AppButton
         type="submit"

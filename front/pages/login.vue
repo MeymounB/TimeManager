@@ -60,13 +60,13 @@ const onSubmit = async () => {
   <section class="w-full h-full flex flex-col justify-center items-center p-4">
     <div class="w-full max-w-md mx-auto text-center">
       <h2 class="text-2xl md:text-4xl font-bold italic">TimeManager</h2>
-      <span class="text-xs md:text-sm italic">Connectez-vous à votre espace</span>
+      <span class="text-xs md:text-sm italic"
+        >Connectez-vous à votre espace</span
+      >
     </div>
     <form class="w-full max-w-md mx-auto mt-4" @submit.prevent="onSubmit">
       <div>
-        <label for="email" class="block text-sm font-medium">
-          Email
-        </label>
+        <label for="email" class="block text-sm font-medium"> Email </label>
         <input
           id="email"
           v-model="formValue.email"
@@ -78,10 +78,13 @@ const onSubmit = async () => {
           class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
           @change="vuelidate.email.$touch"
         />
-        <span v-if="isFieldError('email')" class="text-xs text-red-500">
-          {{ fieldErrorMessage("email").value }}
-        </span>
+        <div class="min-h-[25px]">
+          <span v-if="isFieldError('email')" class="text-xs text-red-500">
+            {{ fieldErrorMessage("email").value }}
+          </span>
+        </div>
       </div>
+
       <div class="mt-4">
         <label for="password" class="block text-sm font-medium">
           Mot de passe
