@@ -301,8 +301,11 @@ const onSubmit = async () => {
               :key="team.id"
               class="flex items-center gap-3 border border-gray-700 rounded max-w-[200px] px-4 py-2"
             >
-              <svg-icon name="team" class="w-4 h-4" />
-              <span class="font-medium text-center">{{ team.name }}</span>
+              <svg-icon name="team" class="w-5 h-5" />
+              <span
+                class="font-medium text-center text-sm whitespace-nowrap text-ellipsis overflow-hidden"
+                >{{ team.name }}</span
+              >
             </div>
           </div>
         </div>
@@ -315,10 +318,13 @@ const onSubmit = async () => {
             <div
               v-for="team in user.managed_teams"
               :key="team.id"
-              class="flex items-center gap-3 border border-gray-700 rounded max-w-[150px] px-4 py-2"
+              class="flex items-center gap-3 border border-gray-700 rounded max-w-[200px] px-4 py-2"
             >
-              <svg-icon name="team" class="w-4 h-4" />
-              <span class="font-medium text-center">{{ team.name }}</span>
+              <svg-icon name="team" class="w-5 h-5" />
+              <span
+                class="font-medium text-center text-sm whitespace-nowrap text-ellipsis overflow-hidden"
+                >{{ team.name }}</span
+              >
             </div>
           </div>
         </div>
