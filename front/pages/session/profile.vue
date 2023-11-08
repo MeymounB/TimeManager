@@ -77,160 +77,191 @@ const onSubmit = async () => {};
 </script>
 
 <template>
-  <section v-if="user" class="profile mx-auto bg-white shadow-md rounded-lg max-w-4xl mt-0 md:mt-6">
-      <div class="text-center py-6 bg-gray-100 border-b">
-        <h1 class="text-3xl font-bold text-gray-800">Votre Profil</h1>
-        <p class="text-gray-600">Vous pouvez mettre à jour vos informations ci-dessous.</p>
-      </div>
-      <form class="p-4 sm:p-6" @submit.prevent="onSubmit">
-        <div class="mb-4">
-          <label for="firstname" class="block text-sm font-medium leading-6">
-            Prénom
-          </label>
-          <div class="mt-1 flex justify-between items-center gap-5">
-            <input
-              id="firstname"
-              v-model="formValue.firstname"
-              name="firstname"
-              type="text"
-              required
-              :class="{
-                'ring-red-500': isFieldError('firstname'),
-                'pointer-events-none bg-transparent ring-0 shadow-none p-0':
-                  !firstnameEdit,
-              }"
-              class="outline-0 h-11 w-3/4 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-500 sm:text-sm sm:leading-6"
-              @change="vuelidate.firstname.$touch"
-            />
-            <template v-if="firstnameEdit">
-              <div class="flex justify-evenly sm:flex-row sm:space-x-3 flex-col items-center gap-3 sm:gap-0">
-                <AppButton
-                  button-style="danger"
-                  type="button"
-                  class="btn-icon"
-                  @click="toggleFirstnameEdit"
-                >
-                  <svg-icon name="cross" class="w-5 h-5" />
-                </AppButton>
-                <AppButton button-style="primary" type="submit" class="btn-icon">
-                  <svg-icon name="valid" class="w-5 h-5" />
-                </AppButton>
-              </div>
-            </template>
-            <template v-else>
+  <section
+    v-if="user"
+    class="profile mx-auto bg-white shadow-md rounded-lg max-w-7xl mt-0 md:mt-6"
+  >
+    <div class="text-center py-6 bg-gray-100 border-b">
+      <h1 class="text-3xl font-bold text-gray-800">Votre Profil</h1>
+      <p class="text-gray-600">
+        Vous pouvez mettre à jour vos informations ci-dessous.
+      </p>
+    </div>
+    <form class="p-4 sm:p-6" @submit.prevent="onSubmit">
+      <div class="mb-4">
+        <label for="firstname" class="block text-sm font-medium leading-6">
+          Prénom
+        </label>
+        <div
+          class="mt-1 flex items-center gap-5"
+          :class="{ 'justify-between': !firstnameEdit }"
+        >
+          <input
+            id="firstname"
+            v-model="formValue.firstname"
+            name="firstname"
+            type="text"
+            required
+            :class="{
+              'ring-red-500': isFieldError('email'),
+              'px-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-500 bg-gray-200 font-normal':
+                firstnameEdit,
+            }"
+            class="outline-0 h-11 bg-transparent w-3/4 rounded-md border-0 py-1.5 sm:text-sm sm:leading-6 font-bold"
+            :disabled="!firstnameEdit"
+            @change="vuelidate.firstname.$touch"
+          />
+          <template v-if="firstnameEdit">
+            <div
+              class="flex justify-evenly sm:flex-row sm:space-x-3 flex-col items-center gap-3 sm:gap-0"
+            >
               <AppButton
-                button-style="tertiary"
+                button-style="danger"
                 type="button"
                 class="btn-icon"
                 @click="toggleFirstnameEdit"
               >
-                <svg-icon name="edit" class="w-5 h-5" />
+                <svg-icon name="cross" class="w-5 h-5" />
               </AppButton>
-            </template>
-          </div>
-
-          <div class="min-h-[25px]">
-            <span v-if="isFieldError('firstname')" class="text-sm text-red-500">
-              {{ fieldErrorMessage("firstname").value }}
-            </span>
-          </div>
+              <AppButton button-style="primary" type="submit" class="btn-icon">
+                <svg-icon name="valid" class="w-5 h-5" />
+              </AppButton>
+            </div>
+          </template>
+          <template v-else>
+            <AppButton
+              button-style="tertiary"
+              type="button"
+              class="btn-icon"
+              @click="toggleFirstnameEdit"
+            >
+              <svg-icon name="edit" class="w-5 h-5" />
+            </AppButton>
+          </template>
         </div>
 
-        <div class="mb-4">
-          <label for="lastname" class="block text-sm font-medium leading-6">
-            Nom
-          </label>
-          <div class="mt-1 flex justify-between items-center gap-5">
-            <input
-              id="lastname"
-              v-model="formValue.lastname"
-              name="lastname"
-              type="text"
-              required
-              :class="{ 'ring-red-500': isFieldError('lastname') }"
-              class="outline-0 h-11 w-3/4 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-500 sm:text-sm sm:leading-6"
-              @change="vuelidate.lastname.$touch"
-            />
-            <template v-if="lastnameEdit">
-              <div class="flex justify-evenly sm:flex-row sm:space-x-3 flex-col items-center gap-3 sm:gap-0">
-                <AppButton
-                  button-style="danger"
-                  type="button"
-                  class="btn-icon"
-                  @click="toggleLastnameEdit"
-                >
-                  <svg-icon name="cross" class="w-5 h-5" />
-                </AppButton>
-                <AppButton button-style="primary" type="submit" class="btn-icon">
-                  <svg-icon name="valid" class="w-5 h-5" />
-                </AppButton>
-              </div>
-            </template>
-            <template v-else>
+        <div class="min-h-[25px]">
+          <span v-if="isFieldError('firstname')" class="text-sm text-red-500">
+            {{ fieldErrorMessage("firstname").value }}
+          </span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="lastname" class="block text-sm font-medium leading-6">
+          Nom
+        </label>
+        <div
+          class="mt-1 flex items-center gap-5"
+          :class="{ 'justify-between': !lastnameEdit }"
+        >
+          <input
+            id="lastname"
+            v-model="formValue.lastname"
+            name="lastname"
+            type="text"
+            required
+            :class="{
+              'ring-red-500': isFieldError('email'),
+              'px-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-500 bg-gray-200 font-normal':
+                lastnameEdit,
+            }"
+            class="outline-0 h-11 bg-transparent w-3/4 rounded-md border-0 py-1.5 sm:text-sm sm:leading-6 font-bold"
+            :disabled="!lastnameEdit"
+            @change="vuelidate.lastname.$touch"
+          />
+          <template v-if="lastnameEdit">
+            <div
+              class="flex justify-evenly sm:flex-row sm:space-x-3 flex-col items-center gap-3 sm:gap-0"
+            >
               <AppButton
-                button-style="tertiary"
+                button-style="danger"
                 type="button"
                 class="btn-icon"
                 @click="toggleLastnameEdit"
               >
-                <svg-icon name="edit" class="w-5 h-5" />
+                <svg-icon name="cross" class="w-5 h-5" />
               </AppButton>
-            </template>
-          </div>
-          <div class="min-h-[25px]">
-            <span v-if="isFieldError('lastname')" class="text-sm text-red-500">
-              {{ fieldErrorMessage("lastname").value }}
-            </span>
-          </div>
+              <AppButton button-style="primary" type="submit" class="btn-icon">
+                <svg-icon name="valid" class="w-5 h-5" />
+              </AppButton>
+            </div>
+          </template>
+          <template v-else>
+            <AppButton
+              button-style="tertiary"
+              type="button"
+              class="btn-icon"
+              @click="toggleLastnameEdit"
+            >
+              <svg-icon name="edit" class="w-5 h-5" />
+            </AppButton>
+          </template>
         </div>
+        <div class="min-h-[25px]">
+          <span v-if="isFieldError('lastname')" class="text-sm text-red-500">
+            {{ fieldErrorMessage("lastname").value }}
+          </span>
+        </div>
+      </div>
 
-        <div class="mb-4">
-          <label for="email" class="block text-sm font-medium leading-6">
-            Email
-          </label>
-          <div class="mt-1 flex justify-between items-center gap-5">
-            <input
-              id="email"
-              v-model="formValue.email"
-              name="email"
-              type="email"
-              required
-              :class="{ 'ring-red-500': isFieldError('email') }"
-              class="outline-0 h-11 w-3/4 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-500 sm:text-sm sm:leading-6"
-              @change="vuelidate.email.$touch"
-            />
-            <template v-if="emailEdit">
-              <div class="flex justify-evenly sm:flex-row sm:space-x-3 flex-col items-center gap-3 sm:gap-0">
-                <AppButton
-                  button-style="danger"
-                  type="button"
-                  class="btn-icon"
-                  @click="toggleEmailEdit"
-                >
-                  <svg-icon name="cross" class="w-5 h-5" />
-                </AppButton>
-                <AppButton button-style="primary" type="submit" class="btn-icon">
-                  <svg-icon name="valid" class="w-5 h-5" />
-                </AppButton>
-              </div>
-            </template>
-            <template v-else>
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium leading-6">
+          Email
+        </label>
+        <div
+          class="mt-1 flex items-center gap-5"
+          :class="{ 'justify-between': !emailEdit }"
+        >
+          <input
+            id="email"
+            v-model="formValue.email"
+            name="email"
+            type="email"
+            required
+            :class="{
+              'ring-red-500': isFieldError('email'),
+              'px-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-500 bg-gray-200 font-normal':
+                emailEdit,
+            }"
+            class="outline-0 h-11 bg-transparent w-3/4 rounded-md border-0 py-1.5 sm:text-sm sm:leading-6 font-bold"
+            :disabled="!emailEdit"
+            @change="vuelidate.email.$touch"
+          />
+          <template v-if="emailEdit">
+            <div
+              class="flex justify-evenly sm:flex-row sm:space-x-3 flex-col items-center gap-3 sm:gap-0"
+            >
               <AppButton
-                button-style="tertiary"
+                button-style="danger"
                 type="button"
                 class="btn-icon"
                 @click="toggleEmailEdit"
               >
-                <svg-icon name="edit" class="w-5 h-5" />
+                <svg-icon name="cross" class="w-5 h-5" />
               </AppButton>
-            </template>
-          </div>
-          <div class="min-h-[25px]">
-            <span v-if="isFieldError('email')" class="text-sm text-red-500">
-              {{ fieldErrorMessage("email").value }}
-            </span>
-          </div>
+              <AppButton button-style="primary" type="submit" class="btn-icon">
+                <svg-icon name="valid" class="w-5 h-5" />
+              </AppButton>
+            </div>
+          </template>
+          <template v-else>
+            <AppButton
+              button-style="tertiary"
+              type="button"
+              class="btn-icon"
+              @click="toggleEmailEdit"
+            >
+              <svg-icon name="edit" class="w-5 h-5" />
+            </AppButton>
+          </template>
         </div>
+        <div class="min-h-[25px]">
+          <span v-if="isFieldError('email')" class="text-sm text-red-500">
+            {{ fieldErrorMessage("email").value }}
+          </span>
+        </div>
+      </div>
       <div class="grid grid-cols-2 divide-x gap-5">
         <div class="p-3">
           <span class="block font-medium">Mes équipes</span>
