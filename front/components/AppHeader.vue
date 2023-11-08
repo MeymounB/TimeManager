@@ -59,7 +59,7 @@ const logout = async () => {
                   <AppDropdown button-style="tertiary">
                     <template #dropdown-toggle>
                       <span
-                        class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center flex font-semibold"
+                        class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center flex font-semibold text-sm"
                       >
                         {{
                           user.firstname[0].toUpperCase() +
@@ -110,7 +110,7 @@ const logout = async () => {
                     @click="navigateTo('/session/profile')"
                   >
                     <span
-                      class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center flex font-semibold"
+                      class="rounded-[100px] bg-blue-200 p-[8px] w-[32px] h-[32px] items-center justify-center flex font-semibold text-sm"
                     >
                       {{
                         user.firstname[0].toUpperCase() +

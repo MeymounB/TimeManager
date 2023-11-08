@@ -9,14 +9,14 @@ export interface IUserShort {
   firstname: string;
   lastname: string;
   role_id: number;
+  clock: IClock;
+  teams: IShortTeam[];
   custom_permissions: Permissions;
 }
 
 export interface IUser extends IUserShort {
   role: IRole;
-  clock: IClock;
   working_times: IWorkingTime[];
-  teams: IShortTeam[];
   managed_teams: IShortTeam[];
 }
 

@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useSessionStore } from "@/stores/sessionStore";
+import type { IUser } from "~/utils/user";
 
-const { user } = storeToRefs(useSessionStore());
+const props = defineProps<{
+  user: IUser;
+  manageable: boolean;
+  inLabel: string;
+  outLabel: string;
+}>();
+
 const getUserClockAPI = useGetClock();
 const clockUserAPI = useClockUser();
 const emits = defineEmits(["clockOut"]);
@@ -12,9 +17,6 @@ const time = ref("00:00:00");
 const interval = ref();
 const formatDate = useFormatDate();
 const formatDateLocaleDateTime = useFormatDateTimeLocal();
-// const startDateTime = computed(() => {
-//   return (clock.value?.time && clock.value.status) ?? null
-// })
 
 const calcTimer = () => {
   if (!clock.value) {
@@ -23,6 +25,8 @@ const calcTimer = () => {
   const clockTime = formatDate(clock.value.time.toString());
   const now = new Date().getTime();
   const timeDifference = now - clockTime.getTime();
+
+  console.log(timeDifference);
 
   const hours = String(
     Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -46,11 +50,7 @@ const clockOut = computed(() => {
 });
 
 const clockUser = async () => {
-  if (!user.value) {
-    return;
-  }
-
-  const response = await clockUserAPI(user.value.id);
+  const response = await clockUserAPI(props.user.id);
 
   if (!response.ok) {
     return alert("Une erreur est servenue lors du badging");
@@ -73,10 +73,7 @@ const clockUser = async () => {
 };
 
 const refresh = async () => {
-  if (!user.value) {
-    return;
-  }
-  const response = await getUserClockAPI(user.value.id);
+  const response = await getUserClockAPI(props.user.id);
 
   if (!response.ok) {
     return;
@@ -93,44 +90,44 @@ const refresh = async () => {
 onMounted(async () => {
   await refresh();
 });
+
+onUnmounted(() => {
+  clearInterval(interval.value);
+  interval.value = null;
+});
 </script>
 
 <template>
-  <section class="manager">
-    <AppCard title="Clocks" class="text-center">
-      <div class="space-y-10">
-        <div v-if="clock" class="clock-infos min-h-[24px]">
-          <span>
-            <span v-if="clockOut"> Badgé à: </span>
-            <span v-else> Parti à: </span>
-            {{
-              formatDateLocaleDateTime(formatDate(clock.time))
-                .toString()
-                .replace("T", " ")
-            }}
-          </span>
-        </div>
-
-        <div class="text-5xl font-bold">
-          {{ time }}
-        </div>
-
-        <AppButton
-          v-if="user"
-          button-style="secondary"
-          type="button"
-          class="w-1/2"
-          @click="clockUser"
-        >
-          <template v-if="clockIn"> Me badger </template>
-          <template v-else-if="clockOut"> Partir </template>
-        </AppButton>
-        <template v-else>
-          Veuillez vous identifier afin de pouvoir vous badger
-        </template>
+  <AppCard class="text-center">
+    <div class="space-y-10">
+      <div v-if="clock" class="clock-infos min-h-[24px]">
+        <span>
+          <span v-if="clockOut"> Badgé à: </span>
+          <span v-else> Parti à: </span>
+          {{
+            formatDateLocaleDateTime(formatDate(clock.time))
+              .toString()
+              .replace("T", " ")
+          }}
+        </span>
       </div>
-    </AppCard>
-  </section>
+
+      <div class="text-5xl font-bold">
+        {{ time }}
+      </div>
+
+      <AppButton
+        v-if="manageable"
+        button-style="secondary"
+        type="button"
+        class="w-1/2"
+        @click="clockUser"
+      >
+        <template v-if="clockIn">{{ inLabel }}</template>
+        <template v-else-if="clockOut">{{ outLabel }}</template>
+      </AppButton>
+    </div>
+  </AppCard>
 </template>
 
 <style scoped></style>

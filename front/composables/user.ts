@@ -1,5 +1,6 @@
 import { useFetchAPI } from "@/composables/fetch";
-import type { IUser } from "~/utils/user";
+import type { IUser, IUserShort } from "~/utils/user";
+import type { IShortTeam } from "~/utils/teams";
 
 const runtimeConfig = useRuntimeConfig();
 const USERS_ENDPOINT = `${runtimeConfig.public.BACK_URL}/users`;
@@ -53,4 +54,16 @@ export function isUserGeneralManager(user: IUser) {
 
 export function isUserAdmin(user: IUser) {
   return !(user.role.name !== RolesNames.ADMIN);
+}
+
+export function userInSameTeam(user: IUser, target: IUserShort) {
+  return user.teams
+    .map((t) => t.id)
+    .some((r) => target.teams.map((t: ITeam) => t.id).includes(r));
+}
+
+export function userManageable(user: IUser, target: IUserShort) {
+  return user.managed_teams
+    .map((t) => t.id)
+    .some((r) => target.teams.map((t: IShortTeam) => t.id).includes(r));
 }

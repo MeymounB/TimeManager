@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import type { IRole } from "~/utils/roles";
-import type { IUserShort } from "~/utils/user";
+import type { IUser, IUserShort } from "~/utils/user";
 import { isUserAdmin, isUserManager } from "~/composables/user";
 import { useSessionStore } from "~/stores/sessionStore";
 
@@ -34,14 +34,6 @@ const userByRoleId = computed(() => {
   });
 });
 
-const userAdmin = computed(() => {
-  return isUserAdmin(user.value as IUser);
-});
-
-const userGeneralManager = computed(() => {
-  return isUserManager(user.value as IUser);
-});
-
 const userManager = computed(() => {
   return isUserManager(user.value as IUser);
 });
@@ -69,15 +61,48 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section class="users">
-    <table class="w-3/5 h-1/2 text-left text-sm font-light">
+  <section class="users my-10 px-1 lg:px-5">
+    <table
+      class="w-full lg:w-4/5 h-1/2 text-left text-sm font-light overflow-hidden table-fixed lg:table-auto mx-auto"
+    >
       <thead class="border-b font-medium dark:border-neutral-500">
         <tr>
-          <th scope="col" class="px-6 py-4">Prénom</th>
-          <th scope="col" class="px-6 py-4">Nom</th>
-          <th scope="col" class="px-6 py-4">Email</th>
-          <th scope="col" class="px-6 py-4">Role</th>
-          <th v-if="userManager" scope="col" class="px-6 py-4 text-center">
+          <th
+            scope="col"
+            class="py-4 overflow-x-hidden text-ellipsis whitespace-nowrap"
+          >
+            Prénom
+          </th>
+          <th
+            scope="col"
+            class="py-4 overflow-x-hidden text-ellipsis whitespace-nowrap"
+          >
+            Nom
+          </th>
+          <th
+            scope="col"
+            class="py-4 overflow-x-hidden text-ellipsis whitespace-nowrap"
+          >
+            Email
+          </th>
+          <th
+            scope="col"
+            class="py-4 overflow-x-hidden text-ellipsis whitespace-nowrap"
+          >
+            Role
+          </th>
+          <th
+            scope="col"
+            class="py-4 overflow-x-hidden text-ellipsis whitespace-nowrap text-center"
+          >
+            Status
+          </th>
+          <th scope="col" />
+          <th
+            v-if="userManager"
+            scope="col"
+            class="py-4 overflow-x-hidden text-ellipsis whitespace-nowrap text-center"
+          >
             Actions
           </th>
         </tr>
@@ -89,12 +114,42 @@ onMounted(async () => {
             :key="tableUser.id"
             class="border-b transition duration-300 ease-in-out h-10"
           >
-            <td>{{ tableUser.firstname }}</td>
-            <td>{{ tableUser.lastname }}</td>
-            <td>{{ tableUser.email }}</td>
-            <td>{{ getRoleName(tableUser.role_id) }}</td>
+            <td class="overflow-x-hidden text-ellipsis whitespace-nowrap">
+              {{ tableUser.firstname }}
+            </td>
+            <td class="overflow-x-hidden text-ellipsis whitespace-nowrap">
+              {{ tableUser.lastname }}
+            </td>
+            <td class="whitespace-nowrap overflow-hidden text-ellipsis">
+              {{ tableUser.email }}
+            </td>
+            <td class="overflow-x-hidden text-ellipsis whitespace-nowrap">
+              {{ getRoleName(tableUser.role_id) }}
+            </td>
+            <td class="text-center">
+              <span :class="{ 'text-green-500': tableUser.clock?.status }">
+                ⬤
+              </span>
+            </td>
+            <td class="flex h-full items-center justify-center">
+              <svg-icon
+                v-if="userInSameTeam(user as IUser, tableUser)"
+                name="team"
+                class="w-4 h-4"
+              />
+              <svg-icon
+                v-if="userManageable(user as IUser, tableUser)"
+                name="settings"
+                class="w-4 h-4"
+              />
+            </td>
             <td v-if="userManager" class="text-center">
-              <AppButton button-style="tertiary" type="button" class="btn-icon">
+              <AppButton
+                button-style="tertiary"
+                type="button"
+                class="btn-icon"
+                @click="navigateTo(`/session/users/${tableUser.id}`)"
+              >
                 <svg-icon name="eye" class="w-4 h-4" />
               </AppButton>
             </td>

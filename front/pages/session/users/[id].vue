@@ -1,0 +1,105 @@
+<script setup lang="ts">
+import { useSessionStore } from "~/stores/sessionStore";
+import type { IUser } from "~/utils/user";
+
+const route = useRoute();
+const getUserAPI = useGetUser();
+
+const session = useSessionStore();
+const user = ref<IUser | null>(null);
+const updateUserAPI = useUpdateUser();
+
+const fetchUser = async () => {
+  const id = parseInt(route.params.id.toString()) ?? 0;
+
+  const response = await getUserAPI(id);
+
+  if (!response.ok) {
+    user.value = null;
+    return alert("User does not exists");
+  }
+
+  user.value = response.data;
+};
+
+const userFormValue = reactive({
+  firstname: user.value?.firstname ?? "",
+  lastname: user.value?.lastname ?? "",
+  email: user.value?.email ?? "",
+});
+
+onMounted(async () => {
+  await fetchUser();
+
+  userFormValue.firstname = user.value?.firstname;
+  userFormValue.lastname = user.value?.lastname;
+  userFormValue.email = user.value?.email;
+});
+
+const onSubmit = async () => {
+  if (!user.value) {
+    return;
+  }
+
+  const response = await updateUserAPI(user.value.id, userFormValue);
+
+  if (!response.ok) {
+    return alert("Error happened while updating user");
+  }
+
+  await fetchUser();
+  userFormValue.firstname = user.value?.firstname;
+  userFormValue.lastname = user.value?.lastname;
+  userFormValue.email = user.value?.email;
+};
+</script>
+
+<template>
+  <section v-if="user" class="mt-0 md:mt-6 px-2 md:px-5">
+    <AppButton
+      button-style="secondary"
+      type="button"
+      class="flex items-center self-start mt-3 lg:mt-0"
+      @click="navigateTo('/session/users')"
+    >
+      <svg-icon name="back-arrow" class="w-3 h-3 mr-2" /> Retour
+    </AppButton>
+    <div class="mt-5 flex flex-col-reverse md:flex-row gap-5">
+      <AppCard class="flex-grow-0 md:flex-grow">
+        <UserForm
+          v-model="userFormValue"
+          :true-user="user"
+          @submit="onSubmit"
+        />
+        <div>
+          <span class="block font-medium">Équipes</span>
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-3 mt-5"
+          >
+            <div
+              v-for="team in user.teams"
+              :key="team.id"
+              class="flex items-center gap-3 border border-gray-700 rounded max-w-[200px] px-4 py-2"
+            >
+              <svg-icon name="team" class="w-5 h-5" />
+              <span
+                class="font-medium text-center text-sm whitespace-nowrap text-ellipsis overflow-hidden"
+                >{{ team.name }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </AppCard>
+      <ClockManager
+        :user="user"
+        :manageable="userManageable(session.user as IUser, user)"
+        in-label="Badger"
+        out-label="Badger"
+        class="md:w-1/3"
+      />
+    </div>
+    <div></div>
+  </section>
+</template>
+
+<style scoped></style>
