@@ -67,7 +67,7 @@ const onSubmit = async () => {};
 </script>
 
 <template>
-  <section v-if="user" class="profile mx-auto bg-white shadow-md rounded-lg max-w-4xl">
+  <section v-if="user" class="profile mx-auto bg-white shadow-md rounded-lg max-w-4xl mt-0 md:mt-6">
       <div class="text-center py-6 bg-gray-100 border-b">
         <h1 class="text-3xl font-bold text-gray-800">Votre Profil</h1>
         <p class="text-gray-600">Vous pouvez mettre à jour vos informations ci-dessous.</p>
