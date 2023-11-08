@@ -9,28 +9,13 @@
             <li><a href="/terms" class="hover:text-gray-300">Termes et Conditions</a></li>
           </ul>
         </nav>
-        <div class="flex space-x-4">
-          <a href="https://facebook.com" target="_blank" class="hover:text-gray-300">
-            <!--  icone à la place de FB -->
-            FB
-          </a>
-          <a href="https://twitter.com" target="_blank" class="hover:text-gray-300">
-            <!--  icone à la place de TW -->
-            TW
-          </a>
-          <a href="https://instagram.com" target="_blank" class="hover:text-gray-300">
-            <!--  icone à la place de IG -->
-            IG
-          </a>
-        </div>
-      </div>
-      <p class="text-center text-gray-500 text-sm mt-8">
+        <p class="text-center text-gray-500 text-sm">
         &copy; 2023 Time Manager. Tous droits réservés.
-      </p>
+        </p>
+      </div>
     </div>
   </footer>
 </template>
 
 <style scoped>
-/* Styles for the footer section */
 </style>
