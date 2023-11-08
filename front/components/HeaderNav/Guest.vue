@@ -7,9 +7,6 @@
         <NuxtLink to="/">Home</NuxtLink>
       </li>
       <li class="hover:underline text-2xl lg:text-base">
-        <NuxtLink to="/">About</NuxtLink>
-      </li>
-      <li class="hover:underline text-2xl lg:text-base">
         <NuxtLink to="/">Contact</NuxtLink>
       </li>
     </ul>

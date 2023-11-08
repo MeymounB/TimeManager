@@ -99,142 +99,116 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <section class="w-full">
-    <div class="text-center">
-      <h2 class="text-4xl h1 font-bold italic">Créer un compte</h2>
+  <section class="flex flex-col items-center w-full h-full p-4">
+    <div class="max-w-md text-center">
+      <h2 class="text-2xl md:text-4xl font-bold italic">Créer un compte</h2>
     </div>
-    <form class="mt-15 space-y-3 p-5" @submit.prevent="onSubmit">
-      <div class="flex gap-5 flex-col md:flex-row">
+    <form class="w-full max-w-md mt-4 space-y-4" @submit.prevent="onSubmit">
+      <div class="flex flex-col space-y-4 md:space-y-0 md:space-x-4 md:flex-row">
         <div class="w-full">
-          <label for="firstname" class="block text-sm font-medium leading-6">
+          <label for="firstname" class="block text-sm font-medium">
             Prénom
           </label>
-          <div>
-            <input
-              id="firstname"
-              v-model="formValue.firstname"
-              name="firstname"
-              type="text"
-              required
-              :class="{ 'ring-red-500': isFieldError('firstname') }"
-              class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-              @change="vuelidate.firstname.$touch"
-            />
-          </div>
-          <div class="min-h-[25px]">
-            <span v-if="isFieldError('firstname')" class="text-sm text-red-500">
-              {{ fieldErrorMessage("firstname").value }}
-            </span>
-          </div>
+          <input
+            id="firstname"
+            v-model="formValue.firstname"
+            name="firstname"
+            type="text"
+            required
+            :class="{ 'ring-red-500': isFieldError('firstname') }"
+            class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+            @change="vuelidate.firstname.$touch"
+          />
+          <span v-if="isFieldError('firstname')" class="text-xs text-red-500">
+            {{ fieldErrorMessage("firstname").value }}
+          </span>
         </div>
 
         <div class="w-full">
-          <label for="lastname" class="block text-sm font-medium leading-6">
+          <label for="lastname" class="block text-sm font-medium">
             Nom
           </label>
-          <div>
-            <input
-              id="lastname"
-              v-model="formValue.lastname"
-              name="lastname"
-              type="text"
-              required
-              :class="{ 'ring-red-500': isFieldError('lastname') }"
-              class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-              @change="vuelidate.lastname.$touch"
-            />
-          </div>
-          <div class="min-h-[25px]">
-            <span v-if="isFieldError('lastname')" class="text-sm text-red-500">
-              {{ fieldErrorMessage("lastname").value }}
-            </span>
-          </div>
+          <input
+            id="lastname"
+            v-model="formValue.lastname"
+            name="lastname"
+            type="text"
+            required
+            :class="{ 'ring-red-500': isFieldError('lastname') }"
+            class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+            @change="vuelidate.lastname.$touch"
+          />
+          <span v-if="isFieldError('lastname')" class="text-xs text-red-500">
+            {{ fieldErrorMessage("lastname").value }}
+          </span>
         </div>
       </div>
       <div>
-        <label for="email" class="block text-sm font-medium leading-6">
+        <label for="email" class="block text-sm font-medium">
           Email
         </label>
-        <div>
-          <input
-            id="email"
-            v-model="formValue.email"
-            name="email"
-            type="email"
-            required
-            :class="{ 'ring-red-500': isFieldError('email') }"
-            class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-            @change="vuelidate.email.$touch"
-          />
-        </div>
-        <div class="min-h-[25px]">
-          <span v-if="isFieldError('email')" class="text-sm text-red-500">
-            {{ fieldErrorMessage("email").value }}
-          </span>
-        </div>
+        <input
+          id="email"
+          v-model="formValue.email"
+          name="email"
+          type="email"
+          required
+          :class="{ 'ring-red-500': isFieldError('email') }"
+          class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+          @change="vuelidate.email.$touch"
+        />
+        <span v-if="isFieldError('email')" class="text-xs text-red-500">
+          {{ fieldErrorMessage("email").value }}
+        </span>
       </div>
 
       <div>
-        <label for="password" class="block text-sm font-medium leading-6">
+        <label for="password" class="block text-sm font-medium">
           Mot de passe
         </label>
-        <div>
-          <input
-            id="password"
-            v-model="formValue.password"
-            name="password"
-            type="password"
-            autocomplete="new-password"
-            required
-            :class="{ 'ring-red-500': isFieldError('password') }"
-            class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-            @change="vuelidate.password.$touch"
-          />
-        </div>
-        <div class="min-h-[25px]">
-          <span v-if="isFieldError('password')" class="text-sm text-red-500">
-            {{ fieldErrorMessage("password").value }}
-          </span>
-        </div>
+        <input
+          id="password"
+          v-model="formValue.password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          required
+          :class="{ 'ring-red-500': isFieldError('password') }"
+          class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+          @change="vuelidate.password.$touch"
+        />
+        <span v-if="isFieldError('password')" class="text-xs text-red-500">
+          {{ fieldErrorMessage("password").value }}
+        </span>
       </div>
 
       <div>
-        <label
-          for="password_confirmation"
-          class="block text-sm font-medium leading-6"
-        >
+        <label for="password_confirmation" class="block text-sm font-medium">
           Répétez le mot de passe
         </label>
-        <div>
-          <input
-            id="password_confirmation"
-            v-model="formValue.password_confirmation"
-            name="password_confirmation"
-            type="password"
-            required
-            :class="{ 'ring-red-500': isFieldError('password_confirmation') }"
-            class="outline-0 block w-full h-11 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500 sm:text-sm sm:leading-6"
-            @change="vuelidate.password_confirmation.$touch"
-          />
-        </div>
-        <div class="min-h-[25px]">
-          <span
-            v-if="isFieldError('password_confirmation')"
-            class="text-sm text-red-500"
-          >
-            {{ fieldErrorMessage("password_confirmation").value }}
-          </span>
-        </div>
+        <input
+          id="password_confirmation"
+          v-model="formValue.password_confirmation"
+          name="password_confirmation"
+          type="password"
+          required
+          :class="{ 'ring-red-500': isFieldError('password_confirmation') }"
+          class="mt-1 block w-full h-10 rounded-md py-2 px-4 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-gray-500"
+          @change="vuelidate.password_confirmation.$touch"
+        />
+        <span v-if="isFieldError('password_confirmation')" class="text-xs text-red-500">
+          {{ fieldErrorMessage("password_confirmation").value }}
+        </span>
       </div>
 
-      <div class="errors min-h-[52px] text-red-500">
-        <template v-if="formErrorsExist"> API errors here </template>
-      </div>
+      <template v-if="formErrorsExist" class="mt-4 text-xs text-red-500">
+       API errors here
+      </template>
 
       <AppButton
         type="submit"
-        :button-style="'primary'"
-        class="flex items-center justify-center w-full"
+        button-style="primary"
+        class="w-full flex items-center justify-center mt-6"
         :is-disabled="preventSubmit"
       >
         Créer un compte
@@ -242,5 +216,6 @@ const onSubmit = async () => {
     </form>
   </section>
 </template>
+
 
 <style scoped></style>

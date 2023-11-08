@@ -1,11 +1,12 @@
 <script setup lang="ts"></script>
 
 <template>
-  <section class="default-layout w-full">
+  <section class="default-layout flex flex-col min-h-screen w-full">
     <AppHeader />
-    <main class="w-100 h-100">
+    <main class="flex-grow">
       <slot />
     </main>
+    <AppFooter />
   </section>
 </template>
 
