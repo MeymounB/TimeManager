@@ -23,7 +23,7 @@ ENV MIX_ENV=prod
 
 RUN mix deps.get --only prod
 RUN mix compile
-RUN echo $SECRET_KEY_BASE
+RUN env
 
 EXPOSE 4000
 
