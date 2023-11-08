@@ -99,11 +99,11 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <section class="flex flex-col items-center w-full h-full p-4">
+  <section class="flex flex-col justify-center items-center w-full h-full p-4">
     <div class="max-w-md text-center">
       <h2 class="text-2xl md:text-4xl font-bold italic">Créer un compte</h2>
     </div>
-    <form class="w-full max-w-md mt-4 space-y-4" @submit.prevent="onSubmit">
+    <form class="w-full mt-4 space-y-4" @submit.prevent="onSubmit">
       <div
         class="flex flex-col space-y-4 md:space-y-0 md:space-x-4 md:flex-row"
       >
@@ -229,6 +229,5 @@ const onSubmit = async () => {
     </form>
   </section>
 </template>
-
 
 <style scoped></style>

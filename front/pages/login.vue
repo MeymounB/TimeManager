@@ -58,13 +58,13 @@ const onSubmit = async () => {
 
 <template>
   <section class="w-full h-full flex flex-col justify-center items-center p-4">
-    <div class="w-full max-w-md mx-auto text-center">
+    <div class="w-full text-center">
       <h2 class="text-2xl md:text-4xl font-bold italic">TimeManager</h2>
       <span class="text-xs md:text-sm italic"
         >Connectez-vous à votre espace</span
       >
     </div>
-    <form class="w-full max-w-md mx-auto mt-4" @submit.prevent="onSubmit">
+    <form class="w-full mt-4" @submit.prevent="onSubmit">
       <div>
         <label for="email" class="block text-sm font-medium"> Email </label>
         <input
@@ -115,6 +115,5 @@ const onSubmit = async () => {
     </form>
   </section>
 </template>
-
 
 <style scoped></style>
