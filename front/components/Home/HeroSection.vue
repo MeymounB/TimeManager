@@ -1,16 +1,4 @@
-<script setup lang="ts">
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-function navigateToSignup() {
-  router.push('/create-account');
-}
-
-function navigateToLogin() {
-  router.push('/login');
-}
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="hero-section bg-blue-100">
@@ -24,13 +12,13 @@ function navigateToLogin() {
       <div class="mt-6 flex flex-col sm:flex-row justify-center items-center">
         <button
           class="text-white font-bold py-2 px-4 rounded transition duration-300 mb-2 sm:mb-0 sm:mr-2 btn-primary"
-          @click="navigateToSignup()"
+          @click="navigateTo('/create-account')"
         >
           Inscrivez-vous maintenant
         </button>
         <button
           class="bg-transparent font-semibold py-2 px-4 border rounded transition duration-300 mt-2 sm:mt-0 btn-secondary"
-          @click="navigateToLogin()"
+          @click="navigateTo('/login')"
         >
           Connectez-vous
         </button>
@@ -39,16 +27,4 @@ function navigateToLogin() {
   </div>
 </template>
 
-<style scoped>
-.hero-section {
-  background-image: url('background-image.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-@media (max-width: 640px) {
-  .hero-section {
-    background-image: none;
-  }
-}
-</style>
+<style scoped></style>
