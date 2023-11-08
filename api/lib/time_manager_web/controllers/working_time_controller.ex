@@ -86,7 +86,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
     description("Create a user working time entry.\nScopes: working_time.create")
 
     parameter(:userID, :path, :integer, "User ID", required: true, example: 123)
-    parameter(:working_time, :body, Schema.ref(:UserWorkingTimeRequest), "Working time object", required: true, example: 123)
+    parameter(:working_time, :body, Schema.ref(:UserWorkingTimeRequest), "Working time object", required: true)
 
     SwaggerDefinitions.protected_path
     SwaggerDefinitions.json_path
@@ -107,12 +107,12 @@ defmodule TimeManagerWeb.WorkingTimeController do
     description("Update a working time entry.\nScopes: working_time.update")
 
     parameter(:id, :path, :integer, "Working time ID", required: true, example: 123)
-    parameter(:working_time, :body, Schema.ref(:WorkingTimeRequest), "Working time object", required: true, example: 123)
+    parameter(:working_time, :body, Schema.ref(:WorkingTimeRequest), "Working time object", required: true)
 
     SwaggerDefinitions.protected_path
     SwaggerDefinitions.json_path
 
-    response(201, "OK", Schema.ref(:WorkingTimeResponse))
+    response(200, "OK", Schema.ref(:WorkingTimeResponse))
     response(404, "Not found", Schema.ref(:NotFoundResponse))
   end
   def update(conn, %{"id" => id, "working_time" => working_time_params}) do

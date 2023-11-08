@@ -56,10 +56,10 @@ defmodule TimeManagerWeb.Router do
         resources "/", TeamController, except: [:new, :edit]
         post "/:teamID/clock", TeamController, :clock
         get "/:teamID/working_times", TeamController, :working_times
-        put "/:teamID/add_employee/:employee_id", TeamController, :add_employee
-        put "/:teamID/remove_employee/:employee_id", TeamController, :add_employee
-        put "/:teamID/add_manager/:manager_id", TeamController, :add_manager
-        put "/:teamID/remove_manager/:manager_id", TeamController, :add_manager
+        put "/:teamID/add_employee/:employeeID", TeamController, :add_employee
+        put "/:teamID/remove_employee/:employeeID", TeamController, :add_employee
+        put "/:teamID/add_manager/:managerID", TeamController, :add_manager
+        put "/:teamID/remove_manager/:managerID", TeamController, :add_manager
       end
 
       scope "/workingtimes" do
