@@ -28,7 +28,7 @@ defmodule TimeManager.Users.User do
   end
 
   def changeset(user_or_changeset, attrs) do
-    case Map.has_key?(attrs, :password) do
+    case Map.has_key?(attrs, :password) or Map.has_key?(attrs, "password") do
       true -> user_or_changeset
         |> pow_current_password_changeset(attrs)
         |> pow_password_changeset(attrs)
