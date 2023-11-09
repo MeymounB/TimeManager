@@ -6,8 +6,11 @@
       <li class="text-2xl lg:text-base">
         <NuxtLink to="/" class="link">Home</NuxtLink>
       </li>
-      <li class="text-2xl lg:text-base">
-        <NuxtLink to="/">Contact</NuxtLink>
+      <li class="hover:underline text-2xl lg:text-base">
+        <NuxtLink to="/guide">Guide</NuxtLink>
+      </li>
+      <li class="hover:underline text-2xl lg:text-base">
+        <NuxtLink to="/contact">Contact</NuxtLink>
       </li>
     </ul>
   </nav>
