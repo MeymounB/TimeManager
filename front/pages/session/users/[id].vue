@@ -4,10 +4,31 @@ import type { IUser } from "~/utils/user";
 
 const route = useRoute();
 const getUserAPI = useGetUser();
+const deleteUserAPI = useDeleteUser();
 
 const session = useSessionStore();
 const user = ref<IUser | null>(null);
 const updateUserAPI = useUpdateUser();
+
+const userGeneralManager = computed(() => {
+  return isUserGeneralManager(session.user as IUser);
+});
+
+const targetUserIsAdmin = computed(() => {
+  if (!user.value) {
+    return false;
+  }
+
+  return isUserAdmin(user.value);
+});
+
+const canDeleteUser = computed(() => {
+  return (
+    userGeneralManager.value &&
+    !targetUserIsAdmin.value &&
+    session.user?.id !== user.value?.id
+  );
+});
 
 const fetchUser = async () => {
   const id = parseInt(route.params.id.toString()) ?? 0;
@@ -22,6 +43,20 @@ const fetchUser = async () => {
   user.value = response.data;
 };
 
+const deleteUser = async () => {
+  if (!user.value) {
+    return;
+  }
+
+  const response = await deleteUserAPI(user.value.id);
+
+  if (!response.ok) {
+    return alert("Failed to delete user");
+  }
+
+  return navigateTo("/session/users");
+};
+
 const userFormValue = reactive({
   firstname: user.value?.firstname ?? "",
   lastname: user.value?.lastname ?? "",
@@ -31,9 +66,9 @@ const userFormValue = reactive({
 onMounted(async () => {
   await fetchUser();
 
-  userFormValue.firstname = user.value?.firstname;
-  userFormValue.lastname = user.value?.lastname;
-  userFormValue.email = user.value?.email;
+  userFormValue.firstname = user.value?.firstname ?? "";
+  userFormValue.lastname = user.value?.lastname ?? "";
+  userFormValue.email = user.value?.email ?? "";
 });
 
 const onSubmit = async () => {
@@ -87,6 +122,16 @@ const onSubmit = async () => {
                 >{{ team.name }}</span
               >
             </div>
+          </div>
+          <div class="w-full mt-3">
+            <AppButton
+              v-if="canDeleteUser"
+              button-style="danger"
+              class="!px-5 ml-auto flex items-center"
+              @click="deleteUser"
+            >
+              <svg-icon name="trash" class="w-5 h-5 mr-2" />Supprimer
+            </AppButton>
           </div>
         </div>
       </AppCard>

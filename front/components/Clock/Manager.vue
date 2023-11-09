@@ -98,7 +98,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <AppCard class="text-center">
+  <AppCard class="flex items-center justify-center">
     <div class="space-y-10">
       <div v-if="clock" class="clock-infos min-h-[24px]">
         <span>
@@ -120,7 +120,7 @@ onUnmounted(() => {
         v-if="manageable"
         button-style="secondary"
         type="button"
-        class="w-1/2"
+        class="w-full"
         @click="clockUser"
       >
         <template v-if="clockIn">{{ inLabel }}</template>
