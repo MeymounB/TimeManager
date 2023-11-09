@@ -5,14 +5,30 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const workingTimes = ref<InstanceType<typeof WorkingTimes> | null>(null);
-const updateWorkingTimes = () => {
-  workingTimes.value?.updateWorkingTimes();
+const session = useSessionStore();
+const { user } = storeToRefs(session);
+
+
+const workingTimes = ref<IWorkingTime[]>([]);
+const accountWorkingTimesAPI = useAccountWorkingTimes();
+
+const updateWorkingTimes = async () => {
+  const response = await accountWorkingTimesAPI();
+  if (!response.ok) {
+    console.error('Failed to fetch user working times data');
+    return;
+  }
+  workingTimes.value = response.data;
 };
+
+onMounted(async () => {
+  updateWorkingTimes();
+});
 </script>
 
 <template>
   <section class="dashboard">Oui</section>
+  <ChartUserWTChart :user="(user as IUser)" :workingTimes="workingTimes"/>
   <!--  <section class="dashboard">-->
   <!--    <div class="section">-->
   <!--      <User class="w-full" />-->
