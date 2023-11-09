@@ -18,6 +18,8 @@ jobs:
 
       - name: Install npm dependencies
         working-directory: ./front
+        env:
+          NUXT_PUBLIC_BACK_URL: ${{secrets.PROD_BACK_URL}} 
         run: |
           npm run build
           npm run generate

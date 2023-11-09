@@ -7,8 +7,18 @@ defmodule TimeManagerWeb.Endpoint do
 
   def cors_origins(_conn) do
     case Mix.env() == :dev do
-      true -> [System.get_env("CORS_ORIGIN", "https://tektimemanager-production.up.railway.app"), "http://localhost:3000"]
-      false -> [System.get_env("CORS_ORIGIN", "https://tektimemanager-production.up.railway.app")]
+      true ->
+        [
+          System.get_env("CORS_ORIGIN", "https://tektimemanager-production.up.railway.app"),
+          "http://localhost:3000"
+        ]
+
+      # Localhost is required for capacitor
+      false ->
+        [
+          System.get_env("CORS_ORIGIN", "https://tektimemanager-production.up.railway.app"),
+          "http://localhost"
+        ]
     end
   end
 
