@@ -1,7 +1,16 @@
 defmodule TimeManagerWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :time_manager
 
-  plug CORSPlug
+  plug CORSPlug,
+    origin:  &TimeManagerWeb.Endpoint.cors_origins/1
+
+
+  def cors_origins(_conn) do
+    case Mix.env() == :dev do
+      true -> [System.get_env("CORS_ORIGIN", "https://tektimemanager-production.up.railway.app"), "http://localhost:3000"]
+      false -> [System.get_env("CORS_ORIGIN", "https://tektimemanager-production.up.railway.app")]
+    end
+  end
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.

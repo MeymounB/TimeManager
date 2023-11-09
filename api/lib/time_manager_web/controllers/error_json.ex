@@ -26,15 +26,29 @@ defmodule TimeManagerWeb.ErrorJSON do
   end
 
   def format_error(%{message: message} = error) do
-    Map.merge(%{_type: "#{error.__struct__}", message: message}, custom_error_format(error))
+    case Mix.env() == :dev do
+      true -> %{_type: "#{error.__struct__}"}
+      false -> %{}
+    end
+    |> Map.put(:message, message)
+    |> Map.merge(custom_error_format(error))
   end
 
   def format_error(error) do
-    Map.merge(%{_type: "#{error.__struct__}", message: "#{inspect(error)}"}, custom_error_format(error))
+    case Mix.env() == :dev do
+      true -> %{_type: "#{error.__struct__}"}
+      false -> %{}
+    end
+    |> Map.put(:message, "#{inspect(error)}")
+    |> Map.merge(custom_error_format(error))
   end
 
   def handle_errors(%{kind: :error, reason: reason, stack: stack}) do
-    %{reason: format_error(reason), stack: format_error_stacktrace(stack)}
+    case Mix.env() == :dev do
+      true -> %{stack: format_error_stacktrace(stack)}
+      false -> %{}
+    end
+    |> Map.put(:reason, format_error(reason))
   end
 
 end
