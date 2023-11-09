@@ -170,23 +170,24 @@ defmodule TimeManager.Seeds do
         password_confirmation: "password",
         role_id: TimeManager.Roles.get_role_by_name("Employee").id
       })
+
+
+      # Add the manager to 2/3 teams, the gmanager to 1/3 and the employee to the first one
+      Teams.add_manager(1, 3)
+      Teams.add_manager(2, 3)
+      Teams.add_manager(1, 2)
+      Teams.add_employee(1, 4)
     end
   end
 
   defp seed_users do
-    seed_roled_users()
-
     # Generate 3 teams
     Enum.map(1..3, fn _ ->
       %Team{}
       |> Team.changeset(%{name: Faker.Commerce.department()})
       |> Repo.insert()
     end)
-    # Add the manager to 2/3 teams, the gmanager to 1/3 and the employee to the first one
-    Teams.add_manager(1, 3)
-    Teams.add_manager(2, 3)
-    Teams.add_manager(1, 2)
-    Teams.add_employee(1, 4)
+    seed_roled_users()
 
     Enum.map(1..20, fn _ -> create_random_user() end)
   end

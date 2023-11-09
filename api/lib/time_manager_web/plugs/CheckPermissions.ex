@@ -74,7 +74,7 @@ defmodule TimeManagerWeb.Plugs.CheckPermissions do
         distinct: t) != nil)
     and
     # Cannot operate on admin user if we are not admin
-    not (!is_admin(user) and is_admin(TimeManager.Repo.preload(TimeManager.Users.get(user_id), :role)))
+    not (!is_admin(user) and is_admin(TimeManager.Repo.preload(TimeManager.Users.get_user(user_id), :role)))
   end
 
   def assert_permission(conn, has_perm) do
