@@ -26,7 +26,6 @@ const calcTimer = () => {
   const now = new Date().getTime();
   const timeDifference = now - clockTime.getTime();
 
-
   const hours = String(
     Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
   ).padStart(2, "0");
@@ -97,8 +96,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <AppCard class="flex items-center justify-center">
-    <div class="space-y-10">
+  <AppCard>
+    <div class="space-y-10 flex flex-col items-center justify-center h-full">
       <div v-if="clock" class="clock-infos min-h-[24px]">
         <span>
           <span v-if="clockOut"> Badgé à: </span>

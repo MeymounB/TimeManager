@@ -9,7 +9,7 @@ defineProps<{
     <div v-if="title" class="title bg-gray-300">
       <h3 class="text-2xl h3">{{ title }}</h3>
     </div>
-    <div class="content">
+    <div class="h-full">
       <slot />
     </div>
   </section>

@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { useSessionStore } from "~/stores/sessionStore";
 import type { IUser } from "~/utils/user";
+import type { IChartData } from "~/utils/chart";
+import { VueChartBar } from "#components";
 
 const route = useRoute();
 const getUserAPI = useGetUser();
 const deleteUserAPI = useDeleteUser();
+const formatChartData = useFormatChartDataWorkingTime();
 
 const session = useSessionStore();
 const user = ref<IUser | null>(null);
 const updateUserAPI = useUpdateUser();
+const chartData = ref<IChartData | null>(null);
 
 const userGeneralManager = computed(() => {
   return isUserGeneralManager(session.user as IUser);
@@ -41,6 +45,7 @@ const fetchUser = async () => {
   }
 
   user.value = response.data;
+  chartData.value = formatChartData(user.value, user.value.working_times);
 };
 
 const deleteUser = async () => {
@@ -65,6 +70,7 @@ const userFormValue = reactive({
 
 onMounted(async () => {
   await fetchUser();
+  await onClockOut();
 
   userFormValue.firstname = user.value?.firstname ?? "";
   userFormValue.lastname = user.value?.lastname ?? "";
@@ -86,6 +92,18 @@ const onSubmit = async () => {
   userFormValue.firstname = user.value?.firstname;
   userFormValue.lastname = user.value?.lastname;
   userFormValue.email = user.value?.email;
+};
+
+const chart1 = ref<InstanceType<typeof VueChartBar> | null>();
+
+const onClockOut = async () => {
+  await fetchUser();
+  chart1.value.reRender(() => {
+    if (!user.value) {
+      return;
+    }
+    chartData.value = formatChartData(user.value, user.value.working_times);
+  });
 };
 </script>
 
@@ -141,9 +159,12 @@ const onSubmit = async () => {
         in-label="Badger"
         out-label="Badger"
         class="md:w-1/3"
+        @clock-out="onClockOut"
       />
     </div>
-    <div></div>
+    <AppCard v-if="chartData" class="h-96">
+      <VueChartBar ref="chart1" :chart-data="chartData" />
+    </AppCard>
   </section>
 </template>
 
