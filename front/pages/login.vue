@@ -4,6 +4,7 @@ import useVuelidate from "@vuelidate/core";
 import { useSessionStore } from "~/stores/sessionStore";
 
 const sessionStore = useSessionStore();
+const loading = ref(false);
 
 definePageMeta({
   layout: "auth",
@@ -47,12 +48,14 @@ const preventSubmit = computed(() => {
 const formError = ref<string | null>(null);
 
 const onSubmit = async () => {
+  loading.value = true;
   formError.value = null;
   try {
     await sessionStore.login(formValue);
   } catch (err) {
     formError.value = "Identifiant ou mot de passe incorrects";
   }
+  loading.value = false;
 };
 </script>
 
@@ -108,6 +111,7 @@ const onSubmit = async () => {
         type="submit"
         button-style="primary"
         class="mt-6 w-full flex items-center justify-center"
+        :is-loading="loading"
         :is-disabled="preventSubmit"
       >
         <svg-icon name="login" class="w-4 h-4 mr-2" /> Connexion

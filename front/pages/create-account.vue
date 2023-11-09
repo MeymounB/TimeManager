@@ -16,6 +16,7 @@ definePageMeta({
 });
 
 const sessionStore = useSessionStore();
+const loading = ref(false);
 
 const formValue = reactive<IUserDTO>({
   firstname: "",
@@ -87,6 +88,7 @@ const preventSubmit = computed(() => {
 });
 
 const onSubmit = async () => {
+  loading.value = true;
   formErrors.value.length = 0;
   try {
     await sessionStore.register(formValue);
@@ -95,6 +97,7 @@ const onSubmit = async () => {
       message: "La creation de l'utilisateur est impossible",
     });
   }
+  loading.value = false;
 };
 </script>
 
@@ -223,6 +226,7 @@ const onSubmit = async () => {
         button-style="primary"
         class="w-full flex items-center justify-center mt-6"
         :is-disabled="preventSubmit"
+        :is-loading="loading"
       >
         Créer un compte
       </AppButton>

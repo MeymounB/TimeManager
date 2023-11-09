@@ -3,14 +3,18 @@ const sessionStore = useSessionStore();
 
 const { user } = storeToRefs(sessionStore);
 const open = ref(false);
+const loading = ref(false);
 
 const logout = async () => {
   if (!user.value) {
     return;
   }
+  loading.value = true;
+
   try {
     await sessionStore.logout();
   } catch (err) {
+    loading.value = false;
     return alert(err);
   }
 };
@@ -89,6 +93,7 @@ const logout = async () => {
                             button-style="danger"
                             class="w-full flex items-center justify-center"
                             type="button"
+                            :is-loading="loading"
                             @click="logout"
                           >
                             <svg-icon
@@ -125,6 +130,7 @@ const logout = async () => {
                     button-style="danger"
                     class="flex items-center justify-center mt-3 w-full"
                     type="button"
+                    :is-loading="loading"
                     @click="logout"
                   >
                     <svg-icon

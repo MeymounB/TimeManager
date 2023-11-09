@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .btn {
-  @apply rounded-lg p-2;
+  @apply rounded-lg p-2 min-h-[40px];
 }
 
 .btn-primary {
