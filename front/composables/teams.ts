@@ -9,3 +9,9 @@ export function useTeams() {
     return useFetchAPI<IShortTeam[]>("GET", TEAMS_ENDPOINT);
   };
 }
+
+export function useTeamDetail() {
+  return (teamId: number) => {
+    return useFetchAPI<ITeam>("GET", `${TEAMS_ENDPOINT}/${teamId}`);
+  };
+}

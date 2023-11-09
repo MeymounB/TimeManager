@@ -7,13 +7,14 @@ module.exports = {
     "./plugins/**/*.{js,ts}",
     "./app.vue",
     "./error.vue",
+    "./node_modules/flowbite/**/*.{js,ts}",
   ],
   theme: {
     extend: {
       backgroundImage: {
-        'office-pattern': "url('@/assets/img/background-office.jpeg')"
-      }
+        "office-pattern": "url('@/assets/img/background-office.jpeg')",
+      },
     },
   },
-  plugins: [],
-}
+  plugins: [require("flowbite/plugin")],
+};

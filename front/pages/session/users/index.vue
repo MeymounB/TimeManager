@@ -15,8 +15,10 @@ const getAllUser = useGetAllUser();
 const getAllRoles = useGetAllRoles();
 const users = ref<IUserShort[]>([]);
 const roles = ref<IRole[]>([]);
+const loading = ref(false);
 
 const fetchAllUsers = async () => {
+  loading.value = true;
   const response = await getAllUser();
 
   if (!response.ok) {
@@ -24,6 +26,7 @@ const fetchAllUsers = async () => {
   }
 
   users.value = response.data;
+  loading.value = false;
 };
 
 const userByRoleId = computed(() => {
@@ -150,6 +153,15 @@ onMounted(async () => {
               >
                 <svg-icon name="eye" class="w-4 h-4" />
               </AppButton>
+            </td>
+          </tr>
+        </template>
+        <template v-else-if="loading">
+          <tr>
+            <td colspan="99" class="py-4">
+              <div class="flex justify-center">
+                <AppSpinner />
+              </div>
             </td>
           </tr>
         </template>
