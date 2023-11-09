@@ -1,3 +1,7 @@
-#FRONT DEPLOYED URL
+# FRONT DEPLOYED URL
 
-`timemanager-production.up.railway.app`
+`https://tektimemanager-production.up.railway.app`
+
+# BACK DEPLOYED URL
+
+`https://tektimemanager-production-back.up.railway.app/`

@@ -26,7 +26,6 @@ const calcTimer = () => {
   const now = new Date().getTime();
   const timeDifference = now - clockTime.getTime();
 
-  console.log(timeDifference);
 
   const hours = String(
     Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),

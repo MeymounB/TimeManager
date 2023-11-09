@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import type { IRole } from "~/utils/roles";
 import type { IUser, IUserShort } from "~/utils/user";
-import { isUserAdmin, isUserManager } from "~/composables/user";
+import { isUserManager } from "~/composables/user";
 import { useSessionStore } from "~/stores/sessionStore";
 
 definePageMeta({
@@ -13,8 +13,6 @@ const session = useSessionStore();
 const { user } = storeToRefs(session);
 const getAllUser = useGetAllUser();
 const getAllRoles = useGetAllRoles();
-// const formatDate = useFormatDate();
-// const formatDateTimeLocal = useFormatDateTimeLocal();
 const users = ref<IUserShort[]>([]);
 const roles = ref<IRole[]>([]);
 

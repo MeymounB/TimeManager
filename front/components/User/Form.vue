@@ -23,7 +23,7 @@ const rules = computed(() => {
   return {
     firstname: {
       required: helpers.withMessage(
-        "le prénom ne peut pas être vide",
+        "Le prénom ne peut pas être vide",
         required,
       ),
     },
