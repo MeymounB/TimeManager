@@ -105,10 +105,9 @@ onUnmounted(() => {
   <AppCard>
     <div class="space-y-10 flex flex-col items-center justify-center h-full">
       <div v-if="clock" class="clock-infos min-h-[24px]">
-        <span>
+        <span v-if="clock.time">
           <span v-if="clockOut"> Badgé à: </span>
           <span v-else> Parti à: </span>
-          <span v-if="clock.time"> </span>
           {{
             formatDateLocaleDateTime(formatDate(clock.time))
               .toString()
