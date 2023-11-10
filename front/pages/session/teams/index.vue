@@ -3,7 +3,8 @@ import { storeToRefs } from "pinia";
 import type { IShortTeam, ITeam } from "~/utils/teams";
 import { isUserManager } from "~/composables/user";
 import { useSessionStore } from "~/stores/sessionStore";
-import type { IChartData } from "~/utils/chart";
+import type { IChartData, IChartLabel } from "~/utils/chart";
+import type { IUserShort } from "~/utils/user";
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
@@ -61,15 +62,24 @@ const fetchTeams = async () => {
     const teamDetail: ITeam = await fetchTeamDetail(team.id);
     teamsDetails.value.set(team.id, teamDetail);
     const teamWorkingTimes = await fetchTeamWorkingTimes(team.id);
+
     if (!teamWorkingTimes) {
       continue;
     }
+
+    const users: IUserShort[] = Array.prototype.concat(
+      teamDetail.employees,
+      teamDetail.managers,
+    );
+    const usersChartLabels: IChartLabel[] = users.map(
+      (user: IUser): IChartLabel => ({
+        id: user.id,
+        name: user.firstname,
+      }),
+    );
     teamsChartData.value.set(
       team.id,
-      formatChartData(
-        Array.prototype.concat(teamDetail.employees, teamDetail.managers),
-        teamWorkingTimes,
-      ),
+      formatChartData(usersChartLabels, teamWorkingTimes),
     );
   }
 };

@@ -17,7 +17,10 @@ const chartData = computed(() => {
   if (!user.value) {
     return null;
   }
-  return formatChartData([user.value], user.value?.working_times);
+  return formatChartData(
+    [{ id: user.value.id, name: user.value.firstname }],
+    user.value?.working_times,
+  );
 });
 
 const userGeneralManager = computed(() => {

@@ -10,6 +10,11 @@ export interface IDataset {
   data: { [dateIndex: number]: number };
 }
 
+export interface IChartLabel {
+  id: number;
+  name: string;
+}
+
 export interface IChartData {
   labels: string[];
   datasets: IDataset[];

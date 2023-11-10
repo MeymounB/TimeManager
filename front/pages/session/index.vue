@@ -12,7 +12,10 @@ const chartData = computed(() => {
   if (!user.value) {
     return null;
   }
-  return formatChartData([user.value], user.value?.working_times);
+  return formatChartData(
+    [{ id: user.value.id, name: user.value.firstname }],
+    user.value?.working_times,
+  );
 });
 </script>
 
@@ -21,14 +24,3 @@ const chartData = computed(() => {
     <VueChartLine :chart-data="chartData"></VueChartLine>
   </section>
 </template>
-<style scoped>
-.dashboard {
-  .section {
-    width: 100%;
-    height: 50%;
-    display: flex;
-    margin-bottom: 10px;
-    gap: 8px;
-  }
-}
-</style>

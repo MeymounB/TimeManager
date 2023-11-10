@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import type { IChartData, ITime } from "~/utils/chart";
-import type { IUser } from "~/utils/user";
 import type { IWorkingTime } from "~/utils/workingTime";
 interface IGroupedData {
   [user_id: number]: {
@@ -42,12 +41,15 @@ const colors = [
 ];
 
 export function useFormatChartDataWorkingTime() {
-  return (users: IUser[], workingTimes: IWorkingTime[]): IChartData => {
+  return (
+    chartLabels: IChartLabel[],
+    workingTimes: IWorkingTime[],
+  ): IChartData => {
     const labels = ref<{ [objectId: number]: string }>({});
     const times = ref<ITime[]>([]);
 
-    users.forEach((u) => {
-      labels.value[u.id] = u.firstname;
+    chartLabels.forEach((cL) => {
+      labels.value[cL.id] = cL.name;
     });
 
     times.value = workingTimes.map((workingTime) => {
@@ -57,7 +59,7 @@ export function useFormatChartDataWorkingTime() {
           (new Date(workingTime.end).getTime() -
             new Date(workingTime.start).getTime()) /
           (1000 * 3600),
-        objectId: workingTime?.user_id ?? 0,
+        objectId: workingTime?.user_id,
       };
     });
 
