@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import type { IShortTeam, ITeam } from "~/utils/teams";
-import { isUserManager } from "~/composables/user";
 import { useSessionStore } from "~/stores/sessionStore";
 import type { IChartData, IChartLabel } from "~/utils/chart";
-import type { IUserShort } from "~/utils/user";
+import type { IUser, IUserShort } from "~/utils/user";
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
@@ -61,26 +60,29 @@ const fetchTeams = async () => {
   for (const team of teams.value) {
     const teamDetail: ITeam = await fetchTeamDetail(team.id);
     teamsDetails.value.set(team.id, teamDetail);
-    const teamWorkingTimes = await fetchTeamWorkingTimes(team.id);
 
-    if (!teamWorkingTimes) {
-      continue;
+    if (userManageTeam(user.value as IUser, teamDetail.id)) {
+      const teamWorkingTimes = await fetchTeamWorkingTimes(team.id);
+
+      if (!teamWorkingTimes) {
+        continue;
+      }
+
+      const users: IUserShort[] = Array.prototype.concat(
+        teamDetail.employees,
+        teamDetail.managers,
+      );
+      const usersChartLabels: IChartLabel[] = users.map(
+        (u: IUserShort): IChartLabel => ({
+          id: u.id,
+          name: u.firstname,
+        }),
+      );
+      teamsChartData.value.set(
+        team.id,
+        formatChartData(usersChartLabels, teamWorkingTimes),
+      );
     }
-
-    const users: IUserShort[] = Array.prototype.concat(
-      teamDetail.employees,
-      teamDetail.managers,
-    );
-    const usersChartLabels: IChartLabel[] = users.map(
-      (user: IUser): IChartLabel => ({
-        id: user.id,
-        name: user.firstname,
-      }),
-    );
-    teamsChartData.value.set(
-      team.id,
-      formatChartData(usersChartLabels, teamWorkingTimes),
-    );
   }
 };
 
@@ -125,7 +127,12 @@ onMounted(async () => {
           <div v-if="teamsChartData.get(team.id)" class="h-72">
             <VueChartBar :chart-data="teamsChartData.get(team.id)" />
           </div>
-          <template v-else>
+          <template
+            v-else-if="
+              userManageTeam(user as IUser, team.id) &&
+              !teamsChartData.get(team.id)
+            "
+          >
             <div class="w-full flex justify-center">
               <AppSpinner />
             </div>

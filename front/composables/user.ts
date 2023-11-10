@@ -56,6 +56,13 @@ export function isUserAdmin(user: IUser) {
   return !(user.role.name !== RolesNames.ADMIN);
 }
 
+export function userManageTeam(user: IUser, teamId: number) {
+  return (
+    user.managed_teams.find((mT) => mT.id === teamId) !== undefined ||
+    isUserGeneralManager(user)
+  );
+}
+
 export function userInSameTeam(user: IUser, target: IUserShort) {
   return user.teams
     .map((t) => t.id)
@@ -67,6 +74,6 @@ export function userManageable(user: IUser, target: IUserShort) {
     user.managed_teams
       .map((t) => t.id)
       .some((r) => target.teams.map((t: IShortTeam) => t.id).includes(r)) ||
-    isUserAdmin(user)
+    isUserGeneralManager(user)
   );
 }
