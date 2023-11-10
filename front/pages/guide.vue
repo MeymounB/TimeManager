@@ -139,7 +139,7 @@ const menuItems = [
         </article>
         <article id="workingtime">
           <h2 class="text-2xl font-bold">Gestion des Temps de travail</h2>
-          <GuideWorkingtime />
+          <GuideWorkingTime />
         </article>
       </div>
     </section>

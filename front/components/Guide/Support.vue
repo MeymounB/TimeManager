@@ -11,4 +11,8 @@
     assistance technique. Nous nous engageons à fournir des réponses rapides et
     des solutions efficaces pour assurer une expérience utilisateur sans faille.
   </p>
+  <p class="mt-4 text-gray-700 text-lg">
+    Vous pouvez contacter le support ici :
+    <nuxt-link to="contact" class="hover:underline">Support</nuxt-link>.
+  </p>
 </template>
