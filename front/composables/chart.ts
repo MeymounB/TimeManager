@@ -40,46 +40,46 @@ const colors = [
   "#641E16",
 ];
 
+export function useFormatWorkingTimeToTime() {
+	return (workingTimes: IWorkingTime[]) => {
+		return workingTimes
+			.map((workingTime) => {
+				// To local datetime
+				const start = new Date(new Date(workingTime.start).toLocaleString());
+				const end = new Date(new Date(workingTime.end).toLocaleString());
+
+				const res = [];
+				do {
+					// Remove the time informations to be at 00:00:00
+					const nextDay = new Date(start.toLocaleDateString());
+					nextDay.setDate(nextDay.getDate() + 1);
+					const endTime = Math.min(end.getTime(), nextDay.getTime());
+
+					const time = {
+						date: start.toLocaleDateString(),
+						duration: (endTime - start.getTime()) / (1000 * 3600),
+						objectId: workingTime?.user_id,
+					};
+
+					res.push(time);
+					start.setTime(endTime);
+				} while (end.getTime() !== start.getTime());
+				return res;
+			})
+			.flat();
+	};
+}
+
 export function useFormatChartDataWorkingTime() {
-  return (
-    chartLabels: IChartLabel[],
-    workingTimes: IWorkingTime[],
-  ): IChartData => {
+  return (chartLabels: IChartLabel[], times: ITime[]): IChartData => {
     const labels = ref<{ [objectId: number]: string }>({});
-    const times = ref<ITime[]>([]);
 
     chartLabels.forEach((cL) => {
       labels.value[cL.id] = cL.name;
     });
 
-    times.value = workingTimes
-      .map((workingTime) => {
-        // To local datetime
-        let start = new Date(new Date(workingTime.start).toLocaleString());
-        const end = new Date(new Date(workingTime.end).toLocaleString());
-
-        const res = [];
-        do {
-          // Remove the time informations to be at 00:00:00
-          const nextDay = new Date(start.toLocaleDateString());
-          nextDay.setDate(nextDay.getDate() + 1);
-          const endTime = Math.min(end.getTime(), nextDay.getTime());
-
-          const time = {
-            date: start.toLocaleDateString(),
-            duration: (endTime - start.getTime()) / (1000 * 3600),
-            objectId: workingTime?.user_id,
-          };
-
-          res.push(time);
-          start.setTime(endTime);
-        } while (end.getTime() != start.getTime());
-        return res;
-      })
-      .flat();
-
     const dateSet = new Set(
-      times.value.map((time) => {
+      times.map((time) => {
         return time.date;
       }),
     );
@@ -88,7 +88,7 @@ export function useFormatChartDataWorkingTime() {
 
     uniqueDates.value = [...dateSet];
 
-    const groupedData = times.value.reduce((acc: IGroupedData, time: ITime) => {
+    const groupedData = times.reduce((acc: IGroupedData, time: ITime) => {
       const dateIndex = uniqueDates.value.indexOf(time.date);
 
       if (!acc[time.objectId])

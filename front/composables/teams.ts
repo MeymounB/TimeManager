@@ -1,5 +1,6 @@
 import { useFetchAPI } from "@/composables/fetch";
 import type { IShortTeam } from "~/utils/teams";
+import type { IWorkingTime } from "~/utils/workingTime";
 
 const runtimeConfig = useRuntimeConfig();
 const TEAMS_ENDPOINT = `${runtimeConfig.public.BACK_URL}/teams`;
@@ -18,7 +19,7 @@ export function useTeamDetail() {
 
 export function useTeamWorkingTimes() {
   return (teamId: number) => {
-    return useFetchAPI<ITeam[]>(
+    return useFetchAPI<IWorkingTime[]>(
       "GET",
       `${TEAMS_ENDPOINT}/${teamId}/working_times`,
     );

@@ -4,6 +4,7 @@ import type { IShortTeam, ITeam } from "~/utils/teams";
 import { useSessionStore } from "~/stores/sessionStore";
 import type { IChartData, IChartLabel } from "~/utils/chart";
 import type { IUser, IUserShort } from "~/utils/user";
+import type { IWorkingTime } from "~/utils/workingTime";
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
@@ -14,6 +15,8 @@ const getTeamWorkingTimes = useTeamWorkingTimes();
 const teamsDetails = ref<Map<number, ITeam>>(new Map([]));
 const teamsChartData = ref<Map<number, IChartData>>(new Map([]));
 const formatChartData = useFormatChartDataWorkingTime();
+const formatWTTime = useFormatWorkingTimeToTime();
+const teamsWorkingTimes = ref<Map<number, IWorkingTime[]>>(new Map());
 
 const getAllRoles = useGetAllRoles();
 const roles = ref<IRole[]>([]);
@@ -63,10 +66,13 @@ const fetchTeams = async () => {
 
     if (userManageTeam(user.value as IUser, teamDetail.id)) {
       const teamWorkingTimes = await fetchTeamWorkingTimes(team.id);
-
       if (!teamWorkingTimes) {
         continue;
       }
+
+      teamsWorkingTimes.value.set(team.id, teamWorkingTimes);
+
+      const times = formatWTTime(teamWorkingTimes);
 
       const users: IUserShort[] = Array.prototype.concat(
         teamDetail.employees,
@@ -80,7 +86,7 @@ const fetchTeams = async () => {
       );
       teamsChartData.value.set(
         team.id,
-        formatChartData(usersChartLabels, teamWorkingTimes),
+        formatChartData(usersChartLabels, times),
       );
     }
   }
@@ -88,6 +94,32 @@ const fetchTeams = async () => {
 
 const userManager = computed(() => {
   return isUserManager(user.value as IUser);
+});
+
+const averageTeamChartData = computed(() => {
+  let mergedWorkingTimes: IWorkingTime[] = [];
+
+  for (const teamWt of teamsWorkingTimes.value) {
+    const id = teamWt[0];
+    const data = teamWt[1];
+
+    mergedWorkingTimes = mergedWorkingTimes.concat(
+      data.map((wt) => ({ ...wt, user_id: id })),
+    );
+  }
+
+  return formatChartData(
+    teams.value.map((t) => ({ id: t.id, name: t.name })),
+    formatWTTime(mergedWorkingTimes),
+  );
+});
+
+watch(averageTeamChartData, () => {
+  console.log(averageTeamChartData.value);
+});
+
+const userGeneralManager = computed(() => {
+  return isUserGeneralManager(user.value as IUser);
 });
 
 const getRoleName = (roleId: number) => {
@@ -110,6 +142,9 @@ onMounted(async () => {
       data-accordion="collapse"
       data-active-classes="bg-gray-100"
     >
+      <div v-if="userGeneralManager && averageTeamChartData">
+        <VueChartBar :chart-data="averageTeamChartData" />
+      </div>
       <AppAccordion
         v-for="team in teams"
         :id="`team-${team.id}`"

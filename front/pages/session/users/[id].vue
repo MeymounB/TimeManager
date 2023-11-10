@@ -7,6 +7,7 @@ const route = useRoute();
 const router = useRouter();
 const getUserAPI = useGetUser();
 const deleteUserAPI = useDeleteUser();
+const formatWTTime = useFormatWorkingTimeToTime();
 const formatChartData = useFormatChartDataWorkingTime();
 
 const session = useSessionStore();
@@ -19,7 +20,7 @@ const chartData = computed(() => {
   }
   return formatChartData(
     [{ id: user.value.id, name: user.value.firstname }],
-    user.value?.working_times,
+    formatWTTime(user.value?.working_times),
   );
 });
 

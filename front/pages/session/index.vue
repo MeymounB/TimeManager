@@ -4,6 +4,7 @@ definePageMeta({
 });
 
 const formatChartData = useFormatChartDataWorkingTime();
+const formatWTTime = useFormatWorkingTimeToTime();
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
@@ -14,7 +15,7 @@ const chartData = computed(() => {
   }
   return formatChartData(
     [{ id: user.value.id, name: user.value.firstname }],
-    user.value?.working_times,
+    formatWTTime(user.value?.working_times),
   );
 });
 </script>
