@@ -42,12 +42,13 @@ const colors = [
 ];
 
 export function useFormatChartDataWorkingTime() {
-  return (user: IUser, workingTimes: IWorkingTime[]): IChartData => {
+  return (users: IUser[], workingTimes: IWorkingTime[]): IChartData => {
     const labels = ref<{ [objectId: number]: string }>({});
     const times = ref<ITime[]>([]);
 
-    labels.value = [];
-    labels.value[user.id] = user.firstname;
+    users.forEach((u) => {
+      labels.value[u.id] = u.firstname;
+    });
 
     times.value = workingTimes.map((workingTime) => {
       return {
@@ -56,7 +57,7 @@ export function useFormatChartDataWorkingTime() {
           (new Date(workingTime.end).getTime() -
             new Date(workingTime.start).getTime()) /
           (1000 * 3600),
-        objectId: workingTime?.user_id ?? user.id,
+        objectId: workingTime?.user_id ?? 0,
       };
     });
 
@@ -85,7 +86,9 @@ export function useFormatChartDataWorkingTime() {
       label: labels.value[objectId as any] ?? "Unknown",
       data: groupedData[objectId as any],
       backgroundColor: colors[index % colors.length],
+      borderColor: colors[index % colors.length],
       fill: false,
+      tension: 0.5,
     }));
 
     return {

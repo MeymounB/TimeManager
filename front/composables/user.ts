@@ -63,7 +63,10 @@ export function userInSameTeam(user: IUser, target: IUserShort) {
 }
 
 export function userManageable(user: IUser, target: IUserShort) {
-  return user.managed_teams
-    .map((t) => t.id)
-    .some((r) => target.teams.map((t: IShortTeam) => t.id).includes(r));
+  return (
+    user.managed_teams
+      .map((t) => t.id)
+      .some((r) => target.teams.map((t: IShortTeam) => t.id).includes(r)) ||
+    isUserAdmin(user)
+  );
 }

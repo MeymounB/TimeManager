@@ -3,19 +3,33 @@ import { storeToRefs } from "pinia";
 import type { IShortTeam, ITeam } from "~/utils/teams";
 import { isUserManager } from "~/composables/user";
 import { useSessionStore } from "~/stores/sessionStore";
+import type { IChartData } from "~/utils/chart";
 
 const session = useSessionStore();
 const { user } = storeToRefs(session);
 const getTeamsAPI = useTeams();
 const teams = ref<IShortTeam[]>([]);
 const getTeamDetail = useTeamDetail();
+const getTeamWorkingTimes = useTeamWorkingTimes();
 const teamsDetails = ref<Map<number, ITeam>>(new Map([]));
+const teamsChartData = ref<Map<number, IChartData>>(new Map([]));
+const formatChartData = useFormatChartDataWorkingTime();
 
 const getAllRoles = useGetAllRoles();
 const roles = ref<IRole[]>([]);
 
 const fetchTeamDetail = async (teamId: number) => {
   const response = await getTeamDetail(teamId);
+
+  if (!response.ok) {
+    return alert("Error happened while fetching");
+  }
+
+  return response.data;
+};
+
+const fetchTeamWorkingTimes = async (teamId: number) => {
+  const response = await getTeamWorkingTimes(teamId);
 
   if (!response.ok) {
     return alert("Error happened while fetching");
@@ -44,8 +58,19 @@ const fetchTeams = async () => {
   teams.value = response.data;
 
   for (const team of teams.value) {
-    const teamDetail = await fetchTeamDetail(team.id);
+    const teamDetail: ITeam = await fetchTeamDetail(team.id);
     teamsDetails.value.set(team.id, teamDetail);
+    const teamWorkingTimes = await fetchTeamWorkingTimes(team.id);
+    if (!teamWorkingTimes) {
+      continue;
+    }
+    teamsChartData.value.set(
+      team.id,
+      formatChartData(
+        Array.prototype.concat(teamDetail.employees, teamDetail.managers),
+        teamWorkingTimes,
+      ),
+    );
   }
 };
 
@@ -77,10 +102,21 @@ onMounted(async () => {
         v-for="team in teams"
         :id="`team-${team.id}`"
         :key="team.id"
-        :title="team.name"
       >
-        <template v-if="teamsDetails.get(team.id)">
+        <template #header>
+          <div class="w-full flex items-center justify-between pr-10">
+            <span>
+              <svg-icon name="team" class="w-5 h-5 mr-5 inline" />
+              {{ team.name }}
+            </span>
+          </div>
+        </template>
+        <template #content>
+          <div v-if="teamsChartData.get(team.id)" class="h-72">
+            <VueChartBar :chart-data="teamsChartData.get(team.id)" />
+          </div>
           <table
+            v-if="teamsDetails.get(team.id)"
             class="w-full text-left text-sm font-light overflow-hidden table-fixed lg:table-auto mx-auto"
           >
             <thead class="border-b font-medium">
@@ -193,11 +229,11 @@ onMounted(async () => {
               </template>
             </tbody>
           </table>
-        </template>
-        <template v-else>
-          <div class="w-full flex justify-center">
-            <AppSpinner />
-          </div>
+          <template v-else>
+            <div class="w-full flex justify-center">
+              <AppSpinner />
+            </div>
+          </template>
         </template>
       </AppAccordion>
     </div>

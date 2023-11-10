@@ -5,6 +5,7 @@ import type { IChartData } from "~/utils/chart";
 import { VueChartBar } from "#components";
 
 const route = useRoute();
+const router = useRouter();
 const getUserAPI = useGetUser();
 const deleteUserAPI = useDeleteUser();
 const formatChartData = useFormatChartDataWorkingTime();
@@ -45,7 +46,7 @@ const fetchUser = async () => {
   }
 
   user.value = response.data;
-  chartData.value = formatChartData(user.value, user.value.working_times);
+  chartData.value = formatChartData([user.value], user.value.working_times);
 };
 
 const deleteUser = async () => {
@@ -102,7 +103,7 @@ const onClockOut = async () => {
     if (!user.value) {
       return;
     }
-    chartData.value = formatChartData(user.value, user.value.working_times);
+    chartData.value = formatChartData([user.value], user.value.working_times);
   });
 };
 </script>
@@ -113,7 +114,7 @@ const onClockOut = async () => {
       button-style="secondary"
       type="button"
       class="flex items-center self-start mt-3 lg:mt-0"
-      @click="navigateTo('/session/users')"
+      @click="router.back()"
     >
       <svg-icon name="back-arrow" class="w-3 h-3 mr-2" /> Retour
     </AppButton>
@@ -122,6 +123,7 @@ const onClockOut = async () => {
         <UserForm
           v-model="userFormValue"
           :true-user="user"
+          :readonly="!userManageable(session.user as IUser, user)"
           @submit="onSubmit"
         />
         <div>
@@ -163,7 +165,7 @@ const onClockOut = async () => {
       />
     </div>
     <AppCard v-if="chartData" class="h-96">
-      <VueChartBar ref="chart1" :chart-data="chartData" />
+      <VueChartLine ref="chart1" :chart-data="chartData" />
     </AppCard>
   </section>
 </template>

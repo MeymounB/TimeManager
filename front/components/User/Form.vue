@@ -6,6 +6,7 @@ import type { IUser } from "~/utils/user";
 const props = defineProps<{
   trueUser: IUser;
   modelValue: IUser;
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits(["update:modelValue", "submit"]);
@@ -123,6 +124,7 @@ const onSubmit = () => {
         </template>
         <template v-else>
           <AppButton
+            v-if="!readonly"
             button-style="tertiary"
             type="button"
             class="btn-icon"
@@ -182,6 +184,7 @@ const onSubmit = () => {
         </template>
         <template v-else>
           <AppButton
+            v-if="!readonly"
             button-style="tertiary"
             type="button"
             class="btn-icon"
@@ -240,6 +243,7 @@ const onSubmit = () => {
         </template>
         <template v-else>
           <AppButton
+            v-if="!readonly"
             button-style="tertiary"
             type="button"
             class="btn-icon"

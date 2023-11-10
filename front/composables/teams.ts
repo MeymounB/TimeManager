@@ -15,3 +15,12 @@ export function useTeamDetail() {
     return useFetchAPI<ITeam>("GET", `${TEAMS_ENDPOINT}/${teamId}`);
   };
 }
+
+export function useTeamWorkingTimes() {
+  return (teamId: number) => {
+    return useFetchAPI<ITeam[]>(
+      "GET",
+      `${TEAMS_ENDPOINT}/${teamId}/working_times`,
+    );
+  };
+}

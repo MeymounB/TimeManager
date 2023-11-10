@@ -2,7 +2,6 @@
 import { initFlowbite } from "flowbite";
 defineProps<{
   id: string;
-  title: string;
 }>();
 
 const emit = defineEmits(["open"]);
@@ -32,7 +31,7 @@ onMounted(() => {
         :aria-controls="`${id}-body`"
         @click="setAccordionState"
       >
-        <span>{{ title }}</span>
+        <slot name="header" />
         <svg-icon
           name="dropdown-toggle"
           data-accordion-icon
@@ -43,7 +42,7 @@ onMounted(() => {
     </h2>
     <div :id="`${id}-body`" class="hidden" :aria-labelledby="`${id}-heading`">
       <div class="py-5 px-10 border-b border-gray-200">
-        <slot />
+        <slot name="content" />
       </div>
     </div>
   </section>

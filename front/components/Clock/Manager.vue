@@ -102,6 +102,7 @@ onUnmounted(() => {
         <span>
           <span v-if="clockOut"> Badgé à: </span>
           <span v-else> Parti à: </span>
+          <span v-if="clock.time"> </span>
           {{
             formatDateLocaleDateTime(formatDate(clock.time))
               .toString()
