@@ -52,16 +52,31 @@ export function useFormatChartDataWorkingTime() {
       labels.value[cL.id] = cL.name;
     });
 
-    times.value = workingTimes.map((workingTime) => {
-      return {
-        date: new Date(workingTime.start).toLocaleDateString(),
-        duration:
-          (new Date(workingTime.end).getTime() -
-            new Date(workingTime.start).getTime()) /
-          (1000 * 3600),
-        objectId: workingTime?.user_id,
-      };
-    });
+    times.value = workingTimes
+      .map((workingTime) => {
+        // To local datetime
+        let start = new Date(new Date(workingTime.start).toLocaleString());
+        const end = new Date(new Date(workingTime.end).toLocaleString());
+
+        const res = [];
+        do {
+          // Remove the time informations to be at 00:00:00
+          const nextDay = new Date(start.toLocaleDateString());
+          nextDay.setDate(nextDay.getDate() + 1);
+          const endTime = Math.min(end.getTime(), nextDay.getTime());
+
+          const time = {
+            date: start.toLocaleDateString(),
+            duration: (endTime - start.getTime()) / (1000 * 3600),
+            objectId: workingTime?.user_id,
+          };
+
+          res.push(time);
+          start.setTime(endTime);
+        } while (end.getTime() != start.getTime());
+        return res;
+      })
+      .flat();
 
     const dateSet = new Set(
       times.value.map((time) => {
