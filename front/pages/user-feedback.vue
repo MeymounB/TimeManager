@@ -1,6 +1,44 @@
+<script setup lang="ts">
+const menuItems = [
+  { name: "cross-box", link: "#rejected", title: "Retours Rejetés" },
+  {
+    name: "question-mark-circle",
+    link: "#company-issues",
+    title: "Problèmes d'Entreprise",
+  },
+  {
+    name: "adjustments-horizontal",
+    link: "#configurable-actions",
+    title: "Actions Configurables",
+  },
+  { name: "shield-check", link: "#useful", title: "Pourquoi c'est Utile" },
+  {
+    name: "briefcase",
+    link: "#dev-tickets",
+    title: "Tickets de Développement",
+  },
+];
+</script>
+
 <template>
   <div class="flex">
-    <UsersFeedbackSideBar />
+    <AppSideBar :menu-items="menuItems">
+      <template #icon-cross-box>
+        <svg-icon name="cross-box" class="h-6 w-6 lg:hidden" />
+      </template>
+      <template #icon-question-mark-circle>
+        <svg-icon name="question-mark-circle" class="h-6 w-6 lg:hidden" />
+      </template>
+      <template #icon-adjustments-horizontal>
+        <svg-icon name="adjustments-horizontal" class="h-6 w-6 lg:hidden" />
+      </template>
+      <template #icon-shield-check>
+        <svg-icon name="shield-check" class="h-6 w-6 lg:hidden" />
+      </template>
+      <template #icon-briefcase>
+        <svg-icon name="briefcase" class="h-6 w-6 lg:hidden" />
+      </template>
+    </AppSideBar>
     <section class="user-feedback-section w-full lg:w-4/5 bg-gray-50 py-12">
       <div class="max-w-4xl mx-auto px-4">
         <h1 class="text-3xl font-bold text-center mb-10">
