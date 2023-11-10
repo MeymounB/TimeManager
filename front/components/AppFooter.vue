@@ -7,7 +7,11 @@
         <nav class="w-full md:w-auto mb-4 md:mb-0">
           <ul class="flex flex-wrap justify-center space-x-4">
             <li><a href="/contact" class="hover:text-gray-300">Contact</a></li>
-            <li><a href="/faq" class="hover:text-gray-300">FAQ</a></li>
+            <li>
+              <a href="/user-feedback" class="hover:text-gray-300"
+                >Retours utilisateur</a
+              >
+            </li>
             <li>
               <a href="/mentions" class="hover:text-gray-300"
                 >Mentions Légales</a
