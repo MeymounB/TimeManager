@@ -53,7 +53,7 @@ export const useSessionStore = defineStore("counter", () => {
     accessToken.value = response.data.access_token;
     refreshToken.value = response.data.refresh_token;
     await reloadUser();
-    navigateTo("/session/dashboard");
+    navigateTo("/session");
   }
 
   async function register(newMe: IUserDTO) {
@@ -70,7 +70,7 @@ export const useSessionStore = defineStore("counter", () => {
     accessToken.value = response.data.access_token;
     refreshToken.value = response.data.refresh_token;
     await reloadUser();
-    navigateTo("/session/dashboard");
+    navigateTo("/session");
   }
 
   async function logout() {

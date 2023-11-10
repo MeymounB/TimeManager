@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { Line } from "vue-chartjs";
+import type { IChartData } from "~/utils/chart";
 
 defineProps<{
-  chartData: { datasets: IDataset[]; labels: string[] };
+  chartData: IChartData | null;
 }>();
 
 const chartOptions = ref({
@@ -25,7 +26,7 @@ defineExpose({
 });
 </script>
 <template>
-  <div v-if="render" class="h-full">
+  <div v-if="render && chartData" class="h-full">
     <Line :data="chartData" :options="chartOptions" />
   </div>
   <template v-else>

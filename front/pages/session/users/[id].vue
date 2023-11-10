@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useSessionStore } from "~/stores/sessionStore";
 import type { IUser } from "~/utils/user";
-import type { IChartData } from "~/utils/chart";
 import { VueChartBar } from "#components";
 
 const route = useRoute();
@@ -13,7 +12,13 @@ const formatChartData = useFormatChartDataWorkingTime();
 const session = useSessionStore();
 const user = ref<IUser | null>(null);
 const updateUserAPI = useUpdateUser();
-const chartData = ref<IChartData | null>(null);
+
+const chartData = computed(() => {
+  if (!user.value) {
+    return null;
+  }
+  return formatChartData([user.value], user.value?.working_times);
+});
 
 const userGeneralManager = computed(() => {
   return isUserGeneralManager(session.user as IUser);
@@ -46,7 +51,6 @@ const fetchUser = async () => {
   }
 
   user.value = response.data;
-  chartData.value = formatChartData([user.value], user.value.working_times);
 };
 
 const deleteUser = async () => {
@@ -97,13 +101,12 @@ const onSubmit = async () => {
 
 const chart1 = ref<InstanceType<typeof VueChartBar> | null>();
 
-const onClockOut = async () => {
-  await fetchUser();
+const onClockOut = () => {
   chart1.value.reRender(() => {
     if (!user.value) {
       return;
     }
-    chartData.value = formatChartData([user.value], user.value.working_times);
+    fetchUser();
   });
 };
 </script>
