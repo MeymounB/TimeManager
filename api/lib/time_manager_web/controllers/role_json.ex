@@ -12,7 +12,7 @@ defmodule TimeManagerWeb.RoleJSON do
   Renders a single role.
   """
   def show(%{role: role}) do
-    %{data: data(role, %{associations: true, global: %{excluded: [:role_id]}})}
+    %{data: data(role, %{associations: true})}
   end
 
   @spec data(%Role{} | nil, %{}) :: %Role{} | nil

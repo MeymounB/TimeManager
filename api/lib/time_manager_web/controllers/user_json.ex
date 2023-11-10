@@ -5,14 +5,14 @@ defmodule TimeManagerWeb.UserJSON do
   Renders a list of users.
   """
   def index(%{users: users}) do
-    %{data: for(user <- users, do: data(user, %{associations: true, excluded: [:managed_teams, :role, :working_times], global: %{excluded: [:user_id]}}))}
+    %{data: for(user <- users, do: data(user, %{associations: true, excluded: [:managed_teams, :role, :working_times]}))}
   end
 
   @doc """
   Renders a single user.
   """
   def show(%{user: user}) do
-    %{data: data(user, %{associations: true, excluded: [:role_id], global: %{excluded: [:user_id]}})}
+    %{data: data(user, %{associations: true})}
   end
 
   @spec data(%User{} | nil, %{}) :: %User{} | nil
