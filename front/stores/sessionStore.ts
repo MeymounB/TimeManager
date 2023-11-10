@@ -17,6 +17,8 @@ export const useSessionStore = defineStore("counter", () => {
 
   const isLoggedIn = computed(() => user.value != null);
 
+  const isRefreshing = ref<boolean>(false);
+
   async function reloadUser() {
     const response = await useGetMe()();
 
@@ -28,7 +30,8 @@ export const useSessionStore = defineStore("counter", () => {
   }
 
   async function refreshSession() {
-    if (!refreshToken.value) {
+    isRefreshing.value = true;
+    if (!refreshToken.value || !accessToken.value) {
       return localLogout();
     }
 
@@ -36,10 +39,12 @@ export const useSessionStore = defineStore("counter", () => {
 
     if (!response.ok) {
       await logout();
+      isRefreshing.value = false;
       return false;
     }
 
     accessToken.value = response.data.access_token;
+    isRefreshing.value = false;
     return true;
   }
 
@@ -78,11 +83,7 @@ export const useSessionStore = defineStore("counter", () => {
       return;
     }
 
-    const response = await useLogoutAccount()();
-
-    if (!response.ok) {
-      throw new Error(`Failed to logout user: ${response.status}`);
-    }
+    await useLogoutAccount()();
 
     return localLogout();
   }
@@ -111,6 +112,7 @@ export const useSessionStore = defineStore("counter", () => {
     refreshSession,
     reloadUser,
     logout,
+    isRefreshing,
     isLoggedIn,
   };
 });
