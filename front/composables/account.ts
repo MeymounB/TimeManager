@@ -69,3 +69,9 @@ export function useAccountWorkingTimes() {
     );
   };
 }
+
+export function useClockAccount() {
+  return () => {
+    return useFetchAPI<IClock>("POST", `${ACCOUNT_ENDPOINT}/clock`);
+  };
+}

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IUser } from "~/utils/user";
+import { useSessionStore } from "~/stores/sessionStore";
 
 const props = defineProps<{
   user: IUser;
@@ -8,8 +9,10 @@ const props = defineProps<{
   outLabel: string;
 }>();
 
+const session = useSessionStore();
 const getUserClockAPI = useGetClock();
 const clockUserAPI = useClockUser();
+const clockAccountAPI = useClockAccount();
 const emits = defineEmits(["clockOut"]);
 
 const clock = ref<IClock | null>(null);
@@ -48,7 +51,10 @@ const clockOut = computed(() => {
 });
 
 const clockUser = async () => {
-  const response = await clockUserAPI(props.user.id);
+  const response =
+    session.user?.id === props.user.id
+      ? await clockAccountAPI()
+      : await clockUserAPI(props.user.id);
 
   if (!response.ok) {
     return alert("Une erreur est servenue lors du badging");
