@@ -28,4 +28,9 @@ defineExpose({
   <div v-if="render" class="h-full">
     <Bar :data="chartData" :options="chartOptions" />
   </div>
+  <template v-else>
+    <div class="w-full flex justify-center">
+      <AppSpinner />
+    </div>
+  </template>
 </template>

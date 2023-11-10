@@ -115,6 +115,11 @@ onMounted(async () => {
           <div v-if="teamsChartData.get(team.id)" class="h-72">
             <VueChartBar :chart-data="teamsChartData.get(team.id)" />
           </div>
+          <template v-else>
+            <div class="w-full flex justify-center">
+              <AppSpinner />
+            </div>
+          </template>
           <table
             v-if="teamsDetails.get(team.id)"
             class="w-full text-left text-sm font-light overflow-hidden table-fixed lg:table-auto mx-auto"
