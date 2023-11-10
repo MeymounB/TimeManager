@@ -9,7 +9,7 @@
             to="#rejected"
             class="flex items-center hover:text-blue-600 py-2"
           >
-            <svg-icon name="cross" class="h-6 w-6 lg:hidden" />
+            <svg-icon name="cross-box" class="h-6 w-6 lg:hidden" />
             <span class="hidden lg:block">Retours Rejetés</span>
           </NuxtLink>
         </li>
@@ -18,7 +18,7 @@
             to="#company-issues"
             class="flex items-center hover:text-blue-600 py-2"
           >
-            <svg-icon name="cross" class="h-6 w-6 lg:hidden" />
+            <svg-icon name="question-mark-circle" class="h-6 w-6 lg:hidden" />
             <span class="hidden lg:block">Problèmes d'Entreprise</span>
           </NuxtLink>
         </li>
@@ -27,7 +27,7 @@
             to="#configurable-actions"
             class="flex items-center hover:text-blue-600 py-2"
           >
-            <svg-icon name="cross" class="h-6 w-6 lg:hidden" />
+            <svg-icon name="adjustments-horizontal" class="h-6 w-6 lg:hidden" />
             <span class="hidden lg:block">Actions Configurables</span>
           </NuxtLink>
         </li>
@@ -36,7 +36,7 @@
             to="#useful"
             class="flex items-center hover:text-blue-600 py-2"
           >
-            <svg-icon name="cross" class="h-6 w-6 lg:hidden" />
+            <svg-icon name="shield-check" class="h-6 w-6 lg:hidden" />
             <span class="hidden lg:block">Pourquoi c'est Utile</span>
           </NuxtLink>
         </li>
@@ -45,7 +45,7 @@
             to="#dev-tickets"
             class="flex items-center hover:text-blue-600 py-2"
           >
-            <svg-icon name="cross" class="h-6 w-6 lg:hidden" />
+            <svg-icon name="briefcase" class="h-6 w-6 lg:hidden" />
             <span class="hidden lg:block">Tickets de Développement</span>
           </NuxtLink>
         </li>
