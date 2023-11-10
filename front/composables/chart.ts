@@ -40,77 +40,169 @@ const colors = [
   "#641E16",
 ];
 
-export function useFormatWorkingTimeToTime() {
-	return (workingTimes: IWorkingTime[]) => {
-		return workingTimes
-			.map((workingTime) => {
-				// To local datetime
-				const start = new Date(new Date(workingTime.start).toLocaleString());
-				const end = new Date(new Date(workingTime.end).toLocaleString());
+function formatDate(date: Date) {
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+  const year = date.getFullYear();
 
-				const res = [];
-				do {
-					// Remove the time informations to be at 00:00:00
-					const nextDay = new Date(start.toLocaleDateString());
-					nextDay.setDate(nextDay.getDate() + 1);
-					const endTime = Math.min(end.getTime(), nextDay.getTime());
-
-					const time = {
-						date: start.toLocaleDateString(),
-						duration: (endTime - start.getTime()) / (1000 * 3600),
-						objectId: workingTime?.user_id,
-					};
-
-					res.push(time);
-					start.setTime(endTime);
-				} while (end.getTime() !== start.getTime());
-				return res;
-			})
-			.flat();
-	};
+  return `${day}/${month}/${year}`;
 }
 
-export function useFormatChartDataWorkingTime() {
-  return (chartLabels: IChartLabel[], times: ITime[]): IChartData => {
-    const labels = ref<{ [objectId: number]: string }>({});
+export function useFormatWorkingTimeToTime() {
+  return (workingTimes: IWorkingTime[]): ITime[] => {
+    return workingTimes
+      .map((workingTime) => {
+        // To local datetime
+        const start = new Date(new Date(workingTime.start).toLocaleString());
+        const end = new Date(new Date(workingTime.end).toLocaleString());
 
-    chartLabels.forEach((cL) => {
-      labels.value[cL.id] = cL.name;
+        const res = [];
+        do {
+          // Remove the time informations to be at 00:00:00
+          const nextDay = new Date(start.toLocaleDateString());
+          nextDay.setDate(nextDay.getDate() + 1);
+          const endTime = Math.min(end.getTime(), nextDay.getTime());
+
+          const time = {
+            date: formatDate(start),
+            duration: (endTime - start.getTime()) / (1000 * 3600),
+            objectId: workingTime?.user_id,
+          };
+
+          res.push(time);
+          start.setTime(endTime);
+        } while (end.getTime() !== start.getTime());
+        return res;
+      })
+      .flat();
+  };
+}
+
+export function useFormatTeamWTToTime() {
+  return (
+    teamId: number,
+    workingTimes: IWorkingTime[],
+    average: boolean = false
+  ): ITime[] => {
+    // Replace working times user id to team id since all working times are considered as a team working time
+    const mergedWorkingTimes = workingTimes.map((wt) => ({
+      ...wt,
+      user_id: teamId,
+    }));
+    const times = useFormatWorkingTimeToTime()(mergedWorkingTimes);
+    if (!average) return times;
+
+    // Sum all the working times for each day
+    const summedTimes = times.reduce(
+      (
+        accumulator: { [date: string]: { duration: number; count: number } },
+        time
+      ) => {
+        if (!accumulator[time.date])
+          accumulator[time.date] = { duration: 0, count: 0 };
+
+        accumulator[time.date].duration += time.duration;
+        accumulator[time.date].count++;
+        return accumulator;
+      },
+      {}
+    );
+
+    // Make the average returning a single ITime object for each different day worked
+    // Average time is the average of the working users (absent users are not considered in the average)
+    return Object.keys(summedTimes).map((key: string): ITime => {
+      let duration = summedTimes[key].duration;
+      if (summedTimes[key].count > 0) duration /= summedTimes[key].count;
+
+      return {
+        date: key,
+        duration: duration,
+        objectId: teamId,
+      };
     });
+  };
+}
 
+export function useFormatChartDataWorkingTime(
+  byDays: boolean = false,
+  reverseDatesOrder: boolean = false
+) {
+  return (chartLabels: IChartLabel[], times: ITime[]): IChartData => {
     const dateSet = new Set(
       times.map((time) => {
         return time.date;
-      }),
+      })
     );
-
     const uniqueDates = ref<string[]>([]);
-
     uniqueDates.value = [...dateSet];
+    uniqueDates.value.sort();
+    if (reverseDatesOrder) uniqueDates.value.reverse();
 
-    const groupedData = times.reduce((acc: IGroupedData, time: ITime) => {
-      const dateIndex = uniqueDates.value.indexOf(time.date);
+    if (!byDays) {
+      const labels = ref<{ [objectId: number]: string }>({});
+      chartLabels.forEach((cL) => {
+        labels.value[cL.id] = cL.name;
+      });
 
-      if (!acc[time.objectId])
-        acc[time.objectId] = Array(uniqueDates.value.length).fill(0);
+      const groupedData = times.reduce((acc: IGroupedData, time: ITime) => {
+        const dateIndex = uniqueDates.value.indexOf(time.date);
 
-      acc[time.objectId][dateIndex] += time.duration;
+        if (!acc[time.objectId])
+          acc[time.objectId] = Array(uniqueDates.value.length).fill(0);
 
-      return acc;
-    }, {});
+        acc[time.objectId][dateIndex] += time.duration;
 
-    const datasets = Object.keys(groupedData).map((objectId, index) => ({
-      label: labels.value[objectId as any] ?? "Unknown",
-      data: groupedData[objectId as any],
-      backgroundColor: colors[index % colors.length],
-      borderColor: colors[index % colors.length],
-      fill: false,
-      tension: 0.5,
-    }));
+        return acc;
+      }, {});
 
-    return {
-      labels: uniqueDates.value,
-      datasets: datasets as any,
-    };
+      const datasets = Object.keys(groupedData).map((objectId, index) => ({
+        label: labels.value[objectId as any] ?? "Unknown",
+        data: groupedData[objectId as any],
+        backgroundColor: colors[index % colors.length],
+        borderColor: colors[index % colors.length],
+        fill: false,
+        tension: 0.5,
+      }));
+
+      return {
+        labels: uniqueDates.value,
+        datasets: datasets as any,
+      };
+    } else {
+      const idToIndex = ref<{ [objectId: number]: number }>({});
+      const teamColors = ref<string[]>([]);
+
+      chartLabels.forEach((cL, index) => {
+        idToIndex.value[cL.id] = index;
+        teamColors.value[index] = colors[index % colors.length];
+      });
+
+      const groupedData = times.reduce(
+        (accumulator: { [date: string]: number[] }, time: ITime) => {
+          if (!accumulator[time.date])
+            accumulator[time.date] = Array(chartLabels.length).fill(0);
+
+          accumulator[time.date][idToIndex.value[time.objectId]] +=
+            time.duration;
+          return accumulator;
+        },
+        {}
+      );
+
+      const datasetsbydate = uniqueDates.value.map((date) => ({
+        label: date,
+        data: groupedData[date],
+        backgroundColor: teamColors.value,
+        fill: false,
+        tension: 0.5,
+      }));
+
+      return {
+        labels: chartLabels.map((label) => {
+          return label.name;
+        }),
+        datasets: datasetsbydate as any,
+      };
+    }
   };
 }

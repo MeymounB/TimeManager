@@ -15,7 +15,9 @@ const getTeamWorkingTimes = useTeamWorkingTimes();
 const teamsDetails = ref<Map<number, ITeam>>(new Map([]));
 const teamsChartData = ref<Map<number, IChartData>>(new Map([]));
 const formatChartData = useFormatChartDataWorkingTime();
+const formatChartDataByDays = useFormatChartDataWorkingTime(true, true);
 const formatWTTime = useFormatWorkingTimeToTime();
+const formatTeamWTTime = useFormatTeamWTToTime();
 const teamsWorkingTimes = ref<Map<number, IWorkingTime[]>>(new Map());
 
 const getAllRoles = useGetAllRoles();
@@ -97,20 +99,18 @@ const userManager = computed(() => {
 });
 
 const averageTeamChartData = computed(() => {
-  let mergedWorkingTimes: IWorkingTime[] = [];
+  let averageTimes: ITime[] = [];
 
   for (const teamWt of teamsWorkingTimes.value) {
     const id = teamWt[0];
     const data = teamWt[1];
 
-    mergedWorkingTimes = mergedWorkingTimes.concat(
-      data.map((wt) => ({ ...wt, user_id: id })),
-    );
+    averageTimes = averageTimes.concat(formatTeamWTTime(id, data, true))
   }
 
-  return formatChartData(
+  return formatChartDataByDays(
     teams.value.map((t) => ({ id: t.id, name: t.name })),
-    formatWTTime(mergedWorkingTimes),
+    averageTimes,
   );
 });
 
@@ -143,7 +143,7 @@ onMounted(async () => {
       data-active-classes="bg-gray-100"
     >
       <div v-if="userGeneralManager && averageTeamChartData">
-        <VueChartBar :chart-data="averageTeamChartData" />
+        <VueChartPie :chart-data="averageTeamChartData" />
       </div>
       <AppAccordion
         v-for="team in teams"
