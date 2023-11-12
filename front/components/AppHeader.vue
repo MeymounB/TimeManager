@@ -36,6 +36,7 @@ const logout = async () => {
           <AppButton
             button-style="secondary"
             class="btn-icon block mb-5 lg:hidden"
+            type="button"
             @click="open = !open"
           >
             <svg-icon class="w-5 h-5" name="cross" />

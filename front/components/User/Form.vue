@@ -13,12 +13,15 @@ const props = defineProps<{
 const session = useSessionStore();
 
 const isSelf = computed(() => session.user?.id === props.trueUser.id);
+const isHigherAuthority = computed(
+  () => (session.user?.id ?? 0) >= props.trueUser.id,
+);
 
 const getAllRoles = useGetAllRoles();
 const roles = ref<{ id: number; name: string }[]>([]);
 
 const authorizedRoles = computed(() => {
-  return roles.value.filter((r) => r.id >= (session.user?.role_id ?? 4));
+  return roles.value.filter((r) => r.id >= (props.trueUser.role_id ?? 4));
 });
 const emit = defineEmits(["update:modelValue", "submit"]);
 
@@ -289,7 +292,7 @@ onMounted(async () => {
       <AppListBox
         v-model="vModel.role_id"
         :options="authorizedRoles"
-        :disabled="isSelf"
+        :disabled="isSelf || isHigherAuthority"
         @update:model-value="emit('submit')"
       />
     </div>

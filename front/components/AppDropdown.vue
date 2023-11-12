@@ -15,6 +15,7 @@ const toggleDropdown = () => {
     <AppButton
       :button-style="buttonStyle"
       class="flex items-center space-x-2"
+      type="button"
       @click="toggleDropdown"
     >
       <slot name="dropdown-toggle" />

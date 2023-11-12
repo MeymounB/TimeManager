@@ -11,6 +11,14 @@ export function useTeams() {
   };
 }
 
+export function useCreateTeam() {
+  return (teamName: string) => {
+    return useFetchAPI<IShortTeam[]>("POST", TEAMS_ENDPOINT, {
+      team: { name: teamName },
+    });
+  };
+}
+
 export function useTeamDetail() {
   return (teamId: number) => {
     return useFetchAPI<ITeam>("GET", `${TEAMS_ENDPOINT}/${teamId}`);

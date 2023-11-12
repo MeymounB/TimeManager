@@ -23,6 +23,7 @@ const getAllUser = useGetAllUser();
 const addEmloyeeAPI = useUpdateAddTeamMember();
 const removeEmloyeeAPI = useUpdateRemoveTeamMember();
 const deleteTeamAPI = useDeleteTeam();
+const createTeamAPI = useCreateTeam();
 
 const getAllRoles = useGetAllRoles();
 const roles = ref<IRole[]>([]);
@@ -113,6 +114,8 @@ const userManager = computed(() => {
   return isUserManager(user.value as IUser);
 });
 
+const newTeamName = ref("");
+
 const averageTeamChartData = computed(() => {
   let averageTimes: ITime[] = [];
 
@@ -181,6 +184,20 @@ const onTeamDelete = async (teamId: number) => {
   await fetchTeams();
 };
 
+const onTeamCreate = async () => {
+  debugger;
+  if (!newTeamName.value) {
+    return;
+  }
+  const response = await createTeamAPI(newTeamName.value);
+
+  if (!response.ok) {
+    return alert("Error happened while creating team");
+  }
+
+  await fetchTeams();
+};
+
 onMounted(async () => {
   await fetchTeams();
   await fetchAllRoles();
@@ -197,7 +214,40 @@ onMounted(async () => {
       data-active-classes="bg-gray-100"
     >
       <div v-if="userGeneralManager && averageTeamChartData">
-        <VueChartPie :chart-data="averageTeamChartData" />
+        <AppModal
+          id="addTeamModal"
+          button-style="primary"
+          button-class="flex items-center"
+        >
+          <template #button-label>
+            <svg-icon name="team" class="w-5 h-5 mr-2" />
+            Créer une équipe
+          </template>
+          <template #header> Créer une équipe </template>
+          <template #content>
+            <input
+              v-model="newTeamName"
+              class="w-full rounded outline-0 border"
+              type="text"
+              placeholder="RH, Développeurs etc..."
+            />
+          </template>
+          <template #valid-button>
+            <AppButton
+              data-modal-hide="addTeamModal"
+              type="button"
+              button-style="primary"
+              @click="onTeamCreate"
+            >
+              Valider
+            </AppButton>
+          </template>
+        </AppModal>
+        <VueChartPie
+          v-if="averageTeamChartData.datasets.length >= 0"
+          :chart-data="averageTeamChartData"
+        />
+        <span v-else class="text-center w-full">Aucune donnée</span>
       </div>
       <AppAccordion
         v-for="team in teams"
@@ -218,7 +268,7 @@ onMounted(async () => {
             class="flex justify-between mb-5"
           >
             <AppModal
-              id="addUserModal"
+              :id="`${team.id}-addUserModal`"
               button-style="primary"
               button-class="flex items-center"
             >
@@ -237,7 +287,7 @@ onMounted(async () => {
               </template>
               <template #valid-button>
                 <AppButton
-                  data-modal-hide="addUserModal"
+                  :data-modal-hide="`${team.id}-addUserModal`"
                   type="button"
                   button-style="primary"
                   @click="onUserAdd(team.id)"
