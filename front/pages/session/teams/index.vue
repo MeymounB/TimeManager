@@ -326,7 +326,7 @@ onMounted(async () => {
                       <svg-icon name="eye" class="w-4 h-4" />
                     </AppButton>
                     <AppButton
-                      v-if="userGeneralManager"
+                      v-if="userGeneralManager && tableUser.id !== user.id"
                       button-style="tertiary"
                       type="button"
                       class="btn-icon"
