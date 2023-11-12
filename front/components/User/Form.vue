@@ -2,6 +2,7 @@
 import { email, helpers, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import type { IUser } from "~/utils/user";
+import { isUserManager } from "~/composables/user";
 
 const props = defineProps<{
   trueUser: IUser;
@@ -9,6 +10,16 @@ const props = defineProps<{
   readonly?: boolean;
 }>();
 
+const session = useSessionStore();
+
+const isSelf = computed(() => session.user?.id === props.trueUser.id);
+
+const getAllRoles = useGetAllRoles();
+const roles = ref<{ id: number; name: string }[]>([]);
+
+const authorizedRoles = computed(() => {
+  return roles.value.filter((r) => r.id >= (session.user?.role_id ?? 4));
+});
 const emit = defineEmits(["update:modelValue", "submit"]);
 
 const vModel = computed({
@@ -44,6 +55,10 @@ const isFieldError = (vuelidateField: string) => {
   return vuelidate.value[vuelidateField as keyof typeof vuelidate.value].$error;
 };
 
+const userManager = computed(() => {
+  return isUserManager(session.user as IUser);
+});
+
 const fieldErrorMessage = (vuelidateField: string) => {
   return computed(() => {
     return vuelidate.value[vuelidateField as keyof typeof vuelidate.value]
@@ -78,6 +93,15 @@ const onSubmit = () => {
   lastnameEdit.value = false;
   emit("submit");
 };
+
+onMounted(async () => {
+  const response = await getAllRoles();
+  if (!response.ok) {
+    return alert("Error happened while fetching roles");
+  }
+
+  roles.value = response.data.map((r) => ({ id: r.id, name: r.name }));
+});
 </script>
 
 <template>
@@ -258,6 +282,16 @@ const onSubmit = () => {
           {{ fieldErrorMessage("email").value }}
         </span>
       </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium leading-6"> Role </label>
+      <AppListBox
+        v-model="vModel.role_id"
+        :options="authorizedRoles"
+        :disabled="isSelf"
+        @update:model-value="emit('submit')"
+      />
     </div>
   </form>
 </template>

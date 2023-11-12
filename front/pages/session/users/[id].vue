@@ -75,15 +75,17 @@ const userFormValue = reactive({
   firstname: user.value?.firstname ?? "",
   lastname: user.value?.lastname ?? "",
   email: user.value?.email ?? "",
+  role_id: user.value?.role_id ?? 0,
 });
 
 onMounted(async () => {
   await fetchUser();
-  await onClockOut();
+  onClockOut();
 
   userFormValue.firstname = user.value?.firstname ?? "";
   userFormValue.lastname = user.value?.lastname ?? "";
   userFormValue.email = user.value?.email ?? "";
+  userFormValue.role_id = user.value?.role_id ?? 0;
 });
 
 const onSubmit = async () => {
@@ -101,6 +103,7 @@ const onSubmit = async () => {
   userFormValue.firstname = user.value?.firstname;
   userFormValue.lastname = user.value?.lastname;
   userFormValue.email = user.value?.email;
+  userFormValue.role_id = user.value?.role_id ?? 0;
 };
 
 const chart1 = ref<InstanceType<typeof VueChartBar> | null>();

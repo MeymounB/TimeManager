@@ -15,6 +15,7 @@ const formValue = reactive({
   firstname: user.value?.firstname,
   lastname: user.value?.lastname,
   email: user.value?.email,
+  role_id: user.value?.role_id,
 });
 
 const onSubmit = async () => {
