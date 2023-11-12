@@ -43,3 +43,9 @@ export function useUpdateRemoveTeamMember() {
     );
   };
 }
+
+export function useDeleteTeam() {
+  return (teamId: number) => {
+    return useFetchAPI<IWorkingTime[]>("DELETE", `${TEAMS_ENDPOINT}/${teamId}`);
+  };
+}

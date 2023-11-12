@@ -22,6 +22,7 @@ const teamsWorkingTimes = ref<Map<number, IWorkingTime[]>>(new Map());
 const getAllUser = useGetAllUser();
 const addEmloyeeAPI = useUpdateAddTeamMember();
 const removeEmloyeeAPI = useUpdateRemoveTeamMember();
+const deleteTeamAPI = useDeleteTeam();
 
 const getAllRoles = useGetAllRoles();
 const roles = ref<IRole[]>([]);
@@ -170,6 +171,16 @@ const getRoleName = (roleId: number) => {
   return role?.name ?? "N/A";
 };
 
+const onTeamDelete = async (teamId: number) => {
+  const response = await deleteTeamAPI(teamId);
+
+  if (!response.ok) {
+    return alert("Error happened while deleting team");
+  }
+
+  await fetchTeams();
+};
+
 onMounted(async () => {
   await fetchTeams();
   await fetchAllRoles();
@@ -240,6 +251,7 @@ onMounted(async () => {
               button-style="danger"
               type="button"
               class="flex items-center"
+              @click="onTeamDelete(team.id)"
             >
               <svg-icon name="trash" class="w-5 h-5 mr-2" />
               Supprimer l'équipe
