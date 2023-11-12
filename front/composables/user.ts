@@ -74,6 +74,6 @@ export function userManageable(user: IUser, target: IUserShort) {
     user.managed_teams
       .map((t) => t.id)
       .some((r) => target.teams.map((t: IShortTeam) => t.id).includes(r)) ||
-    isUserGeneralManager(user)
+    (isUserGeneralManager(user) && target.role_id >= user.role_id)
   );
 }
