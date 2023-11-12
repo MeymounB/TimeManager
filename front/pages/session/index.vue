@@ -57,7 +57,7 @@ const onClockOut = () => {
       <span class="font-bold text-xl">Votre temps de travail</span>
       <VueChartLine
         ref="chart1"
-        class="min-h-[400px]"
+        class="min-h-[350px]"
         :chart-data="chartData"
       />
     </AppCard>
