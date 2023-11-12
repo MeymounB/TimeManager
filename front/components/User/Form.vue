@@ -2,7 +2,6 @@
 import { email, helpers, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import type { IUser } from "~/utils/user";
-import { isUserManager } from "~/composables/user";
 
 const props = defineProps<{
   trueUser: IUser;
@@ -21,7 +20,10 @@ const getAllRoles = useGetAllRoles();
 const roles = ref<{ id: number; name: string }[]>([]);
 
 const authorizedRoles = computed(() => {
-  return roles.value.filter((r) => r.id >= (props.trueUser.role_id ?? 4));
+  return roles.value.filter(
+    (r) =>
+      r.id >= (session.user?.role_id ?? 1) || r.id === props.trueUser.role_id,
+  );
 });
 const emit = defineEmits(["update:modelValue", "submit"]);
 
@@ -57,10 +59,6 @@ const vuelidate = useVuelidate(rules, vModel);
 const isFieldError = (vuelidateField: string) => {
   return vuelidate.value[vuelidateField as keyof typeof vuelidate.value].$error;
 };
-
-const userManager = computed(() => {
-  return isUserManager(session.user as IUser);
-});
 
 const fieldErrorMessage = (vuelidateField: string) => {
   return computed(() => {
