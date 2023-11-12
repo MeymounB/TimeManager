@@ -25,3 +25,21 @@ export function useTeamWorkingTimes() {
     );
   };
 }
+
+export function useUpdateAddTeamMember() {
+  return (teamId: number, employeeId: number) => {
+    return useFetchAPI<IWorkingTime[]>(
+      "PUT",
+      `${TEAMS_ENDPOINT}/${teamId}/add_employee/${employeeId}`,
+    );
+  };
+}
+
+export function useUpdateRemoveTeamMember() {
+  return (teamId: number, employeeId: number) => {
+    return useFetchAPI<IWorkingTime[]>(
+      "PUT",
+      `${TEAMS_ENDPOINT}/${teamId}/remove_employee/${employeeId}`,
+    );
+  };
+}

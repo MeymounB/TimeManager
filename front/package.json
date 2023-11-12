@@ -30,6 +30,8 @@
     "@capacitor/cli": "^5.5.1",
     "@capacitor/core": "^5.5.1",
     "@capacitor/ios": "^5.5.1",
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18",
     "@nuxtjs/svg-sprite": "^1.0.2",
     "@pinia/nuxt": "^0.5.1",
     "@vuelidate/core": "^2.0.3",

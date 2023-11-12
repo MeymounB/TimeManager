@@ -19,9 +19,23 @@ const formatChartDataByDays = useFormatChartDataWorkingTime(true, true);
 const formatWTTime = useFormatWorkingTimeToTime();
 const formatTeamWTTime = useFormatTeamWTToTime();
 const teamsWorkingTimes = ref<Map<number, IWorkingTime[]>>(new Map());
+const getAllUser = useGetAllUser();
+const addEmloyeeAPI = useUpdateAddTeamMember();
+const removeEmloyeeAPI = useUpdateRemoveTeamMember();
 
 const getAllRoles = useGetAllRoles();
 const roles = ref<IRole[]>([]);
+const users = ref<IUserShort[]>([]);
+
+const fetchAllUsers = async () => {
+  const response = await getAllUser();
+
+  if (!response.ok) {
+    return alert("Error happened while fetching");
+  }
+
+  users.value = response.data;
+};
 
 const fetchTeamDetail = async (teamId: number) => {
   const response = await getTeamDetail(teamId);
@@ -105,7 +119,7 @@ const averageTeamChartData = computed(() => {
     const id = teamWt[0];
     const data = teamWt[1];
 
-    averageTimes = averageTimes.concat(formatTeamWTTime(id, data, true))
+    averageTimes = averageTimes.concat(formatTeamWTTime(id, data, true));
   }
 
   return formatChartDataByDays(
@@ -114,13 +128,41 @@ const averageTeamChartData = computed(() => {
   );
 });
 
-watch(averageTeamChartData, () => {
-  console.log(averageTeamChartData.value);
-});
-
 const userGeneralManager = computed(() => {
   return isUserGeneralManager(user.value as IUser);
 });
+
+const getUserNotInTeam = (teamId: number) => {
+  return users.value
+    .filter((user) => !user.teams.map((team) => team.id).includes(teamId))
+    .map((u) => ({
+      id: u.id,
+      name: `${u.firstname} ${u.lastname}`,
+    }));
+};
+
+const userToAdd = ref<{ id: number; name: string } | null>(null);
+
+const onUserAdd = async (teamId: number) => {
+  if (!userToAdd.value) {
+    return;
+  }
+  const response = await addEmloyeeAPI(teamId, userToAdd.value.id);
+
+  if (!response.ok) {
+    return alert("Error happened while updating team");
+  }
+  await fetchTeams();
+};
+
+const onUserDelete = async (teamId: number, userId: number) => {
+  const response = await removeEmloyeeAPI(teamId, userId);
+
+  if (!response.ok) {
+    return alert("Error happened while updating team");
+  }
+  await fetchTeams();
+};
 
 const getRoleName = (roleId: number) => {
   const role = roles.value.find((role) => role.id === roleId);
@@ -131,6 +173,7 @@ const getRoleName = (roleId: number) => {
 onMounted(async () => {
   await fetchTeams();
   await fetchAllRoles();
+  await fetchAllUsers();
 });
 </script>
 
@@ -159,6 +202,49 @@ onMounted(async () => {
           </div>
         </template>
         <template #content>
+          <div
+            v-if="userManageTeam(user as IUser, team.id) || userGeneralManager"
+            class="flex justify-between mb-5"
+          >
+            <AppModal
+              id="addUserModal"
+              button-style="primary"
+              button-class="flex items-center"
+            >
+              <template #button-label>
+                <svg-icon name="user-add" class="w-5 h-5 mr-2" />
+                Ajouter
+              </template>
+              <template #header>
+                Ajouter un utilisateur à {{ team.name }}
+              </template>
+              <template #content>
+                <AppComboBox
+                  v-model="userToAdd"
+                  :options="getUserNotInTeam(team.id)"
+                />
+              </template>
+              <template #valid-button>
+                <AppButton
+                  data-modal-hide="addUserModal"
+                  type="button"
+                  button-style="primary"
+                  @click="onUserAdd(team.id)"
+                >
+                  Valider
+                </AppButton>
+              </template>
+            </AppModal>
+            <AppButton
+              v-if="userGeneralManager"
+              button-style="danger"
+              type="button"
+              class="flex items-center"
+            >
+              <svg-icon name="trash" class="w-5 h-5 mr-2" />
+              Supprimer l'équipe
+            </AppButton>
+          </div>
           <div v-if="teamsChartData.get(team.id)" class="h-72">
             <VueChartBar :chart-data="teamsChartData.get(team.id)" />
           </div>
@@ -239,6 +325,15 @@ onMounted(async () => {
                     >
                       <svg-icon name="eye" class="w-4 h-4" />
                     </AppButton>
+                    <AppButton
+                      v-if="userGeneralManager"
+                      button-style="tertiary"
+                      type="button"
+                      class="btn-icon"
+                      @click="onUserDelete(team.id, tableUser.id)"
+                    >
+                      <svg-icon name="trash" class="w-4 h-4" />
+                    </AppButton>
                   </td>
                 </tr>
               </template>
@@ -268,6 +363,15 @@ onMounted(async () => {
                       @click="navigateTo(`/session/users/${tableUser.id}`)"
                     >
                       <svg-icon name="eye" class="w-4 h-4" />
+                    </AppButton>
+                    <AppButton
+                      v-if="userManageTeam(session.user as IUser, team.id)"
+                      button-style="tertiary"
+                      type="button"
+                      class="btn-icon"
+                      @click="onUserDelete(team.id, tableUser.id)"
+                    >
+                      <svg-icon name="trash" class="w-4 h-4" />
                     </AppButton>
                   </td>
                 </tr>
