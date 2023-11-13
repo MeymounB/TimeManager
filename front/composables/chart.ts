@@ -41,7 +41,7 @@ const colors = [
 ];
 
 function formatDate(date: Date) {
-  const day = date.getDate().toString().padStart(2, "0");
+  const day = date.getDay().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
   const year = date.getFullYear();
 
@@ -53,14 +53,14 @@ export function useFormatWorkingTimeToTime() {
     return workingTimes
       .map((workingTime) => {
         // To local datetime
-        const start = new Date(new Date(workingTime.start).toLocaleString());
-        const end = new Date(new Date(workingTime.end).toLocaleString());
+        const start = new Date(new Date(workingTime.start).toString());
+        const end = new Date(new Date(workingTime.end).toString());
 
         const res = [];
         do {
           // Remove the time informations to be at 00:00:00
-          const nextDay = new Date(start.toLocaleDateString());
-          nextDay.setDate(nextDay.getDate() + 1);
+          const nextDay = new Date(start.toDateString());
+          nextDay.setTime(nextDay.getTime() + 1000 * 3600 * 24);
           const endTime = Math.min(end.getTime(), nextDay.getTime());
 
           const time = {
@@ -82,7 +82,7 @@ export function useFormatTeamWTToTime() {
   return (
     teamId: number,
     workingTimes: IWorkingTime[],
-    average: boolean = false
+    average: boolean = false,
   ): ITime[] => {
     // Replace working times user id to team id since all working times are considered as a team working time
     const mergedWorkingTimes = workingTimes.map((wt) => ({
@@ -96,7 +96,7 @@ export function useFormatTeamWTToTime() {
     const summedTimes = times.reduce(
       (
         accumulator: { [date: string]: { duration: number; count: number } },
-        time
+        time,
       ) => {
         if (!accumulator[time.date])
           accumulator[time.date] = { duration: 0, count: 0 };
@@ -105,7 +105,7 @@ export function useFormatTeamWTToTime() {
         accumulator[time.date].count++;
         return accumulator;
       },
-      {}
+      {},
     );
 
     // Make the average returning a single ITime object for each different day worked
@@ -116,7 +116,7 @@ export function useFormatTeamWTToTime() {
 
       return {
         date: key,
-        duration: duration,
+        duration,
         objectId: teamId,
       };
     });
@@ -125,13 +125,13 @@ export function useFormatTeamWTToTime() {
 
 export function useFormatChartDataWorkingTime(
   byDays: boolean = false,
-  reverseDatesOrder: boolean = false
+  reverseDatesOrder: boolean = false,
 ) {
   return (chartLabels: IChartLabel[], times: ITime[]): IChartData => {
     const dateSet = new Set(
       times.map((time) => {
         return time.date;
-      })
+      }),
     );
     const uniqueDates = ref<string[]>([]);
     uniqueDates.value = [...dateSet];
@@ -186,7 +186,7 @@ export function useFormatChartDataWorkingTime(
             time.duration;
           return accumulator;
         },
-        {}
+        {},
       );
 
       const datasetsbydate = uniqueDates.value.map((date) => ({
