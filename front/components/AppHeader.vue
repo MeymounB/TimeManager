@@ -43,8 +43,9 @@ const logout = async () => {
           </AppButton>
           <NuxtLink
             to="/"
-            class="text-3xl font-extrabold lg:font-bold lg:text-xl"
+            class="text-3xl font-extrabold lg:font-bold lg:text-xl flex items-center gap-2"
           >
+            <NuxtImg src="/logo.png" alt="logo" class="w-10" />
             Time Manager
           </NuxtLink>
         </div>
