@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@nuxtjs/svg-sprite",
+    "@nuxt/image"
   ],
 
   devtools: { enabled: true },
